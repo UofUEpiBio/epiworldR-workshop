@@ -1,0 +1,25 @@
+project:
+  type: website
+
+website:
+  title: "epiworldR"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - href: part1.qmd
+        text: "Part 1: Basic Modeling"
+      - href: part2.qmd
+        text: "Part 2: Adding Multiple Diseases & Tools"
+      - href: part3.qmd
+        text: "Part 3: Multiple Runs"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
