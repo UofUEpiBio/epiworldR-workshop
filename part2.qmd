@@ -7,6 +7,18 @@ epiworldR supports multi-variant models, the below code gives instructions on ho
 ## Adding More Viruses & Variants
 
 ```{r design-and-add}
+library(epiworldR)
+model_sir <- ModelSIRCONN(
+  name              = "COVID-19",
+  n                 = 100000, 
+  prevalence        = 0.0001, 
+  contact_rate      = 2,
+  prob_transmission = 0.5,
+  prob_recovery     = 1/3
+  )
+run(model_sir, ndays = 50, seed = 1912)
+model_sir
+
 # Building the virus
 flu <- virus(name = "Flu", prob_infecting = .3)
 

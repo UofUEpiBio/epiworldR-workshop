@@ -9,6 +9,7 @@ This R package is a wrapper of the C++ library \[epiworld\](https://github.com/U
 You can install the development version of epiworldR from \[GitHub\](https://github.com/) with:
 
 ```{r}
+#| eval: false
 # install.packages("devtools")
 devtools::install_github("UofUEpi/epiworldR")
 ```
