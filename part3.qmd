@@ -60,10 +60,93 @@ To view the a plot of the reproductive number over all 50 days for each of the 5
 ```{r reproductive-number-plot}
 seirconn_50_r <- run_multiple_get_results(model_seirconn)$reproductive
 plot(seirconn_50_r)
-# boxplot(rt ~ source_exposure_date, data = seirconn_50_r,
-#         main = "Reproductive Number",
-#         xlab = "Source Exposure Date",
-#         ylab = "rt",
-#         border = "black",
-#         las = 2)
 ```
+
+## Exercise 1
+
+Consider for this exercise that there is a flu outbreak. Your goal is to 
+observe the average reproductive number over 100 simulations. Using a 
+run-multiple simulation, what is the average reproductive number 
+over the course of the first 20 days? Use a SEIRCONN model with n = 10000,
+prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5, 
+incubation_days = 2, and prob_recovery = $\frac{1}{7}$.
+
+:::{.callout-tip collapse="true"}
+```{mermaid}
+flowchart LR
+  A[Create epiworldR_model] --> B(Generate saver)
+  B --> C(Run epiworldR_model)
+  C --> D(Plot average reproductive number)
+
+```
+:::
+
+:::{.callout-note collapse="true"}
+## Solution 
+```{r}
+model_seirconn <- ModelSEIRCONN(
+  name              = "Flu",
+  n                 = 10000, 
+  prevalence        = 0.01, 
+  contact_rate      = 2,
+  prob_transmission = 0.5,
+  incubation_days   = 2,
+  prob_recovery     = 1/7
+)
+
+# Generating a saver
+saver <- make_saver("reproductive")
+
+# Running and printing
+run_multiple(model_seirconn, ndays = 20, nsims = 100, saver = saver, nthread = 2)
+
+# Plotting
+seirconn_100_r <- run_multiple_get_results(model_seirconn)$reproductive
+plot(seirconn_100_r)
+```
+:::
+
+## Exercise 2
+Simulate a vaccine intervention for the previous exercise's Flu virus where 50% 
+of individuals in the population will receive the vaccine on day 10. How then, 
+does the average reproductive number behave over 20 days and 100 simulations? 
+Assume the following parameters: susceptibility_reduction = .9, 
+transmission_reduction = .5, recovery_enhancer = .5, and death_reduction = .9. 
+
+:::{.callout-tip collapse="true}
+```{mermaid}
+flowchart LR
+  A[Create tool] --> B(Use `globalaction_tool` & `add_global_action`)
+  B --> C(Generate saver & run-multiple)
+  C --> D(Plot average reproductive number)
+
+```
+:::
+
+:::{.callout-note collapse="true"}
+## Solution
+```{r}
+# Creating a tool
+epitool <- tool(
+  name = "Vaccine",
+  susceptibility_reduction = .9,
+  transmission_reduction = .5,
+  recovery_enhancer = .5, 
+  death_reduction = .9
+)
+
+# Adding a global action
+vaccine_day_10 <- globalaction_tool(epitool, .5, day = 10)
+add_global_action(model_seirconn, vaccine_day_10)
+
+# Generating a saver
+saver_2 <- make_saver("reproductive")
+# Running and printing
+run_multiple(model_seirconn, ndays = 20, nsims = 100, saver = saver_2, 
+             nthread = 2)
+
+# Plotting
+seirconn_100_r2 <- run_multiple_get_results(model_seirconn)$reproductive
+plot(seirconn_100_r2)
+```
+:::
