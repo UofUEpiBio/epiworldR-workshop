@@ -150,13 +150,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <a class="nav-link" href="./about.html">About</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./part1.html" aria-current="page">Part 1: Basic Modeling</a>
+    <a class="nav-link active" href="./part1.html" aria-current="page">Part 1</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part2.html">Part 2: Adding Multiple Diseases &amp; Tools</a>
+    <a class="nav-link" href="./part2.html">Part 2</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3.html">Part 3: Multiple Runs</a>
+    <a class="nav-link" href="./part3.html">Part 3</a>
   </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
@@ -173,7 +173,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#example-1-simulating-an-sir-model" id="toc-example-1-simulating-an-sir-model" class="nav-link active" data-scroll-target="#example-1-simulating-an-sir-model">Example 1: Simulating an SIR model</a></li>
+  <li><a href="#example-1-simulating-a-sir-model" id="toc-example-1-simulating-a-sir-model" class="nav-link active" data-scroll-target="#example-1-simulating-a-sir-model">Example 1: Simulating a SIR model</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
   </ul>
 </nav>
     </div>
@@ -197,15 +199,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <p>epiworldR is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models [ABM]. Some key features of epiworldR are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)</p>
-<section id="example-1-simulating-an-sir-model" class="level2">
-<h2 class="anchored" data-anchor-id="example-1-simulating-an-sir-model">Example 1: Simulating an SIR model</h2>
+<section id="example-1-simulating-a-sir-model" class="level2">
+<h2 class="anchored" data-anchor-id="example-1-simulating-a-sir-model">Example 1: Simulating a SIR model</h2>
 <section id="setup-and-running-the-model" class="level4">
 <h4 class="anchored" data-anchor-id="setup-and-running-the-model">Setup and running the model</h4>
-<p>This example implements a social network with parameters listed within the</p>
-<p>ModelSIRCONN function. The disease name is specified (COVID-19), 100000 agents are initialized, disease prevalence of 0.001 is declared, each agent will contact two others (contact_rate), probability of transmitting the disease for any given agent is 0.3, and probability of recovery is set to <span class="math inline">\(\frac{1}{3}\)</span>.To create this model on epiworldR, simply use the ModelSIRCONN function. From here, the example will take you through the basic features of epiworldR.</p>
+<p>This example implements a social network with parameters listed within the ModelSIRCONN function. The disease name is specified (COVID-19), 100000 agents are initialized, disease prevalence of 0.001 is declared, each agent will contact two others (contact_rate), probability of transmitting the disease for any given agent is 0.3, and probability of recovery is set to <span class="math inline">\(\frac{1}{3}\)</span>.To create this model on epiworldR, simply use the ModelSIRCONN function. From here, the example will take you through the basic features of epiworldR.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model_sirconn <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name              =</span> <span class="st">"COVID-19"</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">n                 =</span> <span class="dv">100000</span>, </span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">prevalence        =</span> <span class="fl">0.0001</span>, </span>
@@ -216,7 +217,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Printing the model shows us some information. First, the name of the model, population size, number of entities (think of these as public spaces in which agents can make social contact with one another), the duration in days, number of variants, amount of time the last replicate took to run (last run elapsed t), and rewiring status (on or off). The next piece of information you will see is a list of the viruses used in the model. In this case, COVID-19 was the only disease used. Note that epiworldR has the capability to include more than one virus in a model. Tool(s) lists any tools that agents have to fight the virus. Examples ofthis may include masking, vaccines, social distancing, etc. In this model, no tools are specified. Lastly, the model parameters are listed, which originate from the parameters specified in the model.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model_sir</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model_sirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ________________________________________________________________________________
@@ -247,14 +248,14 @@ Model parameters:
 </div>
 <p>To execute the model, use the run function with the SIR model object, number of simulation days, and an optional seed for reproducibility. Next, print out the results from the simulated model using model_sir.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>_________________________________________________________________________
 |Running the model...
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
 | done.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model_sir</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model_sirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ________________________________________________________________________________
@@ -266,7 +267,7 @@ Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
 Last run elapsed t  : 1.00s
-Last run speed      : 4.03 million agents x day / second
+Last run speed      : 3.11 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -324,14 +325,14 @@ see '?methods' for accessing help and source code</code></pre>
 <section id="plot" class="level4">
 <h4 class="anchored" data-anchor-id="plot">Plot</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_sir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="part1_files/figure-html/plotting-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>As evident from the above plot, the SIR model constructed from epiworldR displays the changes in susceptible, infected, and recovered case counts over time (days). Notice after a certain amount of time, the curves flatten. Below, a table representation of the above plot is printed, complete with each state within the SIR model, date, and agent counts.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(model_sir))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(model_sirconn))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  date       state counts
 1    0 Susceptible  99990
@@ -344,7 +345,7 @@ see '?methods' for accessing help and source code</code></pre>
 </div>
 <p>An important statistic in epidemiological models is the reproductive number.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sir)</span>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sirconn)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  variant source source_exposure_date rt
@@ -363,9 +364,101 @@ see '?methods' for accessing help and source code</code></pre>
 <p><img src="part1_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="exercise-1" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>Create a SEIR model to simulate a COVID-19 outbreak for 100 days in a population with initial prevalence = 0.01, infectiousness = 0.9, probability of recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and incubation days = 4. Then plot the model parameters to analyze changes in counts over time.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>To accomplish this for a SEIR model, you will need to add the model to a smallworld population using the <code>agents_smallworld</code> function after initializing the model. From there, run the model and plot. Assume n = 10000, k = 5, d = FALSE, and p = .01.</p>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize model</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>model_seir <span class="ot">&lt;-</span> <span class="fu">ModelSEIR</span>(<span class="st">"COVID-19"</span>, </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">prevalence =</span> <span class="fl">0.01</span>, </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">infectiousness =</span> <span class="fl">0.9</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">recovery =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">incubation_days =</span> <span class="dv">4</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding a small world population</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">agents_smallworld</span>(</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a> model_seir,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a> <span class="at">n =</span> <span class="dv">10000</span>,</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a> <span class="at">k =</span> <span class="dv">5</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a> <span class="at">d =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a> <span class="at">p =</span> .<span class="dv">01</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a> )</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Running model</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(model_seir, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>_________________________________________________________________________
+Running the model...
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
+ done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_seir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part1_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="exercise-2" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<p>Plot the reproductive number of the simulated SEIR model over 100 days.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Solution
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_seir)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(repnum, <span class="at">type =</span> <span class="st">'b'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part1_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->

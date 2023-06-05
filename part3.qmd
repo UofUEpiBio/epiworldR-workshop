@@ -77,7 +77,6 @@ flowchart LR
   A[Create epiworldR_model] --> B(Generate saver)
   B --> C(Run epiworldR_model)
   C --> D(Plot average reproductive number)
-
 ```
 :::
 
