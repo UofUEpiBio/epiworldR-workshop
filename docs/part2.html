@@ -122,6 +122,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -231,7 +232,7 @@ Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
 Last run elapsed t  : 1.00s
-Last run speed      : 4.01 million agents x day / second
+Last run speed      : 2.80 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -290,9 +291,9 @@ Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 2
 Last run elapsed t  : 1.00s
-Total elapsed t     : 2.00s (2 runs)
-Last run speed      : 3.93 million agents x day / second
-Average run speed   : 3.97 million agents x day / second
+Total elapsed t     : 3.00s (2 runs)
+Last run speed      : 2.85 million agents x day / second
+Average run speed   : 2.82 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -382,7 +383,7 @@ Transition Probabilities:
 </section>
 <section id="exercise-1" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Using a SIR connected model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = 1/4 for model initialization. Assume the Delta variant has a probability of infecting = 0.3 with an initial prevalence = 0.0001.</p>
+<p>Using a SIR connected model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span> for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and an initial prevalence = 0.001.</p>
 <div class="callout-note callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -406,10 +407,10 @@ Solution
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Building the virus</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">virus</span>(<span class="at">name =</span> <span class="st">"Delta"</span>, <span class="at">prob_infecting =</span> .<span class="dv">3</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>delta <span class="ot">&lt;-</span> <span class="fu">virus</span>(<span class="at">name =</span> <span class="st">"Delta"</span>, <span class="at">prob_infecting =</span> .<span class="dv">3</span>, <span class="at">prob_recovery =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>)</span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding the virus to the model</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">add_virus</span>(model_sir, delta, .<span class="dv">0001</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">add_virus</span>(model_sir, delta, .<span class="dv">001</span>)</span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the model</span></span>
 <span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">75</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

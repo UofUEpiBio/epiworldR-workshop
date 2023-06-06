@@ -89,9 +89,9 @@ par(op)
 Using a SIR connected model to simulate the Flu for 75 days, add the Coronavirus 
 Delta variant to the model. Then plot the model parameters and reproductive 
 numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, 
-contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = 1/4 for model 
-initialization. Assume the Delta variant has a probability of infecting = 0.3 
-with an initial prevalence = 0.0001.
+contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ 
+for model initialization. Assume the Delta variant has a prob_infecting = 0.3,
+prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.
 
 :::{.callout-note collapse="true"}
 ## Solution
@@ -106,10 +106,10 @@ model_sir <- ModelSIRCONN(
   )
 
 # Building the virus
-delta <- virus(name = "Delta", prob_infecting = .3)
+delta <- virus(name = "Delta", prob_infecting = .3, prob_recovery = 1/4)
 
 # Adding the virus to the model
-add_virus(model_sir, delta, .0001)
+add_virus(model_sir, delta, .001)
 
 # Run the model
 run(model_sir, ndays = 75, seed = 1912)

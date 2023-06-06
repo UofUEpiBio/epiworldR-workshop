@@ -134,12 +134,11 @@ prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5,
 incubation_days = 2, and prob_recovery = $\frac{1}{7}$.
 
 :::{.callout-tip collapse="true"}
-```{mermaid}
-flowchart LR
-  A[Create epiworldR_model] --> B(Generate saver)
-  B --> C(Run epiworldR_model)
-  C --> D(Plot average reproductive number)
-```
+General Steps:
+1. Create epiworldR_model
+2. Generate saver
+3. Run epiworldR_model
+4. Plot average reproductive number
 :::
 
 :::{.callout-note collapse="true"}
@@ -175,13 +174,11 @@ Assume the following parameters: susceptibility_reduction = .9,
 transmission_reduction = .5, recovery_enhancer = .5, and death_reduction = .9. 
 
 :::{.callout-tip collapse="true}
-```{mermaid}
-flowchart LR
-  A[Create tool] --> B(Use `globalaction_tool` & `add_global_action`)
-  B --> C(Generate saver & run-multiple)
-  C --> D(Plot average reproductive number)
-
-```
+General Steps:
+1. Create tool
+2. Use `globalaction_tool` & `add_global_action`
+3. Generate saver & run-multiple
+4. Plot average reproductive number
 :::
 
 :::{.callout-note collapse="true"}
