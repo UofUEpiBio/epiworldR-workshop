@@ -172,8 +172,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#adding-more-viruses-variants" id="toc-adding-more-viruses-variants" class="nav-link active" data-scroll-target="#adding-more-viruses-variants">Adding More Viruses &amp; Variants</a></li>
+  <li><a href="#adding-multiple-viruses-variants" id="toc-adding-multiple-viruses-variants" class="nav-link active" data-scroll-target="#adding-multiple-viruses-variants">Adding Multiple Viruses &amp; Variants</a></li>
   <li><a href="#tools" id="toc-tools" class="nav-link" data-scroll-target="#tools">Tools</a></li>
+  <li><a href="#comorbidities-using-logit-functions" id="toc-comorbidities-using-logit-functions" class="nav-link" data-scroll-target="#comorbidities-using-logit-functions">Comorbidities Using Logit Functions</a></li>
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
   <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
   </ul>
@@ -198,9 +199,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>epiworldR supports multi-variant models, the below code gives instructions on how to implement this. Using the “virus” function, give a name to the new virus/variant with its corresponding probability of infecting any given agent. In this example, prob_infecting is set to 1.0 as the flu is very contagious. In order to officially add this new virus to the model, use the “add_virus” function by calling the original epiworldR model object, the new virus, and the new virus’ prevalence (which is set to 0.01 in this example).</p>
-<section id="adding-more-viruses-variants" class="level2">
-<h2 class="anchored" data-anchor-id="adding-more-viruses-variants">Adding More Viruses &amp; Variants</h2>
+<p>epiworldR supports multi-variant models, the below code gives instructions on how to implement this. First, build a SIRCONN model for COVID-19, which new viruses and tools will then be added to.</p>
+<section id="adding-multiple-viruses-variants" class="level2">
+<h2 class="anchored" data-anchor-id="adding-multiple-viruses-variants">Adding Multiple Viruses &amp; Variants</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epiworldR)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
@@ -230,7 +231,7 @@ Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
 Last run elapsed t  : 1.00s
-Last run speed      : 3.11 million agents x day / second
+Last run speed      : 4.01 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -257,13 +258,18 @@ Transition Probabilities:
  - Infected     0.00  0.67  0.33
  - Recovered    0.00  0.00  1.00</code></pre>
 </div>
+</div>
+<section id="designing-the-virus" class="level4">
+<h4 class="anchored" data-anchor-id="designing-the-virus">Designing the Virus</h4>
+<p>Using the <code>virus</code> function, assign a name the new virus/variant with its corresponding probability of infecting any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the <code>add_virus</code> function by calling the original epiworldR model object, the new virus, and the new virus’ prevalence (which is set to 0.0001 in this example).</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Building the virus</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>flu <span class="ot">&lt;-</span> <span class="fu">virus</span>(<span class="at">name =</span> <span class="st">"Flu"</span>, <span class="at">prob_infecting =</span> .<span class="dv">3</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding the virus to the model</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">add_virus</span>(model_sir, flu, .<span class="dv">0001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>After running the updated model with the new virus included for 50 days, the output below describes the simulation. To confirm that the flu is included, notice the presence of “Flu” in the Virus(es) section of the output. All other output is interpretable as specified in previous sections.</p>
+<p>Next, run the updated model with the new virus for 50 days, the output below describes the simulation. To confirm that the flu is included, notice the presence of “Flu” in the Virus(es) section of the output. All other output is interpretable as specified in previous sections.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -284,9 +290,9 @@ Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 2
 Last run elapsed t  : 1.00s
-Total elapsed t     : 3.00s (2 runs)
-Last run speed      : 2.96 million agents x day / second
-Average run speed   : 3.03 million agents x day / second
+Total elapsed t     : 2.00s (2 runs)
+Last run speed      : 3.93 million agents x day / second
+Average run speed   : 3.97 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -315,6 +321,9 @@ Transition Probabilities:
  - Recovered    0.00  0.00  1.00</code></pre>
 </div>
 </div>
+</section>
+<section id="plotting" class="level4">
+<h4 class="anchored" data-anchor-id="plotting">Plotting</h4>
 <p>Plotting the previous model (including the flu) yields the following. Notice the presence of two reproductive numbers plotted over time. Variant 0 refers to COVID-19 and variant 1 refers to the flu.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>repnum2 <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sir)</span>
@@ -323,14 +332,15 @@ Transition Probabilities:
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_sir)</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(repnum2, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="part2_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<p><img src="part2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+</section>
 <section id="tools" class="level2">
 <h2 class="anchored" data-anchor-id="tools">Tools</h2>
-<p>Now, the implementation of tools to combat any viruses and variants in the model will be demonstrated. First, for simplicity, remove the flu virus from the SIR model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the “tool” function. These parameters include the name of the tool, any reduction in probabilities for the SIR model parameters, and increased probability of recovery option. In order to add the tool to the SIR model, use the “add_tool”function with the SIR model object, new tool, and prevalence of the tool. In this example, assume that 85% of the population will have received the vaccination.</p>
+<p>Now, the implementation of tools to combat any viruses and variants in the model will be demonstrated. First, for simplicity, remove the flu virus from the SIR model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the “tool” function. These parameters include the name of the tool, any reduction in probabilities for the SIR model parameters, and increased probability of recovery option. In order to add the tool to the SIR model, use the <code>add_tool</code> function with the SIR model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Removing the flu virus from the model</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm_virus</span>(model_sir, <span class="dv">1</span>)</span>
@@ -352,6 +362,8 @@ Transition Probabilities:
 | done.</code></pre>
 </div>
 </div>
+<section id="plotting-1" class="level4">
+<h4 class="anchored" data-anchor-id="plotting-1">Plotting</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>repnum3 <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sir)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -363,6 +375,10 @@ Transition Probabilities:
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
+<section id="comorbidities-using-logit-functions" class="level2">
+<h2 class="anchored" data-anchor-id="comorbidities-using-logit-functions">Comorbidities Using Logit Functions</h2>
 </section>
 <section id="exercise-1" class="level2">
 <h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
@@ -411,7 +427,7 @@ Running the model...
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_sir)</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="part2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<p><img src="part2_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -482,7 +498,7 @@ Solution
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_sir)</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(repnum2, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="part2_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="part2_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
