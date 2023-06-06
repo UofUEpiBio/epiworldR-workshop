@@ -71,6 +71,9 @@ generate a saver for any metric compatible with the "make_saver" function
 
 ```{r}
 ?make_saver
+```
+
+```{r}
 # Generating a saver
 saver <- make_saver("total_hist", "reproductive")
 ```
