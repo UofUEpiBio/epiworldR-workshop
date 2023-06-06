@@ -134,11 +134,11 @@ prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5,
 incubation_days = 2, and prob_recovery = $\frac{1}{7}$.
 
 :::{.callout-tip collapse="true"}
-General Steps:
-1. Create epiworldR_model
-2. Generate saver
-3. Run epiworldR_model
-4. Plot average reproductive number
+General Steps:  
+1. Create epiworldR_model  
+2. Generate saver  
+3. Run epiworldR_model  
+4. Plot average reproductive number  
 :::
 
 :::{.callout-note collapse="true"}
@@ -173,12 +173,12 @@ does the average reproductive number behave over 20 days and 100 simulations?
 Assume the following parameters: susceptibility_reduction = .9, 
 transmission_reduction = .5, recovery_enhancer = .5, and death_reduction = .9. 
 
-:::{.callout-tip collapse="true}
-General Steps:
-1. Create tool
-2. Use `globalaction_tool` & `add_global_action`
-3. Generate saver & run-multiple
-4. Plot average reproductive number
+:::{.callout-tip collapse="true"}
+General Steps:  
+1. Create tool  
+2. Use `globalaction_tool` & `add_global_action`  
+3. Generate saver & run-multiple  
+4. Plot average reproductive number  
 :::
 
 :::{.callout-note collapse="true"}
