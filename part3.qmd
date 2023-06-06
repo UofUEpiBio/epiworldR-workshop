@@ -67,11 +67,7 @@ model_seirconn <- ModelSEIRCONN(
 Next, generate a saver for the purpose of extracting the "total_hist" and 
 "reproductive" information from the model object. Keep in mind that you can 
 generate a saver for any metric compatible with the "make_saver" function 
-(see details section of the make_saver manual).
-
-```{r}
-?make_saver
-```
+(see details section of the make_saver help manual).
 
 ```{r}
 # Generating a saver

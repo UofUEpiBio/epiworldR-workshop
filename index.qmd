@@ -2,16 +2,16 @@
 title: "epiworldR"
 ---
 
-This R package is a wrapper of the C++ library \[epiworld\](https://github.com/UofUEpi/epiworld). It provides a general framework for modeling disease transmission using agent-based models (\[wiki\](https://en.wikipedia.org/w/index.php?title=Agent-based_model&oldid=1153634802)). Some of the main features include: - Fast simulation with an average of 30 million agents/day per second. - One model can include multiple diseases. - Policies (tools) can be multiple and user-defined.
+This R package is a wrapper of the C++ library [epiworld](https://github.com/UofUEpi/epiworld). It provides a general framework for modeling disease transmission using agent-based models [wiki](https://en.wikipedia.org/w/index.php?title=Agent-based_model&oldid=1153634802). Some of the main features include: - Fast simulation with an average of 30 million agents/day per second. - One model can include multiple diseases. - Policies (tools) can be multiple and user-defined.
 
 ## **Installation**
 
-You can install the development version of epiworldR from \[GitHub\](https://github.com/) with:
+You can install the development version of epiworldR from [GitHub](https://github.com/UofUEpiBio/epiworldR) with:
 
 ```{r}
 #| eval: false
 # install.packages("devtools")
-devtools::install_github("UofUEpi/epiworldR")
+devtools::install_github("UofUEpiBio/epiworldR")
 ```
 
 ## Examples
