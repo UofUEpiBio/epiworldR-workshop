@@ -8,13 +8,14 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
       - href: part1.qmd
         text: "Part 1"
       - href: part2.qmd
         text: "Part 2"
       - href: part3.qmd
         text: "Part 3"
+      - href: examples.qmd
+        text: "Examples"
 
 format:
   html:

@@ -53,9 +53,9 @@ plot(repnum2, type="b")
 par(op)
 ```
 
-## Tools
+## Using tools
 
-Now, the implementation of tools to combat any viruses and variants in the model will be demonstrated. First, for simplicity, remove the flu virus from the SIR model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the "tool" function. These parameters include the name of the tool, any reduction in probabilities for the SIR model parameters, and increased probability of recovery option. In order to add the tool to the SIR model, use the `add_tool` function with the SIR model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
+Now, the implementation of tools to fight any viruses and variants in the model will be demonstrated. First, for simplicity, remove the flu virus from the SIR model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the "tool" function. These parameters include the tool's name, any reduction in probabilities for the SIR model parameters, and increased probability of recovery option. To add the tool to the SIR model, use the `add_tool` function with the SIR model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
 
 ```{r removing-virus}
 # Removing the flu virus from the model
@@ -85,8 +85,153 @@ par(op)
 ```
 ## Comorbidities Using Logit Functions
 
+Many times we want to model the effects of comorbidities on the
+disease. For example, we may want to model the effects of obesity on the
+probability of recovery from COVID-19. To do this, we can use the `virus_fun_logit()` function
+to model the probability of recovery. 
+
+The steps are the following:
+
+1. Create the model
+
+2. Assign the agents' data (a matrix with covariates/features) to the model.
+
+3. Create a function to model the probability of recovery using the `virus_fun_logit()` function.
+
+4. Add the function to the virus' recovery rate using `set_prob_recovery_fun()`.
+
+5. Run the model.
+
+We start by creating two matching models, one with comorbidities and one without.
+
+```{r}
+# With comorbidities
+model_comor <- ModelSEIRCONN(
+  name              = "Flu",
+  n                 = 10000, 
+  prevalence        = 0.001, 
+  contact_rate      = 2.1,
+  prob_transmission = 0.5,
+  incubation_days   = 7,
+  prob_recovery     = 1/4
+  )
+
+# Without comorbidities
+model_no_comor <- ModelSEIRCONN(
+  name              = "Flu",
+  n                 = 10000, 
+  prevalence        = 0.001, 
+  contact_rate      = 2.1,
+  prob_transmission = 0.5,
+  incubation_days   = 7,
+  prob_recovery     = 1/4
+  )
+```
+
+Next, we will create a matrix with the agents' data. As an example, we will
+create a matrix with two columns, one for the baseline and one for obesity.
+
+```{r}
+# Artificial population with obesity
+set.seed(88)
+X <- cbind(
+  baseline = 1,
+  obese    = sample.int(2, size(model_comor), replace = TRUE) - 1
+  )
+
+# Looking at the data
+head(X)
+```
+
+Let's now link agents' data to the model. This will allow us to use the data to
+model the probability of recovery.
+
+```{r}
+# Adding the data to the model
+set_agents_data(model_comor, X)
+model_comor
+```
+
+We then use the `virus_fun_logit` to create a function we can use to model the
+probability of recovery. The function takes in the following arguments:
+
+- `vars`: the variables to use in the model
+- `coefs`: the coefficients for each variable
+- `model`: the model object
+
+```{r}
+# Logit function 
+lfun <- virus_fun_logit(
+  vars  = 0:1,
+  coefs = c(
+    qlogis(.25),
+    qlogis(.25 - .25/2)
+    ), 
+  model_comor
+  )
+
+# Printing
+lfun
+```
+
+The next step is to set the probability of recovery function for the virus. We
+can do this using the `set_prob_recovery_fun` function:
+
+```{r}
+# Setting the probability of recovery
+set_prob_recovery_fun(
+  virus = get_virus(model_comor, 0), 
+  model = model_comor,
+  vfun  = lfun
+  )
+```
+
+We are now ready to run the model.
+
+```{r}
+run(model_comor, ndays = 50, seed = 1231)
+run(model_no_comor, ndays = 50, seed = 1231)
+```
+
+And see the result
+
+```{r}
+#| label: curves-comorbidities
+op <- par(mfrow = c(1, 2), cex = .7)
+plot_incidence(model_comor, main = "With comorbidities")
+plot_incidence(model_no_comor, main = "Without comorbidities")
+par(op)
+```
+
+Let's also look at the states of the agents in the model using the `get_state()` and
+`get_agents()` functions.
+
+```{r}
+states_comor <- sapply(1:size(model_comor), \(i) {
+  get_state(get_agents(model_comor)[i - 1])
+})
+
+states_no_comor <- sapply(1:size(model_comor), \(i) {
+  get_state(get_agents(model_no_comor)[i - 1])
+})
+
+table(states_comor, states_no_comor)
+
+# We can even compute the correlation
+t.test(X[,2],
+  (states_no_comor < 3) - 
+  (states_comor < 3)
+  )
+```
+
+The table above shows that the model with comorbidities has fewer
+recovered agents than the model without comorbidities. Furthermore, the model
+with no comorbidities still has susceptible agents, which is not the case
+for the model with comorbidities.
+
 ## Exercise 1
-Using a SIR connected model to simulate the Flu for 75 days, add the Coronavirus 
+
+Using a SIR-connected model to simulate the Flu for 75 days, add the Coronavirus 
 Delta variant to the model. Then plot the model parameters and reproductive 
 numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, 
 contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ 
@@ -126,15 +271,16 @@ par(op)
 :::
 
 ## Exercise 2
-Using the SIR connected model from exercise 1 (model_sir), remove the Delta variant
+
+Using the SIR-connected model from exercise 1 (model_sir), remove the Delta variant
 from the model and add a masking tool called "mask_wearing" with transmission 
 reduction = 0.3 and proportion of complying agents = 0.6. Simulate this 
 scenario for 50 days and plot the model parameters and average reproductive number
 over time. 
 
 :::{.callout-tip collapse="true"}
-Masking only influences transmission of a disease, thus transmission reduction 
-= 0.3 and all other parameters of this tool will be 0.0. 
+Masking only influences the transmission of a disease, thus transmission reduction 
+= 0.3, and all other parameters of this tool will be 0.0. 
 :::
 
 :::{.callout-note collapse="true"}

@@ -1,0 +1,155 @@
+---
+title: Examples
+---
+
+This R package includes several popular epidemiological models, including SIS ([wiki](https://en.wikipedia.org/w/index.php?title=Compartmental_models_in_epidemiology&oldid=1155757336#Variations_on_the_basic_SIR_model)), SIR ([wiki](https://en.wikipedia.org/w/index.php?title=Compartmental_models_in_epidemiology&oldid=1155757336#The_SIR_model)), and SEIR ([wiki](https://en.wikipedia.org/w/index.php?title=Compartmental_models_in_epidemiology&oldid=1155757336#The_SEIR_model)) using either a fully connected graph (similar to a compartmental model) or a user-defined network. Here are some examples:
+
+## SIR Model Using a Random Graph
+
+This Susceptible-Infected-Recovered model features a population of 100,000 agents simulated in a small-world network. Each agent is connected to ten other agents. One percent of the population has the virus, with a 70% chance of transmission. Infected individuals recover at a 0.3 rate:
+
+```{r}
+library(epiworldR)
+
+## Creating a SIR model
+sir <- ModelSIR(
+  name           = "COVID-19",
+  prevalence     = .01,
+  infectiousness = .7,
+  recovery       = .3
+  ) |>
+  # Adding a Small world population 
+  agents_smallworld(n = 100000, k = 10, d = FALSE, p = .01) |>
+  # Running the model for 50 days
+  run(ndays = 50, seed = 1912)
+
+sir
+```
+
+Visualizing the outputs
+
+```{r}
+plot(sir)
+```
+
+## SEIR Model With a Fully Connected Graph
+
+```{r}
+model_seirconn <- ModelSEIRCONN(
+  name                = "COVID-19",
+  prevalence          = 0.01, 
+  n                   = 10000,
+  contact_rate        = 4, 
+  incubation_days     = 7, 
+  prob_transmission   = 0.6,
+  prob_recovery       = 0.5
+)
+
+set.seed(132)
+run(model_seirconn, ndays = 100)
+model_seirconn
+```
+
+Computing some key statistics: plotting and reproductive number ([wiki](https://en.wikipedia.org/w/index.php?title=Basic_reproduction_number&oldid=1155282807))
+
+```{r}
+plot(model_seirconn)
+
+repnum <- get_reproductive_number(model_seirconn)
+plot(repnum, type = "b")
+```
+
+## SIR Logit
+
+```{r}
+set.seed(2223)
+n <- 100000
+
+X <- cbind(
+  Intercept = 1,
+  Female    = sample.int(2, n, replace = TRUE) - 1
+  )
+
+coef_infect  <- c(.1, -2, 2)
+coef_recover <- rnorm(2)
+
+model_logit <- ModelSIRLogit(
+  "covid2",
+  data = X,
+  coefs_infect      = coef_infect,
+  coefs_recover     = coef_recover, 
+  coef_infect_cols  = 1L:ncol(X),
+  coef_recover_cols = 1L:ncol(X),
+  prob_infection = .8,
+  prob_recovery = .3,
+  prevalence = .01
+)
+
+agents_smallworld(model_logit, n, 8, FALSE, .01)
+
+run(model_logit, 50)
+
+plot(model_logit)
+
+## Females are supposed to be more likely to become infected
+rn <- get_reproductive_number(model_logit)
+
+(table(
+  X[, "Female"],
+  (1:n %in% rn$source)
+) |> prop.table())[,2]
+
+## Looking into the agents
+get_agents(model_logit)
+```
+
+## Transmission Network
+
+```{r}
+sir <- ModelSIR(
+  name           = "COVID-19",
+  prevalence     = .01,
+  infectiousness = .5,
+  recovery       = .5
+  ) |>
+    # Adding a Small world population 
+    agents_smallworld(n = 500, k = 10, d = FALSE, p = .01) |>
+    # Running the model for 50 days
+    run(ndays = 50, seed = 1912)
+
+## Transmission network
+net <- get_transmissions(sir)
+
+## Plotting
+library(netplot)
+library(igraph)
+x <- graph_from_edgelist(as.matrix(net[,2:3]) + 1)
+
+nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
+```
+
+## Multiple Simulations
+
+```{r}
+model_sir <- ModelSIRCONN(
+  name = "COVID-19",
+  prevalence = 0.01,
+  n = 1000,
+  contact_rate = 2,
+  prob_transmission = 0.9, prob_recovery = 0.1
+  )
+
+## Generating a saver
+saver <- make_saver("total_hist", "reproductive")
+
+## Running and printing
+run_multiple(model_sir, ndays = 100, nsims = 50, saver = saver, nthread = 2)
+
+## Retrieving the results
+ans <- run_multiple_get_results(model_sir)
+
+head(ans$total_hist)
+head(ans$reproductive)
+
+plot(ans$reproductive)
+```
