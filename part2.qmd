@@ -2,8 +2,8 @@
 title: "Part 2: Adding Multiple Diseases & Tools"
 ---
 
-epiworldR supports multi-variant models, the below code gives instructions on 
-how to implement this. First, build a SIRCONN model for COVID-19, which new
+`epiworldR` supports multi-variant models, the below code gives instructions on 
+how to implement this. First, build a `SIRCONN` model for COVID-19, which new
 viruses and tools will then be added to. 
 
 ## Adding Multiple Viruses & Variants
@@ -24,7 +24,7 @@ model_sir
 
 #### Designing the Virus
 
-Using the `virus` function, assign a name the new virus/variant with its corresponding probability of infecting any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the `add_virus` function by calling the original epiworldR model object, the new virus, and the new virus' prevalence (which is set to 0.0001 in this example).
+Using the `virus()` function, assign a name the new virus/variant with its corresponding probability of infecting any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the `add_virus()` function by calling the original `epiworldR` model object, the new virus, and the new virus' prevalence (which is set to 0.0001 in this example).
 
 ```{r}
 # Building the virus
@@ -55,7 +55,7 @@ par(op)
 
 ## Using tools
 
-Now, the implementation of tools to fight any viruses and variants in the model will be demonstrated. First, for simplicity, remove the flu virus from the SIR model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the "tool" function. These parameters include the tool's name, any reduction in probabilities for the SIR model parameters, and increased probability of recovery option. To add the tool to the SIR model, use the `add_tool` function with the SIR model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
+Now, the implementation of tools to fight any viruses and variants in the model will be demonstrated. First, for simplicity, remove the flu virus from the `SIR` model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the `tool()` function. These parameters include the tool's name, any reduction in probabilities for the `SIR` model parameters, and increased probability of recovery option. To add the tool to the `SIR` model, use the `add_tool()` function with the `SIR` model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
 
 ```{r removing-virus}
 # Removing the flu virus from the model
@@ -152,7 +152,7 @@ set_agents_data(model_comor, X)
 model_comor
 ```
 
-We then use the `virus_fun_logit` to create a function we can use to model the
+We then use `virus_fun_logit()` to create a function we can use to model the
 probability of recovery. The function takes in the following arguments:
 
 - `vars`: the variables to use in the model
@@ -175,7 +175,7 @@ lfun
 ```
 
 The next step is to set the probability of recovery function for the virus. We
-can do this using the `set_prob_recovery_fun` function:
+can do this using the `set_prob_recovery_fun()` function:
 
 ```{r}
 # Setting the probability of recovery
@@ -231,12 +231,14 @@ for the model with comorbidities.
 
 ## Exercise 1
 
-Using a SIR-connected model to simulate the Flu for 75 days, add the Coronavirus 
+Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus 
 Delta variant to the model. Then plot the model parameters and reproductive 
 numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, 
 contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ 
 for model initialization. Assume the Delta variant has a prob_infecting = 0.3,
-prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.
+prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.  
+  
+After how many days does the number of infections peak in this simulation? 
 
 :::{.callout-note collapse="true"}
 ## Solution
@@ -267,16 +269,24 @@ op <- par(mfrow = c(2,1))
 plot(model_sir)
 plot(repnum, type="b")
 par(op)
+
+# Day of peak infections 
+x <- get_hist_total(model_sir)
+which.max(x$counts[x$state == "Infected"]) - 1
+# Number of infections on peak day
+max(x$counts[x$state == "Infected"])
 ```
 :::
 
 ## Exercise 2
 
-Using the SIR-connected model from exercise 1 (model_sir), remove the Delta variant
+Using the `SIRCONN` model from exercise 1 (model_sir), remove the Delta variant
 from the model and add a masking tool called "mask_wearing" with transmission 
 reduction = 0.3 and proportion of complying agents = 0.6. Simulate this 
 scenario for 50 days and plot the model parameters and average reproductive number
 over time. 
+
+After how many days does the number of infections peak in this simulation?
 
 :::{.callout-tip collapse="true"}
 Masking only influences the transmission of a disease, thus transmission reduction 
@@ -312,5 +322,11 @@ op <- par(mfrow = c(2,1))
 plot(model_sir)
 plot(repnum2, type="b")
 par(op)
+
+# Day of peak infections
+y <- get_hist_total(model_sir)
+which.max(y$counts[y$state == "Infected"]) - 1
+# Number of infections on peak day
+max(y$counts[y$state == "Infected"])
 ```
 :::
