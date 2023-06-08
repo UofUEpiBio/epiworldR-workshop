@@ -79,7 +79,8 @@ with initial prevalence = 0.01, infectiousness = 0.9, probability of recovery
 = $\frac{1}{4}$, and incubation days = 4. Then plot the model parameters to 
 analyze changes in counts over time.  
   
-After how many days does the number of infections peak in this simulation? 
+After how many days does the number of infections peak in this simulation?  
+How many infections occur at the peak?
 
 :::{.callout-tip collapse="true"}
 To accomplish this for a SEIR model, you will need to add the model to a smallworld 

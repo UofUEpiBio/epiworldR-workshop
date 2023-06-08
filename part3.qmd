@@ -47,7 +47,7 @@ corresponding population means.
 
 #### Setup and Running Model
 
-To use the `run_multiple` function in `epiworldR`, create your `epiworldR_model` of choice; in this case, the example uses a `SEIRCONN` model for COVID-19, `10000` people, an initial prevalence of `0.0001` (0.01%), a contact rate of `2`, probability of transmission `0.5`, a total of `7` incubation days, and probability of recovery `$\frac{1}{3}$`.
+To use the `run_multiple` function in `epiworldR`, create your `epiworldR_model` of choice; in this case, the example uses a `SEIRCONN` model for COVID-19, `10000` people, an initial prevalence of `0.0001` (0.01%), a contact rate of `2`, probability of transmission `0.5`, a total of `7` incubation days, and probability of recovery $\frac{1}{3}$.
 
 ```{r sirconn-setup}
 library(epiworldR)

@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.298">
+<meta name="generator" content="quarto-1.1.251">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>epiworldR - Examples</title>
+<title>epiworldR - Sunbelt 2023 Workshop - Examples</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -14,10 +14,9 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -44,13 +43,43 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
+    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -100,45 +129,36 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">epiworldR</span>
+    <span class="navbar-title">epiworldR - Sunbelt 2023 Workshop</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="./index.html">Home</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part1.html" rel="" target="">
- <span class="menu-text">Part 1</span></a>
+    <a class="nav-link" href="./part1.html">Part 1</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part2.html" rel="" target="">
- <span class="menu-text">Part 2</span></a>
+    <a class="nav-link" href="./part2.html">Part 2</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3.html" rel="" target="">
- <span class="menu-text">Part 3</span></a>
+    <a class="nav-link" href="./part3.html">Part 3</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./examples.html" rel="" target="" aria-current="page">
- <span class="menu-text">Examples</span></a>
+    <a class="nav-link active" href="./examples.html" aria-current="page">Examples</a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop" rel="" target=""><i class="bi bi-github" role="img">
-</i> 
- <span class="menu-text">GitHub</span></a>
+    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop">GitHub</a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools">
-</div>
+<div id="quarto-search" class="" title="Search"></div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -165,7 +185,6 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <div class="quarto-title-meta">
 
     
-  
     
   </div>
   
@@ -174,7 +193,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <section id="sir-model-using-a-random-graph" class="level2"><h2 class="anchored" data-anchor-id="sir-model-using-a-random-graph">SIR Model Using a Random Graph</h2>
 <p>This Susceptible-Infected-Recovered model features a population of 100,000 agents simulated in a small-world network. Each agent is connected to ten other agents. One percent of the population has the virus, with a 70% chance of transmission. Infected individuals recover at a 0.3 rate:</p>
 <div class="cell">
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="do">## Creating a SIR model</span></span>
 <span id="cb1-4"><a href="#cb1-4"></a>sir <span class="ot">&lt;-</span> <span class="fu">ModelSIR</span>(</span>
@@ -193,7 +212,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
 | done.</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>sir</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>sir</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
 ________________________________________________________________________________
@@ -201,12 +220,11 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Infected-Recovered (SIR)
 Population size     : 100000
-Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
-Last run elapsed t  : 517.00ms
-Last run speed      : 9.65 million agents x day / second
+Last run elapsed t  : 333.00ms
+Last run speed      : 14.97 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -235,14 +253,14 @@ Transition Probabilities:
 </div>
 <p>Visualizing the outputs</p>
 <div class="cell">
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">plot</span>(sir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">plot</span>(sir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section><section id="seir-model-with-a-fully-connected-graph" class="level2"><h2 class="anchored" data-anchor-id="seir-model-with-a-fully-connected-graph">SEIR Model With a Fully Connected Graph</h2>
 <div class="cell">
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>model_seirconn <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>model_seirconn <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
 <span id="cb6-2"><a href="#cb6-2"></a>  <span class="at">name                =</span> <span class="st">"COVID-19"</span>,</span>
 <span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">prevalence          =</span> <span class="fl">0.01</span>, </span>
 <span id="cb6-4"><a href="#cb6-4"></a>  <span class="at">n                   =</span> <span class="dv">10000</span>,</span>
@@ -260,7 +278,7 @@ Running the model...
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
  done.</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>model_seirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>model_seirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>
 ________________________________________________________________________________
@@ -268,12 +286,11 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 Population size     : 10000
-Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 100 (of 100)
 Number of variants  : 1
-Last run elapsed t  : 206.00ms
-Last run speed      : 4.84 million agents x day / second
+Last run elapsed t  : 116.00ms
+Last run speed      : 8.59 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -306,11 +323,11 @@ Transition Probabilities:
 </div>
 <p>Computing some key statistics: plotting and reproductive number (<a href="https://en.wikipedia.org/w/index.php?title=Basic_reproduction_number&amp;oldid=1155282807">wiki</a>)</p>
 <div class="cell">
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">plot</span>(model_seirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">plot</span>(model_seirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_seirconn)</span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_seirconn)</span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="fu">plot</span>(repnum, <span class="at">type =</span> <span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
@@ -318,7 +335,7 @@ Transition Probabilities:
 </div>
 </section><section id="sir-logit" class="level2"><h2 class="anchored" data-anchor-id="sir-logit">SIR Logit</h2>
 <div class="cell">
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">set.seed</span>(<span class="dv">2223</span>)</span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">set.seed</span>(<span class="dv">2223</span>)</span>
 <span id="cb12-2"><a href="#cb12-2"></a>n <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
 <span id="cb12-3"><a href="#cb12-3"></a></span>
 <span id="cb12-4"><a href="#cb12-4"></a>X <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
@@ -350,11 +367,11 @@ Transition Probabilities:
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
 | done.</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">plot</span>(model_logit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">plot</span>(model_logit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="do">## Females are supposed to be more likely to become infected</span></span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="do">## Females are supposed to be more likely to become infected</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a>rn <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_logit)</span>
 <span id="cb15-3"><a href="#cb15-3"></a></span>
 <span id="cb15-4"><a href="#cb15-4"></a>(<span class="fu">table</span>(</span>
@@ -365,7 +382,7 @@ Transition Probabilities:
 <pre><code>      0       1 
 0.12984 0.14201 </code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="do">## Looking into the agents</span></span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="do">## Looking into the agents</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a><span class="fu">get_agents</span>(model_logit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>Agents from the model "Susceptible-Infected-Removed (SIR) (logit)":
@@ -384,7 +401,7 @@ Agent: 9, state: Recovered (2), Nvirus: 0, NTools: 0, NNeigh: 8
 </div>
 </section><section id="transmission-network" class="level2"><h2 class="anchored" data-anchor-id="transmission-network">Transmission Network</h2>
 <div class="cell">
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>sir <span class="ot">&lt;-</span> <span class="fu">ModelSIR</span>(</span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>sir <span class="ot">&lt;-</span> <span class="fu">ModelSIR</span>(</span>
 <span id="cb19-2"><a href="#cb19-2"></a>  <span class="at">name           =</span> <span class="st">"COVID-19"</span>,</span>
 <span id="cb19-3"><a href="#cb19-3"></a>  <span class="at">prevalence     =</span> .<span class="dv">01</span>,</span>
 <span id="cb19-4"><a href="#cb19-4"></a>  <span class="at">infectiousness =</span> .<span class="dv">5</span>,</span>
@@ -400,15 +417,12 @@ Agent: 9, state: Recovered (2), Nvirus: 0, NTools: 0, NNeigh: 8
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
 | done.</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="do">## Transmission network</span></span>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="do">## Transmission network</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a>net <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(sir)</span>
 <span id="cb21-3"><a href="#cb21-3"></a></span>
 <span id="cb21-4"><a href="#cb21-4"></a><span class="do">## Plotting</span></span>
-<span id="cb21-5"><a href="#cb21-5"></a><span class="fu">library</span>(netplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: grid</code></pre>
-</div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="fu">library</span>(netplot)</span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'igraph'</code></pre>
@@ -428,28 +442,28 @@ Attaching package: 'igraph'</code></pre>
 
     union</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>x <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(<span class="fu">as.matrix</span>(net[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb28-2"><a href="#cb28-2"></a></span>
-<span id="cb28-3"><a href="#cb28-3"></a><span class="fu">nplot</span>(x, <span class="at">edge.curvature =</span> <span class="dv">0</span>, <span class="at">edge.color =</span> <span class="st">"gray"</span>, <span class="at">skip.vertex=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>x <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(<span class="fu">as.matrix</span>(net[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="fu">nplot</span>(x, <span class="at">edge.curvature =</span> <span class="dv">0</span>, <span class="at">edge.color =</span> <span class="st">"gray"</span>, <span class="at">skip.vertex=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section><section id="multiple-simulations" class="level2"><h2 class="anchored" data-anchor-id="multiple-simulations">Multiple Simulations</h2>
 <div class="cell">
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
-<span id="cb29-2"><a href="#cb29-2"></a>  <span class="at">name =</span> <span class="st">"COVID-19"</span>,</span>
-<span id="cb29-3"><a href="#cb29-3"></a>  <span class="at">prevalence =</span> <span class="fl">0.01</span>,</span>
-<span id="cb29-4"><a href="#cb29-4"></a>  <span class="at">n =</span> <span class="dv">1000</span>,</span>
-<span id="cb29-5"><a href="#cb29-5"></a>  <span class="at">contact_rate =</span> <span class="dv">2</span>,</span>
-<span id="cb29-6"><a href="#cb29-6"></a>  <span class="at">prob_transmission =</span> <span class="fl">0.9</span>, <span class="at">prob_recovery =</span> <span class="fl">0.1</span></span>
-<span id="cb29-7"><a href="#cb29-7"></a>  )</span>
-<span id="cb29-8"><a href="#cb29-8"></a></span>
-<span id="cb29-9"><a href="#cb29-9"></a><span class="do">## Generating a saver</span></span>
-<span id="cb29-10"><a href="#cb29-10"></a>saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span>
-<span id="cb29-11"><a href="#cb29-11"></a></span>
-<span id="cb29-12"><a href="#cb29-12"></a><span class="do">## Running and printing</span></span>
-<span id="cb29-13"><a href="#cb29-13"></a><span class="fu">run_multiple</span>(model_sir, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">nsims =</span> <span class="dv">50</span>, <span class="at">saver =</span> saver, <span class="at">nthread =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
+<span id="cb27-2"><a href="#cb27-2"></a>  <span class="at">name =</span> <span class="st">"COVID-19"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3"></a>  <span class="at">prevalence =</span> <span class="fl">0.01</span>,</span>
+<span id="cb27-4"><a href="#cb27-4"></a>  <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb27-5"><a href="#cb27-5"></a>  <span class="at">contact_rate =</span> <span class="dv">2</span>,</span>
+<span id="cb27-6"><a href="#cb27-6"></a>  <span class="at">prob_transmission =</span> <span class="fl">0.9</span>, <span class="at">prob_recovery =</span> <span class="fl">0.1</span></span>
+<span id="cb27-7"><a href="#cb27-7"></a>  )</span>
+<span id="cb27-8"><a href="#cb27-8"></a></span>
+<span id="cb27-9"><a href="#cb27-9"></a><span class="do">## Generating a saver</span></span>
+<span id="cb27-10"><a href="#cb27-10"></a>saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span>
+<span id="cb27-11"><a href="#cb27-11"></a></span>
+<span id="cb27-12"><a href="#cb27-12"></a><span class="do">## Running and printing</span></span>
+<span id="cb27-13"><a href="#cb27-13"></a><span class="fu">run_multiple</span>(model_sir, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">nsims =</span> <span class="dv">50</span>, <span class="at">saver =</span> saver, <span class="at">nthread =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>Starting multiple runs (50) using 2 thread(s)
 _________________________________________________________________________
@@ -457,10 +471,10 @@ _________________________________________________________________________
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
  done.</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="do">## Retrieving the results</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>ans <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(model_sir)</span>
-<span id="cb31-3"><a href="#cb31-3"></a></span>
-<span id="cb31-4"><a href="#cb31-4"></a><span class="fu">head</span>(ans<span class="sc">$</span>total_hist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="do">## Retrieving the results</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>ans <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(model_sir)</span>
+<span id="cb29-3"><a href="#cb29-3"></a></span>
+<span id="cb29-4"><a href="#cb29-4"></a><span class="fu">head</span>(ans<span class="sc">$</span>total_hist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  sim_num thread date nvariants       state counts
 1       1      0    0         1 Susceptible    990
@@ -470,17 +484,17 @@ _________________________________________________________________________
 5       1      0    1         1    Infected     25
 6       1      0    1         1   Recovered      1</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">head</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">head</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  sim_num thread variant source source_exposure_date rt
-1       1      0       0    767                   11  0
+1       1      0       0    527                   10  0
 2       1      0       0    835                   10  0
-3       1      0       0    466                    9  0
-4       1      0       0    612                    9  0
-5       1      0       0    793                    9  0
-6       1      0       0     20                    8  0</code></pre>
+3       1      0       0    189                    9  0
+4       1      0       0    192                    9  0
+5       1      0       0    612                    9  0
+6       1      0       0    977                    9  0</code></pre>
 </div>
-<details><summary>Code</summary><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">plot</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">plot</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -514,23 +528,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
   });
   clipboard.on('success', function(e) {
@@ -542,24 +542,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
     setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -595,128 +578,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
       });
-    }
+      return popup.innerHTML;
+    });
   }
 });
 </script>
