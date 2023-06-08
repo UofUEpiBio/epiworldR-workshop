@@ -4,6 +4,11 @@ project:
 
 website:
   title: "epiworldR"
+  google-analytics: G-CQNCQM1SG1
+  repo-subdir: docs
+  repo-url: https://github.com/UofUEpiBio/epiworldR-workshop
+  repo-branch: main
+  search: true
   navbar:
     left:
       - href: index.qmd
@@ -16,12 +21,22 @@ website:
         text: "Part 3"
       - href: examples.qmd
         text: "Examples"
+    right: 
+      - href: https://github.com/UofUEpiBio/epiworldR-workshop
+        text: "GitHub"
+        icon: github
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
+    code-fold: true
+    code-link: true
+    code-line-numbers: true
+    
 
 editor: visual
+
+
 
