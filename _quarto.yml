@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "epiworldR"
+  title: "epiworldR - Sunbelt 2023 Workshop"
   google-analytics: G-CQNCQM1SG1
   repo-subdir: docs
   repo-url: https://github.com/UofUEpiBio/epiworldR-workshop
@@ -31,7 +31,7 @@ format:
     theme: cosmo
     css: styles.css
     toc: true
-    code-fold: true
+    code-fold: show
     code-link: true
     code-line-numbers: true
     

@@ -1,5 +1,10 @@
 build:
-	module load quarto ; \
-		quarto preview .
+	quarto preview .
 
-.PHONY: build
+all:
+	quarto preview --render=all .
+
+load:
+	module load quarto
+
+.PHONY: build all load
