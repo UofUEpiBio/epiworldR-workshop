@@ -239,6 +239,7 @@ for model initialization. Assume the Delta variant has a prob_infecting = 0.3,
 prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.  
   
 After how many days does the number of infections peak in this simulation? 
+How many infections occur at the peak?
 
 :::{.callout-note collapse="true"}
 ## Solution
@@ -286,7 +287,8 @@ reduction = 0.3 and proportion of complying agents = 0.6. Simulate this
 scenario for 50 days and plot the model parameters and average reproductive number
 over time. 
 
-After how many days does the number of infections peak in this simulation?
+After how many days does the number of infections peak in this simulation?  
+How many infections occur at the peak?
 
 :::{.callout-tip collapse="true"}
 Masking only influences the transmission of a disease, thus transmission reduction 
