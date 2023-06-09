@@ -2,14 +2,78 @@
 title: "Part 1: Basic Modeling"
 ---
 
-epiworldR is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models \[ABM\]. Some key features of epiworldR are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)
+**`epiworldR`** is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models \[ABM\]. Some key features of **`epiworldR`** are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)[^compartments]
+
+Let's start right away with an example!
+
+[^compartments]: This feature is currently under development. The [repository of epiworld](https://github.com/UofUEpiBio/epiworld){target="_blank"} contains a branch with this feature.
+
+## Motivating Example
+
+```{r}
+#| label: motivating-example
+library(epiworldR)
+
+# Create a model
+model <- ModelSEIRCONN(
+  name              = "COVID-19",
+  n                 = 100000, 
+  prevalence        = 0.0001, 
+  contact_rate      = 4,
+  incubation_days   = 7,
+  prob_transmission = 0.5,
+  prob_recovery     = 1/7
+  ) |>
+
+  # Adding a virus (Flu)
+  add_virus(virus("Flu", 0.5, 1/4), .0001) |>
+
+  # Individuals wear a mask
+  add_tool(tool("Mask", 0.2, 0.3, 0, 0), .3) |>
+
+  # Adding an intervention on day 20 (Vaccines)
+  add_global_action(globalaction_tool(
+    tool("Vaccine", .9, .9, .9, 0),
+    prob = .7,
+    day = 20
+    ))
+```
+
+```{r}
+#| label: run-model
+# Run the model
+run(model, ndays = 100, seed = 1912)
+model
+```
+
+```{r}
+#| label: plot-model
+# Plot the model
+plot_incidence(model)
+abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+
+plot_reproductive_number(model)
+abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+
+plot_generation_time(model)
+abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+
+```
 
 ## Example 1: Simulating a SIR model
 
 #### Setup and running the model
 
-This example implements a social network with parameters listed within the
-ModelSIRCONN function. The disease name is specified (COVID-19), 100000 agents are initialized, disease prevalence of 0.0001 is declared, each agent will contact two others (contact_rate), probability of transmitting the disease for any given agent is 0.5, and probability of recovery is set to $\frac{1}{3}$.To create this model on epiworldR, simply use the ModelSIRCONN function. From here, the example will take you through the basic features of epiworldR.
+This example implements the following scenario:
+
+- The disease name is specified (COVID-19),
+- 100,000 agents are initialized,
+- the disease prevalence of 0.0001 is declared,
+- each agent will contact two others (contact_rate),
+- the probability of transmitting the disease for any given agent is 0.5, and
+- the probability of recovery is set to $\frac{1}{3}$.
+
+To create this model on **`epiworldR`**, we use the `ModelSIRCONN()` function. From here, the example will take you through the basic features of **`epiworldR`**.
 
 ```{r sirconn-setup}
 library(epiworldR)
@@ -23,7 +87,7 @@ model_sirconn <- ModelSIRCONN(
   )
 ```
 
-Printing the model shows us some information. First, the name of the model, population size, number of entities (think of these as public spaces in which agents can make social contact with one another), the duration in days, number of variants, amount of time the last replicate took to run (last run elapsed t), and rewiring status (on or off). The next piece of information you will see is a list of the viruses used in the model. In this case, COVID-19 was the only disease used. Note that epiworldR has the capability to include more than one virus in a model. Tool(s) lists any tools that agents have to fight the virus. Examples ofthis may include masking, vaccines, social distancing, etc. In this model, no tools are specified. Lastly, the model parameters are listed, which originate from the parameters specified in the model.
+Printing the model shows us some information. First, the name of the model, population size, number of entities (think of these as public spaces in which agents can make social contact with one another), the duration in days, number of variants, amount of time the last replicate took to run (last run elapsed t), and rewiring status (on or off). The next piece of information you will see is a list of the viruses used in the model. In this case, COVID-19 was the only disease used. Note that **`epiworldR`** has the capability to include more than one virus in a model. Tool(s) lists any tools that agents have to fight the virus. Examples ofthis may include masking, vaccines, social distancing, etc. In this model, no tools are specified. Lastly, the model parameters are listed, which originate from the parameters specified in the model.
 
 ```{r}
 model_sirconn
@@ -40,7 +104,7 @@ There are two additional sections in the model summary after running the model o
 
 #### Extracting Simulation Data
 
-After running the epiworldR model, below is a list of all the functions that can be called using the epiworldR model object. To demonstrate, start with the basic plot and get_hist_total functions.
+After running the **`epiworldR`** model, below is a list of all the functions that can be called using the **`epiworldR`** model object. To demonstrate, start with the basic plot and get_hist_total functions.
 
 ```{r showing-methods}
 methods(class = "epiworld_model")
@@ -52,7 +116,7 @@ methods(class = "epiworld_model")
 plot(model_sirconn)
 ```
 
-As evident from the above plot, the SIR model constructed from epiworldR displays the changes in susceptible, infected, and recovered case counts over time (days). Notice after a certain amount of time, the curves flatten. Below, a table representation of the above plot is printed, complete with each state within the SIR model, date, and agent counts.
+As evident from the above plot, the SIR model constructed from **`epiworldR`** displays the changes in susceptible, infected, and recovered case counts over time (days). Notice after a certain amount of time, the curves flatten. Below, a table representation of the above plot is printed, complete with each state within the SIR model, date, and agent counts.
 
 #### Using Network Data
 
@@ -67,7 +131,7 @@ repnum <- get_reproductive_number(model_sirconn)
 head(repnum)
 ```
 
-epiworldR has a method to automatically plot the reproductive number. Thisfunction takes the average of values in the above table for each date and repeats until all date have been accounted for. For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 1.7 other individuals.
+**`epiworldR`** has a method to automatically plot the reproductive number. Thisfunction takes the average of values in the above table for each date and repeats until all date have been accounted for. For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 1.7 other individuals.
 
 ```{r}
 x <- plot(repnum, type="b")
