@@ -4,9 +4,10 @@ title: "Part 3: Multiple Runs"
 
 ## Introduction
 
-The purpose of the `run_multiple` function is to run a specified number of simulations using the same model object. That is, this function makes it possible to compare model results across several separate and repeated simulations. 
+The purpose of the `run_multiple` function is to run a specified number of simulations using the same model object. That is, this function makes it possible to compare model results across several separate and repeated simulations.
 
 ## The Principle Behind Multiple Runs
+
 ```{r, echo = FALSE}
 # Set the seed for reproducibility
 set.seed(123)
@@ -36,12 +37,7 @@ plot(sample_sizes, averages, type = "l", xlab = "Sample Size (n)",
      ylab = "Average", main = "Average vs. Sample Size")
 ```
 
-In statistics, the Law of Large Numbers ensures that as the sample size increases, 
-the sample mean (average) of a random variable will converge to the population mean.
-The same principle applies when using multiple runs to simulate epidemiological 
-models. As the number of `epiworldR` simulations increases, the sample means of 
-the reproductive number or model parameters, for example, will converge to their 
-corresponding population means.
+In statistics, the Law of Large Numbers ensures that as the sample size increases, the sample mean (average) of a random variable will converge to the population mean. The same principle applies when using multiple runs to simulate epidemiological models. As the number of `epiworldR` simulations increases, the sample means of the reproductive number or model parameters, for example, will converge to their corresponding population means.
 
 ## Example: Simulating a SEIRCONN Model 50 Times
 
@@ -64,10 +60,7 @@ model_seirconn <- ModelSEIRCONN(
 
 #### Generating a Saver
 
-Next, generate a saver for the purpose of extracting the `total_hist` and 
-`reproductive` information from the model object. Keep in mind that you can 
-generate a saver for any metric compatible with the `make_saver` function 
-(see details section of the `make_saver` help manual).
+Next, generate a saver for the purpose of extracting the `total_hist` and `reproductive` information from the model object. Keep in mind that you can generate a saver for any metric compatible with the `make_saver` function (see details section of the `make_saver` help manual).
 
 ```{r}
 # Generating a saver
@@ -76,9 +69,7 @@ saver <- make_saver("total_hist", "reproductive")
 
 #### Running the Simulation
 
-Now, use the `run_multiple` function with the model object, number of desired 
-days to run the simulation, number of simulations to run, the generated saver, 
-and number of threads for parallel computing.
+Now, use the `run_multiple` function with the model object, number of desired days to run the simulation, number of simulations to run, the generated saver, and number of threads for parallel computing.
 
 ```{r saver-generation}
 
@@ -88,8 +79,7 @@ run_multiple(model_seirconn, ndays = 50, nsims = 50, saver = saver, nthread = 2)
 
 #### Extracting Results
 
-Using the `run_multiple_get_results` function, extract the results from the 
-model object that was simulated 50 times for comparison across simulations.
+Using the `run_multiple_get_results` function, extract the results from the model object that was simulated 50 times for comparison across simulations.
 
 ```{r extracting-results}
 ans <- run_multiple_get_results(model_seirconn)
@@ -99,11 +89,7 @@ head(ans$reproductive)
 
 #### Plotting
 
-To plot the model parameters and reproductive numbers over time using boxplots, 
-extract the results from the model object using `run_multiple_get_results`. 
-For this example, the dates are filtered to observe the model parameters over 
-the first 20 days. Notice each boxplot in the below table represents the 
-observed values from each of the 50 simulations for each date.
+To plot the model parameters and reproductive numbers over time using boxplots, extract the results from the model object using `run_multiple_get_results`. For this example, the dates are filtered to observe the model parameters over the first 20 days. Notice each boxplot in the below table represents the observed values from each of the 50 simulations for each date.
 
 ```{r plotting-seirconn-epicurves}
 seirconn_50 <- run_multiple_get_results(model_seirconn)$total_hist
@@ -111,12 +97,7 @@ seirconn_50 <- seirconn_50[seirconn_50$date <= 20,]
 plot(seirconn_50)
 ```
 
-To view the a plot of the reproductive number over all 50 days for each of the 
-50 simulations, store the reproductive results to a new object using 
-`run_multiple_get_results`, then plot using the `plot` function. Notice each 
-source exposure date displays a boxplot representing the distribution of 
-reproductive numbers across all 50 simulations for each date. As expected, the 
-reproductive number on average, decreases over time.
+To view the a plot of the reproductive number over all 50 days for each of the 50 simulations, store the reproductive results to a new object using `run_multiple_get_results`, then plot using the `plot` function. Notice each source exposure date displays a boxplot representing the distribution of reproductive numbers across all 50 simulations for each date. As expected, the reproductive number on average, decreases over time.
 
 ```{r reproductive-number-plot}
 seirconn_50_r <- run_multiple_get_results(model_seirconn)$reproductive
@@ -125,23 +106,19 @@ plot(seirconn_50_r)
 
 ## Exercise 1
 
-Consider for this exercise that there is a flu outbreak. Your goal is to 
-observe the average reproductive number over 100 simulations. Using a 
-`run_multiple` simulation, what is the average reproductive number 
-over the course of the first 20 days? Use a `SEIRCONN` model with n = 10000,
-prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5, 
-incubation_days = 2, and prob_recovery = $\frac{1}{7}$. 
+Consider for this exercise that there is a flu outbreak. Your goal is to observe the average reproductive number over 100 simulations. Using a `run_multiple` simulation, what is the average reproductive number over the course of the first 20 days? Use a `SEIRCONN` model with n = 10000, prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5, incubation_days = 2, and prob_recovery = $\frac{1}{7}$.
 
-:::{.callout-tip collapse="true"}
-General Steps:  
-1. Create `epiworldR_model`  
-2. Generate saver  
-3. Run `epiworldR_model`  
-4. Plot average reproductive number  
+::: {.callout-tip collapse="true"}
+General Steps:\
+1. Create `epiworldR_model`\
+2. Generate saver\
+3. Run `epiworldR_model`\
+4. Plot average reproductive number
 :::
 
-:::{.callout-note collapse="true"}
-## Solution 
+::: {.callout-note collapse="true"}
+## Solution
+
 ```{r}
 model_seirconn <- ModelSEIRCONN(
   name              = "Flu",
@@ -166,22 +143,19 @@ plot(seirconn_100_r)
 :::
 
 ## Exercise 2
-Simulate a vaccine intervention for the previous exercise's Flu virus where 50% 
-of individuals in the population will receive the vaccine on day 10. How then, 
-does the average reproductive number behave over 20 days and 100 simulations? 
-Assume the following parameters: susceptibility_reduction = .9, 
-transmission_reduction = .5, recovery_enhancer = .5, and death_reduction = .9. 
 
-:::{.callout-tip collapse="true"}
-General Steps:  
-1. Create tool  
-2. Use `globalaction_tool` & `add_global_action`  
-3. Generate saver & `run_multiple` 
-4. Plot average reproductive number  
+Simulate a vaccine intervention for the previous exercise's Flu virus where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters: susceptibility_reduction = .9, transmission_reduction = .5, recovery_enhancer = .5, and death_reduction = .9.
+
+::: {.callout-tip collapse="true"}
+General Steps:\
+1. Create tool\
+2. Use `globalaction_tool` & `add_global_action`\
+3. Generate saver & `run_multiple` 4. Plot average reproductive number
 :::
 
-:::{.callout-note collapse="true"}
+::: {.callout-note collapse="true"}
 ## Solution
+
 ```{r}
 # Creating a tool
 epitool <- tool(

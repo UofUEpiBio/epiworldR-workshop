@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+<meta name="generator" content="quarto-1.3.353">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>epiworldR - Sunbelt 2023 Workshop - Part 2: Adding Multiple Diseases &amp; Tools</title>
 <style>
@@ -14,9 +14,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -43,43 +44,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -121,7 +92,7 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
-</script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
+</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-fixed">
 
@@ -132,33 +103,42 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
     <span class="navbar-title">epiworldR - Sunbelt 2023 Workshop</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link" href="./index.html">Home</a>
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part1.html">Part 1</a>
+    <a class="nav-link" href="./part1.html" rel="" target="">
+ <span class="menu-text">Part 1</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./part2.html" aria-current="page">Part 2</a>
+    <a class="nav-link active" href="./part2.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Part 2</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3.html">Part 3</a>
+    <a class="nav-link" href="./part3.html" rel="" target="">
+ <span class="menu-text">Part 3</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./examples.html">Examples</a>
+    <a class="nav-link" href="./examples.html" rel="" target="">
+ <span class="menu-text">Examples</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop">GitHub</a>
+    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text">GitHub</span></a>
   </li>  
 </ul>
-<div id="quarto-search" class="" title="Search"></div>
+<div class="quarto-navbar-tools">
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
@@ -185,6 +165,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <div class="quarto-title-meta">
 
     
+  
     
   </div>
   
@@ -220,12 +201,8 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
-Last run elapsed t  : 1.00s
-<<<<<<< HEAD
-Last run speed      : 4.02 million agents x day / second
-=======
-Last run speed      : 3.86 million agents x day / second
->>>>>>> 488ce4876c0d7a82dc170fb6e47f0beeed7135da
+Last run elapsed t  : 553.00ms
+Last run speed      : 9.03 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -243,13 +220,13 @@ Model parameters:
  - Prob. Transmission : 0.5000
 
 Distribution of the population at time 50:
-  - (0) Susceptible :  99990 -&gt; 6514
-  - (1) Infected    :     10 -&gt; 3
-  - (2) Recovered   :      0 -&gt; 93483
+  - (0) Susceptible :  99990 -&gt; 6603
+  - (1) Infected    :     10 -&gt; 13
+  - (2) Recovered   :      0 -&gt; 93384
 
 Transition Probabilities:
  - Susceptible  0.95  0.05  0.00
- - Infected     0.00  0.67  0.33
+ - Infected     0.00  0.66  0.34
  - Recovered    0.00  0.00  1.00</code></pre>
 </div>
 </div>
@@ -284,15 +261,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 2
-Last run elapsed t  : 1.00s
-Total elapsed t     : 2.00s (2 runs)
-<<<<<<< HEAD
-Last run speed      : 3.95 million agents x day / second
-Average run speed   : 3.98 million agents x day / second
-=======
-Last run speed      : 3.43 million agents x day / second
-Average run speed   : 3.63 million agents x day / second
->>>>>>> 488ce4876c0d7a82dc170fb6e47f0beeed7135da
+Last run elapsed t  : 0.00s
+Total elapsed t     : 1.00s (2 runs)
+Last run speed      : 9.09 million agents x day / second
+Average run speed   : 9.06 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -311,9 +283,9 @@ Model parameters:
  - Prob. Transmission : 0.5000
 
 Distribution of the population at time 50:
-  - (0) Susceptible :  99980 -&gt; 6488
-  - (1) Infected    :     20 -&gt; 8
-  - (2) Recovered   :      0 -&gt; 93504
+  - (0) Susceptible :  99980 -&gt; 6635
+  - (1) Infected    :     20 -&gt; 3
+  - (2) Recovered   :      0 -&gt; 93362
 
 Transition Probabilities:
  - Susceptible  0.95  0.05  0.00
@@ -553,10 +525,10 @@ queue_removed  : -99</code></pre>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>            states_no_comor
 states_comor    0    1    2    3
-           0    2    1    3    8
-           1   78  156  113  382
-           2  331  595  452 1592
-           3  641 1348  872 3426</code></pre>
+           0    2    4    1    9
+           1   79  194  113  450
+           2  304  604  415 1587
+           3  626 1375  897 3340</code></pre>
 </div>
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co"># We can even compute the correlation</span></span>
 <span id="cb33-2"><a href="#cb33-2"></a><span class="fu">t.test</span>(X[,<span class="dv">2</span>],</span>
@@ -568,25 +540,26 @@ states_comor    0    1    2    3
     Welch Two Sample t-test
 
 data:  X[, 2] and (states_no_comor &lt; 3) - (states_comor &lt; 3)
-t = 48.931, df = 18225, p-value &lt; 2.2e-16
+t = 48.894, df = 18122, p-value &lt; 2.2e-16
 alternative hypothesis: true difference in means is not equal to 0
 95 percent confidence interval:
- 0.4003917 0.4338083
+ 0.4029707 0.4366293
 sample estimates:
 mean of x mean of y 
-   0.5050    0.0879 </code></pre>
+   0.5050    0.0852 </code></pre>
 </div>
 </div>
 <p>The table above shows that the model with comorbidities has fewer recovered agents than the model without comorbidities. Furthermore, the model with no comorbidities still has susceptible agents, which is not the case for the model with comorbidities.</p>
 </section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Using a <code>SIRCONN</code> model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span> for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and an initial prevalence = 0.001.</p>
+<p>Using a <code>SIRCONN</code> model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span> for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and an initial prevalence = 0.001.<br>
+When running the model, use seed = 1912.</p>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -633,27 +606,27 @@ Running the model...
 <span id="cb38-4"><a href="#cb38-4"></a>x <span class="ot">&lt;-</span> <span class="fu">get_hist_total</span>(model_sir)</span>
 <span id="cb38-5"><a href="#cb38-5"></a><span class="fu">which.max</span>(x<span class="sc">$</span>counts[x<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>]) <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 15</code></pre>
+<pre><code>[1] 16</code></pre>
 </div>
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="co"># Number of infections on peak day</span></span>
 <span id="cb40-2"><a href="#cb40-2"></a><span class="fu">max</span>(x<span class="sc">$</span>counts[x<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 4025</code></pre>
+<pre><code>[1] 3798</code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
-<p>Using the <code>SIRCONN</code> model from exercise 1 (model_sir), remove the Delta variant from the model and add a masking tool called “mask_wearing” with transmission reduction = 0.3 and proportion of complying agents = 0.6. Simulate this scenario for 50 days and plot the model parameters and average reproductive number over time.</p>
+<p>Using the <code>SIRCONN</code> model from exercise 1 (model_sir), remove the Delta variant from the model and add a masking tool called “mask_wearing” with transmission reduction = 0.3 and proportion of complying agents = 0.6. Simulate this scenario for 50 days and plot the model parameters and average reproductive number over time. When running the model, set seed = 1912.</p>
 <p>After how many days does the number of infections peak in this simulation?<br>
 How many infections occur at the peak?</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -664,12 +637,12 @@ Tip
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -693,7 +666,7 @@ Solution
 <span id="cb42-14"><a href="#cb42-14"></a><span class="fu">add_tool</span>(model_sir, mask_wearing, <span class="fl">0.6</span>)</span>
 <span id="cb42-15"><a href="#cb42-15"></a></span>
 <span id="cb42-16"><a href="#cb42-16"></a><span class="co"># Running the model</span></span>
-<span id="cb42-17"><a href="#cb42-17"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-17"><a href="#cb42-17"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>_________________________________________________________________________
 |Running the model...
@@ -707,21 +680,32 @@ Solution
 <span id="cb44-5"><a href="#cb44-5"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
 <span id="cb44-6"><a href="#cb44-6"></a><span class="fu">plot</span>(model_sir)</span>
 <span id="cb44-7"><a href="#cb44-7"></a><span class="fu">plot</span>(repnum2, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in min(x): no non-missing arguments to min; returning Inf</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in max(x): no non-missing arguments to max; returning -Inf</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="part2_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="fu">par</span>(op)</span>
-<span id="cb45-2"><a href="#cb45-2"></a></span>
-<span id="cb45-3"><a href="#cb45-3"></a><span class="co"># Day of peak infections</span></span>
-<span id="cb45-4"><a href="#cb45-4"></a>y <span class="ot">&lt;-</span> <span class="fu">get_hist_total</span>(model_sir)</span>
-<span id="cb45-5"><a href="#cb45-5"></a><span class="fu">which.max</span>(y<span class="sc">$</span>counts[y<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>]) <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a><span class="co"># Day of peak infections</span></span>
+<span id="cb50-2"><a href="#cb50-2"></a>y <span class="ot">&lt;-</span> <span class="fu">get_hist_total</span>(model_sir)</span>
+<span id="cb50-3"><a href="#cb50-3"></a><span class="fu">which.max</span>(y<span class="sc">$</span>counts[y<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>]) <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 19</code></pre>
+<pre><code>[1] 0</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Number of infections on peak day</span></span>
-<span id="cb47-2"><a href="#cb47-2"></a><span class="fu">max</span>(y<span class="sc">$</span>counts[y<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="co"># Number of infections on peak day</span></span>
+<span id="cb52-2"><a href="#cb52-2"></a><span class="fu">max</span>(y<span class="sc">$</span>counts[y<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 3503</code></pre>
+<pre><code>[1] 1</code></pre>
 </div>
 </div>
 </div>
@@ -756,9 +740,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -770,7 +768,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -806,24 +821,128 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>

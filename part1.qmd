@@ -2,11 +2,11 @@
 title: "Part 1: Basic Modeling"
 ---
 
-**`epiworldR`** is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models \[ABM\]. Some key features of **`epiworldR`** are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)[^compartments]
+**`epiworldR`** is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models \[ABM\]. Some key features of **`epiworldR`** are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)[^1]
+
+[^1]: This feature is currently under development. The [repository of epiworld](https://github.com/UofUEpiBio/epiworld){target="_blank"} contains a branch with this feature.
 
 Let's start right away with an example!
-
-[^compartments]: This feature is currently under development. The [repository of epiworld](https://github.com/UofUEpiBio/epiworld){target="_blank"} contains a branch with this feature.
 
 ## Motivating Example
 
@@ -66,12 +66,12 @@ abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
 
 This example implements the following scenario:
 
-- The disease name is specified (COVID-19),
-- 100,000 agents are initialized,
-- the disease prevalence of 0.0001 is declared,
-- each agent will contact two others (contact_rate),
-- the probability of transmitting the disease for any given agent is 0.5, and
-- the probability of recovery is set to $\frac{1}{3}$.
+-   The disease name is specified (COVID-19),
+-   100,000 agents are initialized,
+-   the disease prevalence of 0.0001 is declared,
+-   each agent will contact two others (contact_rate),
+-   the probability of transmitting the disease for any given agent is 0.5, and
+-   the probability of recovery is set to $\frac{1}{3}$.
 
 To create this model on **`epiworldR`**, we use the `ModelSIRCONN()` function. From here, the example will take you through the basic features of **`epiworldR`**.
 
@@ -138,20 +138,17 @@ x <- plot(repnum, type="b")
 ```
 
 ## Exercise 1
-Create a SEIR model to simulate a COVID-19 outbreak for 100 days in a population 
-with initial prevalence = 0.01, infectiousness = 0.9, probability of recovery 
-= $\frac{1}{4}$, and incubation days = 4. Then plot the model parameters to 
-analyze changes in counts over time. When running the model, use seed = 1912. 
 
-To accomplish this for a SEIR model, you will need to add the model to a smallworld 
-population using the `agents_smallworld` function after initializing the model. From there,
-run the model and plot. Assume n = 10000, k = 5, d = FALSE, and p = .01.
+Create a SEIR model using the `ModelSEIR()` function (not `ModelSEIRCONN()`) to simulate a COVID-19 outbreak for 100 days in a population with initial prevalence = 0.01, infectiousness = 0.9, probability of recovery = $\frac{1}{4}$, and incubation days = 4. Then plot the model parameters to analyze changes in counts over time. When running the model, set seed = 1912.
 
-After how many days does the number of infections peak in this simulation?  
+To accomplish this for a SEIR model, you will need to add the model to a smallworld population using the `agents_smallworld` function after initializing the model. From there, run the model and plot. Assume n = 10000, k = 5, d = FALSE, and p = .01.
+
+After how many days does the number of infections peak in this simulation?\
 How many infections occur at the peak?
 
-:::{.callout-note collapse="true"}
+::: {.callout-note collapse="true"}
 ## Solution
+
 ```{r}
 # Initialize model
 model_seir <- ModelSEIR("COVID-19", 
@@ -186,10 +183,11 @@ max(x$counts[x$state == "Infected"])
 
 ## Exercise 2
 
-Plot the reproductive number of the simulated SEIR model over 100 days. 
+Plot the reproductive number of the simulated SEIR model over 100 days.
 
-:::{.callout-note collapse="true"}
+::: {.callout-note collapse="true"}
 ## Solution
+
 ```{r}
 repnum <- get_reproductive_number(model_seir)
 plot(repnum, type = 'b')
