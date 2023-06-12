@@ -237,6 +237,7 @@ numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001,
 contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ 
 for model initialization. Assume the Delta variant has a prob_infecting = 0.3,
 prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.  
+When running the model, use seed = 1912.
   
 After how many days does the number of infections peak in this simulation? 
 How many infections occur at the peak?
@@ -285,7 +286,7 @@ Using the `SIRCONN` model from exercise 1 (model_sir), remove the Delta variant
 from the model and add a masking tool called "mask_wearing" with transmission 
 reduction = 0.3 and proportion of complying agents = 0.6. Simulate this 
 scenario for 50 days and plot the model parameters and average reproductive number
-over time. 
+over time. When running the model, use seed = 1912.
 
 After how many days does the number of infections peak in this simulation?  
 How many infections occur at the peak?
@@ -314,7 +315,7 @@ mask_wearing <- tool(
 add_tool(model_sir, mask_wearing, 0.6)
 
 # Running the model
-run(model_sir, ndays = 50, seed = 1231)
+run(model_sir, ndays = 50, seed = 1912)
 
 # Reproductive number
 repnum2 <- get_reproductive_number(model_sir)

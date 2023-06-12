@@ -130,7 +130,7 @@ observe the average reproductive number over 100 simulations. Using a
 `run_multiple` simulation, what is the average reproductive number 
 over the course of the first 20 days? Use a `SEIRCONN` model with n = 10000,
 prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5, 
-incubation_days = 2, and prob_recovery = $\frac{1}{7}$.
+incubation_days = 2, and prob_recovery = $\frac{1}{7}$. 
 
 :::{.callout-tip collapse="true"}
 General Steps:  
