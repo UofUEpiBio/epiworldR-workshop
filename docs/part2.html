@@ -152,6 +152,9 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   <li class="nav-item">
     <a class="nav-link" href="./examples.html">Examples</a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./solutions.qmd">Exercise Solutions</a>
+  </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
@@ -216,16 +219,11 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Infected-Removed (SIR) (connected)
 Population size     : 100000
-Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
-Last run elapsed t  : 1.00s
-<<<<<<< HEAD
-Last run speed      : 4.02 million agents x day / second
-=======
-Last run speed      : 3.86 million agents x day / second
->>>>>>> 488ce4876c0d7a82dc170fb6e47f0beeed7135da
+Last run elapsed t  : 859.00ms
+Last run speed      : 5.82 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -280,19 +278,13 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Infected-Removed (SIR) (connected)
 Population size     : 100000
-Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 2
-Last run elapsed t  : 1.00s
-Total elapsed t     : 2.00s (2 runs)
-<<<<<<< HEAD
-Last run speed      : 3.95 million agents x day / second
-Average run speed   : 3.98 million agents x day / second
-=======
-Last run speed      : 3.43 million agents x day / second
-Average run speed   : 3.63 million agents x day / second
->>>>>>> 488ce4876c0d7a82dc170fb6e47f0beeed7135da
+Last run elapsed t  : 0.00s
+Total elapsed t     : 1.00s (2 runs)
+Last run speed      : 5.66 million agents x day / second
+Average run speed   : 5.74 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -439,7 +431,6 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 Population size     : 10000
-Agents' data loaded : yes (2 columns/features)
 Number of entities  : 0
 Days (duration)     : 0 (of 0)
 Number of variants  : 1
@@ -579,7 +570,8 @@ mean of x mean of y
 </div>
 <p>The table above shows that the model with comorbidities has fewer recovered agents than the model without comorbidities. Furthermore, the model with no comorbidities still has susceptible agents, which is not the case for the model with comorbidities.</p>
 </section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Using a <code>SIRCONN</code> model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span> for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and an initial prevalence = 0.001.</p>
+<p>Using a <code>SIRCONN</code> model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span> for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and an initial prevalence = 0.001.<br>
+When running the model, use seed = 1912.</p>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
 <div class="callout-note callout callout-style-default callout-captioned">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
@@ -645,7 +637,7 @@ Running the model...
 </div>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
-<p>Using the <code>SIRCONN</code> model from exercise 1 (model_sir), remove the Delta variant from the model and add a masking tool called “mask_wearing” with transmission reduction = 0.3 and proportion of complying agents = 0.6. Simulate this scenario for 50 days and plot the model parameters and average reproductive number over time.</p>
+<p>Using the <code>SIRCONN</code> model from exercise 1 (model_sir), remove the Delta variant from the model and add a masking tool called “mask_wearing” with transmission reduction = 0.3 and proportion of complying agents = 0.6. Simulate this scenario for 50 days and plot the model parameters and average reproductive number over time. When running the model, use seed = 1912.</p>
 <p>After how many days does the number of infections peak in this simulation?<br>
 How many infections occur at the peak?</p>
 <div class="callout-tip callout callout-style-default callout-captioned">
@@ -693,7 +685,7 @@ Solution
 <span id="cb42-14"><a href="#cb42-14"></a><span class="fu">add_tool</span>(model_sir, mask_wearing, <span class="fl">0.6</span>)</span>
 <span id="cb42-15"><a href="#cb42-15"></a></span>
 <span id="cb42-16"><a href="#cb42-16"></a><span class="co"># Running the model</span></span>
-<span id="cb42-17"><a href="#cb42-17"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-17"><a href="#cb42-17"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>_________________________________________________________________________
 |Running the model...
@@ -716,12 +708,12 @@ Solution
 <span id="cb45-4"><a href="#cb45-4"></a>y <span class="ot">&lt;-</span> <span class="fu">get_hist_total</span>(model_sir)</span>
 <span id="cb45-5"><a href="#cb45-5"></a><span class="fu">which.max</span>(y<span class="sc">$</span>counts[y<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>]) <span class="sc">-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 19</code></pre>
+<pre><code>[1] 22</code></pre>
 </div>
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a><span class="co"># Number of infections on peak day</span></span>
 <span id="cb47-2"><a href="#cb47-2"></a><span class="fu">max</span>(y<span class="sc">$</span>counts[y<span class="sc">$</span>state <span class="sc">==</span> <span class="st">"Infected"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>[1] 3503</code></pre>
+<pre><code>[1] 3397</code></pre>
 </div>
 </div>
 </div>

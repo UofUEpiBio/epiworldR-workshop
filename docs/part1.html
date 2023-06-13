@@ -152,6 +152,9 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   <li class="nav-item">
     <a class="nav-link" href="./examples.html">Examples</a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./solutions.qmd">Exercise Solutions</a>
+  </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
@@ -236,12 +239,11 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 Population size     : 100000
-Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 100 (of 100)
 Number of variants  : 2
-Last run elapsed t  : 5.00s
-Last run speed      : 1.81 million agents x day / second
+Last run elapsed t  : 4.00s
+Last run speed      : 2.47 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -326,7 +328,6 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Infected-Removed (SIR) (connected)
 Population size     : 100000
-Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 0 (of 0)
 Number of variants  : 1
@@ -365,12 +366,11 @@ SIMULATION STUDY
 
 Name of the model   : Susceptible-Infected-Removed (SIR) (connected)
 Population size     : 100000
-Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
-Last run elapsed t  : 1.00s
-Last run speed      : 4.18 million agents x day / second
+Last run elapsed t  : 858.00ms
+Last run speed      : 5.82 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -413,12 +413,12 @@ Transition Probabilities:
 [13] get_n_variants             get_name                  
 [15] get_ndays                  get_param                 
 [17] get_reproductive_number    get_states                
-[19] get_transition_probability get_transmissions         
-[21] print                      queuing_off               
-[23] queuing_on                 run_multiple              
-[25] run                        set_name                  
-[27] set_param                  size                      
-[29] verbose_off                verbose_on                
+[19] get_transition_probability print                     
+[21] queuing_off                queuing_on                
+[23] run_multiple               run                       
+[25] set_name                   set_param                 
+[27] size                       verbose_off               
+[29] verbose_on                
 see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
@@ -465,27 +465,12 @@ see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
 </section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Create a SEIR model to simulate a COVID-19 outbreak for 100 days in a population with initial prevalence = 0.01, infectiousness = 0.9, probability of recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and incubation days = 4. Then plot the model parameters to analyze changes in counts over time.</p>
+<p>Create a SEIR model to simulate a COVID-19 outbreak for 100 days in a population with initial prevalence = 0.01, infectiousness = 0.9, probability of recovery = <span class="math inline">\(\frac{1}{4}\)</span>, and incubation days = 4. Then plot the model parameters to analyze changes in counts over time. When running the model, use seed = 1912.</p>
+<p>To accomplish this for a SEIR model, you will need to add the model to a smallworld population using the <code>agents_smallworld</code> function after initializing the model. From there, run the model and plot. Assume n = 10000, k = 5, d = FALSE, and p = .01.</p>
 <p>After how many days does the number of infections peak in this simulation?<br>
 How many infections occur at the peak?</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-Tip
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>To accomplish this for a SEIR model, you will need to add the model to a smallworld population using the <code>agents_smallworld</code> function after initializing the model. From there, run the model and plot. Assume n = 10000, k = 5, d = FALSE, and p = .01.</p>
-</div>
-</div>
-</div>
 <div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -494,7 +479,7 @@ Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># Initialize model</span></span>
@@ -544,7 +529,7 @@ Running the model...
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
 <p>Plot the reproductive number of the simulated SEIR model over 100 days.</p>
 <div class="callout-note callout callout-style-default callout-captioned">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -553,7 +538,7 @@ Solution
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_seir)</span>

@@ -79,7 +79,7 @@ run(model_sir, ndays = 50, seed = 1231)
 repnum3 <- get_reproductive_number(model_sir)
 
 op <- par(mfrow = c(2,1))
-plot(model_sir)
+plot_incidence(model_sir)
 plot(repnum3, type="b")
 par(op)
 ```
@@ -242,44 +242,6 @@ When running the model, use seed = 1912.
 After how many days does the number of infections peak in this simulation? 
 How many infections occur at the peak?
 
-:::{.callout-note collapse="true"}
-## Solution
-```{r, fig.height=10}
-model_sir <- ModelSIRCONN(
-  name              = "Flu",
-  n                 = 10000, 
-  prevalence        = 0.0001, 
-  contact_rate      = 2.1,
-  prob_transmission = 0.5,
-  prob_recovery     = 1/4
-  )
-
-# Building the virus
-delta <- virus(name = "Delta", prob_infecting = .3, prob_recovery = 1/4)
-
-# Adding the virus to the model
-add_virus(model_sir, delta, .001)
-
-# Run the model
-run(model_sir, ndays = 75, seed = 1912)
-
-# Reproductive number 
-repnum <- get_reproductive_number(model_sir)
-
-# Plotting
-op <- par(mfrow = c(2,1))
-plot(model_sir)
-plot(repnum, type="b")
-par(op)
-
-# Day of peak infections 
-x <- get_hist_total(model_sir)
-which.max(x$counts[x$state == "Infected"]) - 1
-# Number of infections on peak day
-max(x$counts[x$state == "Infected"])
-```
-:::
-
 ## Exercise 2
 
 Using the `SIRCONN` model from exercise 1 (model_sir), remove the Delta variant
@@ -296,40 +258,4 @@ Masking only influences the transmission of a disease, thus transmission reducti
 = 0.3, and all other parameters of this tool will be 0.0. 
 :::
 
-:::{.callout-note collapse="true"}
-## Solution
-```{r, fig.height=10}
-# Removing Delta variant
-rm_virus(model_sir, 1)
 
-# Creating a tool
-mask_wearing <- tool(
-  name = "Mask",
-  susceptibility_reduction = 0.0,
-  transmission_reduction   = 0.3, # Only transmission
-  recovery_enhancer        = 0.0,
-  death_reduction          = 0.0
-)
-
-# Adding tool to the model
-add_tool(model_sir, mask_wearing, 0.6)
-
-# Running the model
-run(model_sir, ndays = 50, seed = 1912)
-
-# Reproductive number
-repnum2 <- get_reproductive_number(model_sir)
-
-# Plotting
-op <- par(mfrow = c(2,1))
-plot(model_sir)
-plot(repnum2, type="b")
-par(op)
-
-# Day of peak infections
-y <- get_hist_total(model_sir)
-which.max(y$counts[y$state == "Infected"]) - 1
-# Number of infections on peak day
-max(y$counts[y$state == "Infected"])
-```
-:::

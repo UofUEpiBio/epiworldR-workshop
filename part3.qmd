@@ -43,7 +43,7 @@ models. As the number of `epiworldR` simulations increases, the sample means of
 the reproductive number or model parameters, for example, will converge to their 
 corresponding population means.
 
-## Example: Simulating a SEIRCONN Model 50 Times
+## Example: Simulating a SEIRCONN Model 500 Times
 
 #### Setup and Running Model
 
@@ -83,13 +83,13 @@ and number of threads for parallel computing.
 ```{r saver-generation}
 
 # Running and printing
-run_multiple(model_seirconn, ndays = 50, nsims = 50, saver = saver, nthread = 2)
+run_multiple(model_seirconn, ndays = 50, nsims = 500, saver = saver, nthread = 2)
 ```
 
 #### Extracting Results
 
 Using the `run_multiple_get_results` function, extract the results from the 
-model object that was simulated 50 times for comparison across simulations.
+model object that was simulated 500 times for comparison across simulations.
 
 ```{r extracting-results}
 ans <- run_multiple_get_results(model_seirconn)
@@ -103,24 +103,24 @@ To plot the model parameters and reproductive numbers over time using boxplots,
 extract the results from the model object using `run_multiple_get_results`. 
 For this example, the dates are filtered to observe the model parameters over 
 the first 20 days. Notice each boxplot in the below table represents the 
-observed values from each of the 50 simulations for each date.
+observed values from each of the 500 simulations for each date.
 
 ```{r plotting-seirconn-epicurves}
-seirconn_50 <- run_multiple_get_results(model_seirconn)$total_hist
-seirconn_50 <- seirconn_50[seirconn_50$date <= 20,]
-plot(seirconn_50)
+seirconn_500 <- run_multiple_get_results(model_seirconn)$total_hist
+seirconn_500 <- seirconn_500[seirconn_500$date <= 20,]
+plot(seirconn_500)
 ```
 
 To view the a plot of the reproductive number over all 50 days for each of the 
-50 simulations, store the reproductive results to a new object using 
+500 simulations, store the reproductive results to a new object using 
 `run_multiple_get_results`, then plot using the `plot` function. Notice each 
 source exposure date displays a boxplot representing the distribution of 
-reproductive numbers across all 50 simulations for each date. As expected, the 
+reproductive numbers across all 500 simulations for each date. As expected, the 
 reproductive number on average, decreases over time.
 
 ```{r reproductive-number-plot}
-seirconn_50_r <- run_multiple_get_results(model_seirconn)$reproductive
-plot(seirconn_50_r)
+seirconn_500_r <- run_multiple_get_results(model_seirconn)$reproductive
+plot(seirconn_500_r)
 ```
 
 ## Exercise 1
@@ -140,31 +140,6 @@ General Steps:
 4. Plot average reproductive number  
 :::
 
-:::{.callout-note collapse="true"}
-## Solution 
-```{r}
-model_seirconn <- ModelSEIRCONN(
-  name              = "Flu",
-  n                 = 10000, 
-  prevalence        = 0.01, 
-  contact_rate      = 2,
-  prob_transmission = 0.5,
-  incubation_days   = 2,
-  prob_recovery     = 1/7
-)
-
-# Generating a saver
-saver <- make_saver("reproductive")
-
-# Running and printing
-run_multiple(model_seirconn, ndays = 20, nsims = 100, saver = saver, nthread = 2)
-
-# Plotting
-seirconn_100_r <- run_multiple_get_results(model_seirconn)$reproductive
-plot(seirconn_100_r)
-```
-:::
-
 ## Exercise 2
 Simulate a vaccine intervention for the previous exercise's Flu virus where 50% 
 of individuals in the population will receive the vaccine on day 10. How then, 
@@ -180,30 +155,3 @@ General Steps:
 4. Plot average reproductive number  
 :::
 
-:::{.callout-note collapse="true"}
-## Solution
-```{r}
-# Creating a tool
-epitool <- tool(
-  name = "Vaccine",
-  susceptibility_reduction = .9,
-  transmission_reduction = .5,
-  recovery_enhancer = .5, 
-  death_reduction = .9
-)
-
-# Adding a global action
-vaccine_day_10 <- globalaction_tool(epitool, .5, day = 10)
-add_global_action(model_seirconn, vaccine_day_10)
-
-# Generating a saver
-saver_2 <- make_saver("reproductive")
-# Running and printing
-run_multiple(model_seirconn, ndays = 20, nsims = 100, saver = saver_2, 
-             nthread = 2)
-
-# Plotting
-seirconn_100_r2 <- run_multiple_get_results(model_seirconn)$reproductive
-plot(seirconn_100_r2)
-```
-:::

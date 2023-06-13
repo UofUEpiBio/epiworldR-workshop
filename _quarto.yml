@@ -21,6 +21,7 @@ website:
         text: "Part 3"
       - href: examples.qmd
         text: "Examples"
+
     right: 
       - href: https://github.com/UofUEpiBio/epiworldR-workshop
         text: "GitHub"
