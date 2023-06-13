@@ -4,9 +4,10 @@ title: "Part 3: Multiple Runs"
 
 ## Introduction
 
-The purpose of the `run_multiple` function is to run a specified number of simulations using the same model object. That is, this function makes it possible to compare model results across several separate and repeated simulations. 
+The purpose of the `run_multiple` function is to run a specified number of simulations using the same model object. That is, this function makes it possible to compare model results across several separate and repeated simulations.
 
 ## The Principle Behind Multiple Runs
+
 ```{r, echo = FALSE}
 # Set the seed for reproducibility
 set.seed(123)
@@ -36,12 +37,7 @@ plot(sample_sizes, averages, type = "l", xlab = "Sample Size (n)",
      ylab = "Average", main = "Average vs. Sample Size")
 ```
 
-In statistics, the Law of Large Numbers ensures that as the sample size increases, 
-the sample mean (average) of a random variable will converge to the population mean.
-The same principle applies when using multiple runs to simulate epidemiological 
-models. As the number of `epiworldR` simulations increases, the sample means of 
-the reproductive number or model parameters, for example, will converge to their 
-corresponding population means.
+In statistics, the Law of Large Numbers ensures that as the sample size increases, the sample mean (average) of a random variable will converge to the population mean. The same principle applies when using multiple runs to simulate epidemiological models. As the number of `epiworldR` simulations increases, the sample means of the reproductive number or model parameters, for example, will converge to their corresponding population means.
 
 ## Example: Simulating a SEIRCONN Model 500 Times
 
@@ -64,10 +60,7 @@ model_seirconn <- ModelSEIRCONN(
 
 #### Generating a Saver
 
-Next, generate a saver for the purpose of extracting the `total_hist` and 
-`reproductive` information from the model object. Keep in mind that you can 
-generate a saver for any metric compatible with the `make_saver` function 
-(see details section of the `make_saver` help manual).
+Next, generate a saver for the purpose of extracting the `total_hist` and `reproductive` information from the model object. Keep in mind that you can generate a saver for any metric compatible with the `make_saver` function (see details section of the `make_saver` help manual).
 
 ```{r}
 # Generating a saver
@@ -76,9 +69,7 @@ saver <- make_saver("total_hist", "reproductive")
 
 #### Running the Simulation
 
-Now, use the `run_multiple` function with the model object, number of desired 
-days to run the simulation, number of simulations to run, the generated saver, 
-and number of threads for parallel computing.
+Now, use the `run_multiple` function with the model object, number of desired days to run the simulation, number of simulations to run, the generated saver, and number of threads for parallel computing.
 
 ```{r saver-generation}
 
@@ -125,33 +116,24 @@ plot(seirconn_500_r)
 
 ## Exercise 1
 
-Consider for this exercise that there is a flu outbreak. Your goal is to 
-observe the average reproductive number over 100 simulations. Using a 
-`run_multiple` simulation, what is the average reproductive number 
-over the course of the first 20 days? Use a `SEIRCONN` model with n = 10000,
-prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5, 
-incubation_days = 2, and prob_recovery = $\frac{1}{7}$. 
+Consider for this exercise that there is a flu outbreak. Your goal is to observe the average reproductive number over 100 simulations. Using a `run_multiple` simulation, what is the average reproductive number over the course of the first 20 days? Use a `SEIRCONN` model with n = 10000, prevalence = 0.01, contact_rate = 2, prob_transmission = 0.5, incubation_days = 2, and prob_recovery = $\frac{1}{7}$.
 
-:::{.callout-tip collapse="true"}
+::: {.callout-tip collapse="true"}
 General Steps:  
 1. Create `epiworldR_model`  
 2. Generate saver  
 3. Run `epiworldR_model`  
-4. Plot average reproductive number  
+4. Plot average reproductive number
 :::
 
 ## Exercise 2
-Simulate a vaccine intervention for the previous exercise's Flu virus where 50% 
-of individuals in the population will receive the vaccine on day 10. How then, 
-does the average reproductive number behave over 20 days and 100 simulations? 
-Assume the following parameters: susceptibility_reduction = .9, 
-transmission_reduction = .5, recovery_enhancer = .5, and death_reduction = .9. 
 
-:::{.callout-tip collapse="true"}
+Simulate a vaccine intervention for the previous exercise's Flu virus where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters: susceptibility_reduction = .9, transmission_reduction = .5, recovery_enhancer = .5, and death_reduction = .9.
+
+::: {.callout-tip collapse="true"}
 General Steps:  
 1. Create tool  
 2. Use `globalaction_tool` & `add_global_action`  
-3. Generate saver & `run_multiple` 
-4. Plot average reproductive number  
+3. Generate saver & `run_multiple` 4. Plot average reproductive number
 :::
 

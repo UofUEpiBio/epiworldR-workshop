@@ -2,9 +2,7 @@
 title: "Part 2: Adding Multiple Diseases & Tools"
 ---
 
-`epiworldR` supports multi-variant models, the below code gives instructions on 
-how to implement this. First, build a `SIRCONN` model for COVID-19, which new
-viruses and tools will then be added to. 
+`epiworldR` supports multi-variant models, the below code gives instructions on how to implement this. First, build a `SIRCONN` model for COVID-19, which new viruses and tools will then be added to.
 
 ## Adding Multiple Viruses & Variants
 
@@ -42,6 +40,7 @@ model_sir
 ```
 
 #### Plotting
+
 Plotting the previous model (including the flu) yields the following. Notice the presence of two reproductive numbers plotted over time. Variant 0 refers to COVID-19 and variant 1 refers to the flu.
 
 ```{r, fig.height=10}
@@ -83,24 +82,22 @@ plot_incidence(model_sir)
 plot(repnum3, type="b")
 par(op)
 ```
+
 ## Comorbidities Using Logit Functions
 
-Many times we want to model the effects of comorbidities on the
-disease. For example, we may want to model the effects of obesity on the
-probability of recovery from COVID-19. To do this, we can use the `virus_fun_logit()` function
-to model the probability of recovery. 
+Many times we want to model the effects of comorbidities on the disease. For example, we may want to model the effects of obesity on the probability of recovery from COVID-19. To do this, we can use the `virus_fun_logit()` function to model the probability of recovery.
 
 The steps are the following:
 
-1. Create the model
+1.  Create the model
 
-2. Assign the agents' data (a matrix with covariates/features) to the model.
+2.  Assign the agents' data (a matrix with covariates/features) to the model.
 
-3. Create a function to model the probability of recovery using the `virus_fun_logit()` function.
+3.  Create a function to model the probability of recovery using the `virus_fun_logit()` function.
 
-4. Add the function to the virus' recovery rate using `set_prob_recovery_fun()`.
+4.  Add the function to the virus' recovery rate using `set_prob_recovery_fun()`.
 
-5. Run the model.
+5.  Run the model.
 
 We start by creating two matching models, one with comorbidities and one without.
 
@@ -128,8 +125,7 @@ model_no_comor <- ModelSEIRCONN(
   )
 ```
 
-Next, we will create a matrix with the agents' data. As an example, we will
-create a matrix with two columns, one for the baseline and one for obesity.
+Next, we will create a matrix with the agents' data. As an example, we will create a matrix with two columns, one for the baseline and one for obesity.
 
 ```{r}
 # Artificial population with obesity
@@ -143,8 +139,7 @@ X <- cbind(
 head(X)
 ```
 
-Let's now link agents' data to the model. This will allow us to use the data to
-model the probability of recovery.
+Let's now link agents' data to the model. This will allow us to use the data to model the probability of recovery.
 
 ```{r}
 # Adding the data to the model
@@ -152,12 +147,11 @@ set_agents_data(model_comor, X)
 model_comor
 ```
 
-We then use `virus_fun_logit()` to create a function we can use to model the
-probability of recovery. The function takes in the following arguments:
+We then use `virus_fun_logit()` to create a function we can use to model the probability of recovery. The function takes in the following arguments:
 
-- `vars`: the variables to use in the model
-- `coefs`: the coefficients for each variable
-- `model`: the model object
+-   `vars`: the variables to use in the model
+-   `coefs`: the coefficients for each variable
+-   `model`: the model object
 
 ```{r}
 # Logit function 
@@ -174,8 +168,7 @@ lfun <- virus_fun_logit(
 lfun
 ```
 
-The next step is to set the probability of recovery function for the virus. We
-can do this using the `set_prob_recovery_fun()` function:
+The next step is to set the probability of recovery function for the virus. We can do this using the `set_prob_recovery_fun()` function:
 
 ```{r}
 # Setting the probability of recovery
@@ -203,8 +196,7 @@ plot_incidence(model_no_comor, main = "Without comorbidities")
 par(op)
 ```
 
-Let's also look at the states of the agents in the model using the `get_state()` and
-`get_agents()` functions.
+Let's also look at the states of the agents in the model using the `get_state()` and `get_agents()` functions.
 
 ```{r}
 states_comor <- sapply(1:size(model_comor), \(i) {
@@ -224,38 +216,24 @@ t.test(X[,2],
   )
 ```
 
-The table above shows that the model with comorbidities has fewer
-recovered agents than the model without comorbidities. Furthermore, the model
-with no comorbidities still has susceptible agents, which is not the case
-for the model with comorbidities.
+The table above shows that the model with comorbidities has fewer recovered agents than the model without comorbidities. Furthermore, the model with no comorbidities still has susceptible agents, which is not the case for the model with comorbidities.
 
 ## Exercise 1
 
-Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus 
-Delta variant to the model. Then plot the model parameters and reproductive 
-numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, 
-contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ 
-for model initialization. Assume the Delta variant has a prob_infecting = 0.3,
-prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.  
+Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.
 When running the model, use seed = 1912.
-  
-After how many days does the number of infections peak in this simulation? 
-How many infections occur at the peak?
+
+After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 
 ## Exercise 2
 
-Using the `SIRCONN` model from exercise 1 (model_sir), remove the Delta variant
-from the model and add a masking tool called "mask_wearing" with transmission 
-reduction = 0.3 and proportion of complying agents = 0.6. Simulate this 
-scenario for 50 days and plot the model parameters and average reproductive number
-over time. When running the model, use seed = 1912.
+Using the `SIRCONN` model from exercise 1 (model_sir), remove the Delta variant from the model and add a masking tool called "mask_wearing" with transmission reduction = 0.3 and proportion of complying agents = 0.6. Simulate this scenario for 50 days and plot the model parameters and average reproductive number over time. When running the model, set seed = 1912.
 
-After how many days does the number of infections peak in this simulation?  
+After how many days does the number of infections peak in this simulation?\
 How many infections occur at the peak?
 
-:::{.callout-tip collapse="true"}
-Masking only influences the transmission of a disease, thus transmission reduction 
-= 0.3, and all other parameters of this tool will be 0.0. 
+::: {.callout-tip collapse="true"}
+Masking only influences the transmission of a disease, thus transmission reduction = 0.3, and all other parameters of this tool will be 0.0.
 :::
 
 
