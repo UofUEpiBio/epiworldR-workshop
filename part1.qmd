@@ -124,13 +124,14 @@ plot(model_sirconn)
 
 As evident from the above plot, the SIR model constructed from **`epiworldR`** displays the changes in susceptible, infected, and recovered case counts over time (days). Notice after a certain amount of time, the curves flatten. Below, a table representation of the above plot is printed, complete with each state within the SIR model, date, and agent counts.
 
+::: {.callout-tip collapse="true"}
 ## Connected vs Non-connected Models
-
 The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where:
-- n = number of agents
+- n = number of agents  
 - k = number of ties in the small world network 
 - d = whether the graph is directed or not 
 - p = probability of rewiring
+:::
 
 ## Important Statistics
 
@@ -157,7 +158,7 @@ Create a SEIR model using the `ModelSEIR()` function (not `ModelSEIRCONN()`) to 
 
 To accomplish this for a SEIR model, you will need to add the model to a smallworld population using the `agents_smallworld()` function after initializing the model. From there, run the model and plot. Assume n = 10000, k = 5, d = FALSE, and p = .01.
 
-After how many days does the number of infections peak in this simulation?\
+After how many days does the number of infections peak in this simulation?
 How many infections occur at the peak?
 
 ## Exercise 2
