@@ -4,13 +4,11 @@ title: "Part 1: Basic Modeling"
 
 **`epiworldR`** is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models \[ABM\]. Some key features of **`epiworldR`** are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)[^1]
 
-## Agent-Based Modeling
-Agent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.
-
-Let's start right away with an example!
-
 [^1]: This feature is currently under development. The [repository of epiworld](https://github.com/UofUEpiBio/epiworld){target="_blank"} contains a branch with this feature.
 
+## Agent-Based Modeling
+
+Agent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.
 
 Let's start right away with an example!
 
@@ -126,11 +124,9 @@ As evident from the above plot, the SIR model constructed from **`epiworldR`** d
 
 ::: {.callout-tip collapse="true"}
 ## Connected vs Non-connected Models
-The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where:
-- n = number of agents  
-- k = number of ties in the small world network 
-- d = whether the graph is directed or not 
-- p = probability of rewiring
+
+The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where: - n = number of agents\
+- k = number of ties in the small world network - d = whether the graph is directed or not - p = probability of rewiring
 :::
 
 ## Important Statistics
@@ -154,14 +150,22 @@ x <- plot(repnum, type="b")
 
 ## Exercise 1
 
-Create a SEIR model using the `ModelSEIR()` function (not `ModelSEIRCONN()`) to simulate a COVID-19 outbreak for 100 days in a population with initial prevalence = 0.01, infectiousness = 0.9, probability of recovery = $\frac{1}{4}$, and incubation days = 4. Then plot the model parameters to analyze changes in counts over time. When running the model, set seed = 1912.
+Create a SEIR model using the `ModelSEIR()` function (not `ModelSEIRCONN()`) to simulate a COVID-19 outbreak for 100 days in a population with:\
+- prevalence = 0.01\
+- infectiousness = 0.9\
+- recovery = $\frac{1}{4}$\
+- incubation_days = 4
 
-To accomplish this for a SEIR model, you will need to add the model to a smallworld population using the `agents_smallworld()` function after initializing the model. From there, run the model and plot. Assume n = 10000, k = 5, d = FALSE, and p = .01.
+Then plot the model parameters to analyze changes in counts over time. When running the model, set seed = 1912.
 
-After how many days does the number of infections peak in this simulation?
-How many infections occur at the peak?
+To accomplish this for a SEIR model, you will need to add the model to a smallworld population using the `agents_smallworld()` function after initializing the model. From there, run the model and visualize. Assume:\
+- n = 10000\
+- k = 5\
+- d = FALSE\
+- p = .01
+
+After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 
 ## Exercise 2
 
-Plot the reproductive number of the simulated SEIR model over 100 days.
-
+Plot the reproductive number of the COVID-19 simulated SEIR model over 100 days.
