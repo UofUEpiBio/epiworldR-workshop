@@ -6,10 +6,6 @@ title: "Part 1: Basic Modeling"
 
 [^1]: This feature is currently under development. The [repository of epiworld](https://github.com/UofUEpiBio/epiworld){target="_blank"} contains a branch with this feature.
 
-## Agent-Based Modeling
-
-Agent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.
-
 Let's start right away with an example!
 
 ## Motivating Example
