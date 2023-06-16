@@ -149,6 +149,8 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
    
   <ul>
 <li><a href="#installation" id="toc-installation" class="nav-link active" data-scroll-target="#installation"><strong>Installation</strong></a></li>
+  <li><a href="#agent-based-modeling" id="toc-agent-based-modeling" class="nav-link" data-scroll-target="#agent-based-modeling">Agent-Based Modeling</a></li>
+  <li><a href="#terminology" id="toc-terminology" class="nav-link" data-scroll-target="#terminology">Terminology</a></li>
   <li><a href="#about-the-instructors" id="toc-about-the-instructors" class="nav-link" data-scroll-target="#about-the-instructors">About the instructors</a></li>
   </ul></nav>
     </div>
@@ -248,9 +250,21 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <span id="cb3-2"><a href="#cb3-2"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"UofUEpiBio/epiworldR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section><section id="agent-based-modeling" class="level2"><h2 class="anchored" data-anchor-id="agent-based-modeling">Agent-Based Modeling</h2>
+<p>Agent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.</p>
+</section><section id="terminology" class="level2"><h2 class="anchored" data-anchor-id="terminology">Terminology</h2>
+<p>epiworldR focuses heavily on epidemiological applications to social networking. Below are some common terms that will be used throughout.</p>
+<p>SEIR, SIR, SIS, etc.:<br>
+These are epidemiological models that are used to analyze the spread and dynamics of diseases in a population. These models are a combination or selection of the states susceptible, exposed, infected, and/or recovered, in which all individuals in a population can be categorized in.</p>
+<p>SEIR connected (SEIRCONN), SIR connected (SIRCONN), etc.:<br>
+These are epidemiological models that are similar to their above counterparts (SEIR, SIR, etc.), but with the assumption that each individual agent is connected to all other agents.</p>
+<p>Reproductive number:<br>
+The average number of secondary transmissions from one infected person. For example, a reproductive number of 2.0 indicates that one infected person transmits the disease to two other people in the population on average.</p>
+<p>Incidence:<br>
+The the occurrence of new cases of disease or injury in a population over a specified period of time. Specifically, daily incidence is computed in epiworldR.</p>
 </section><section id="about-the-instructors" class="level2"><h2 class="anchored" data-anchor-id="about-the-instructors">About the instructors</h2>
 <p>Dr.&nbsp;George G. Vega Yon is a Research Assistant Professor of Epidemiology at the Department of Internal Medicine at the University of Utah.</p>
-<p>Derek S. Meyer is a Research Assistant and M.Sc. student in Biostatistics at the Department of Internal Medicine at the University of Utah.</p>
+<p>Derek S. Meyer is a Research Assistant and M.Stat. student in Biostatistics at the Department of Internal Medicine at the University of Utah.</p>
 
 
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">

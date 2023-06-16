@@ -49,8 +49,8 @@ To use the `run_multiple` function in `epiworldR`, create your `epiworldR_model`
 library(epiworldR)
 model_seirconn <- ModelSEIRCONN(
   name              = "Measles",
-  n                 = 10000, 
-  prevalence        = 0.0001, 
+  n                 = 5000, 
+  prevalence        = 0.001, 
   contact_rate      = 2,
   prob_transmission = 0.5,
   incubation_days   = 7,
@@ -73,7 +73,7 @@ Now, use the `run_multiple` function with the model object, number of desired da
 
 ```{r saver-generation}
 # Running and printing
-run_multiple(model_seirconn, ndays = 50, nsims = 500, saver = saver, nthread = 2)
+run_multiple(model_seirconn, ndays = 50, nsims = 500, saver = saver, nthread = 4)
 ```
 
 #### Extracting Results

@@ -6,27 +6,40 @@ Create a diffusion network model which simulates the diffusion of a rumor
 throughout the UKfaculty population of size n = 81. Use set.seed(2223).  
 ```{r}
 set.seed(2223)
-n <- 1000
 
 # First, load in the dataset
-library(igraphdata)
+library(igraph)
 data(UKfaculty, package="igraphdata")
+n <- igraph::vcount(UKfaculty)
 
 # Turning the network into an edgelist
 library(epiworldR)
-UKfaculty <- as_edgelist(UKfaculty)
+UKfaculty_vertex_data <- as_data_frame(UKfaculty, what = c("vertices"))
+UKfaculty_matrix <- as.matrix(UKfaculty_vertex_data)
+UKfaculty_edgelist <- as_edgelist(UKfaculty)
+library(netplot)
+nplot(UKfaculty)
 
+# Simulate a 2 col numeric matrix and use for data in next function
 # Creating the diffusion model
 adopt_rumor <- ModelDiffNet(
   "Rumor",
-  prevalence = .01,
+  prevalence = .05,
   prob_adopt = .1,
-  data       = UKfaculty,
+  data       = UKfaculty_matrix,
   params     = c(1, 4)
 )
 
-# Simulating a population from smallworld
-agents_smallworld(adopt_rumor, n, 8, FALSE, .01)
+g <- matrix(runif(n ^ 2) < .01, nrow = n)
+diag(g) <- FALSE
+el <- which(g, arr.ind = TRUE) - 1L
+
+# Simulating a population from smallworld - Use agents_from_edgelist
+agents_from_edgelist(adopt_rumor,
+                     source = el[,1],
+                     target = el[,2],
+                     size = n, 
+                     directed = TRUE)
 
 # Running the model for 50 steps
 run(adopt_rumor, 50)

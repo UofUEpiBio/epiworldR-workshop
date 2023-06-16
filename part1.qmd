@@ -121,8 +121,11 @@ As evident from the above plot, the SIR model constructed from **`epiworldR`** d
 ::: {.callout-tip collapse="true"}
 ## Connected vs Non-connected Models
 
-The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where: - n = number of agents\
-- k = number of ties in the small world network - d = whether the graph is directed or not - p = probability of rewiring
+The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where:   
+- n = number of agents\
+- k = number of ties in the small world network  
+- d = whether the graph is directed or not  
+- p = probability of rewiring
 :::
 
 ## Important Statistics

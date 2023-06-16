@@ -220,8 +220,7 @@ The table above shows that the model with comorbidities has fewer recovered agen
 
 ## Exercise 1
 
-Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001.
-When running the model, use seed = 1912.
+Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001. When running the model, use seed = 1912.
 
 After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 
@@ -235,5 +234,3 @@ How many infections occur at the peak?
 ::: {.callout-tip collapse="true"}
 Masking only influences the transmission of a disease, thus transmission reduction = 0.3, and all other parameters of this tool will be 0.0.
 :::
-
-
