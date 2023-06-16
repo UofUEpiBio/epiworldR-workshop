@@ -229,13 +229,19 @@ capability.
 Goal: Create a diffusion network model which simulates the spread of a rumor 
 throughout the UKfaculty population of size n = 81.  
 
+```{r, echo = FALSE}
+library(igraph)
+library(netplot)
+```
+
+
 ```{r}
 # First, load in the dataset using the igraph library
-library(igraph)
+# library(igraph)
 data(UKfaculty, package="igraphdata")
 
 # Visualizing the Network
-library(netplot)
+# library(netplot)
 nplot(UKfaculty)
 ```
 The above plot visualizes the UK faculty network of size 81 and its interaction 
