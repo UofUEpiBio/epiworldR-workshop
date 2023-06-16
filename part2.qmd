@@ -229,7 +229,7 @@ capability.
 Goal: Create a diffusion network model which simulates the spread of a rumor 
 throughout the UKfaculty population of size n = 81.  
 
-```{r, echo = FALSE}
+```{r, include = FALSE}
 library(igraph)
 library(netplot)
 ```
