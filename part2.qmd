@@ -10,11 +10,11 @@ title: "Part 2: Adding Multiple Diseases & Tools"
 library(epiworldR)
 model_sir <- ModelSIRCONN(
   name              = "COVID-19",
-  n                 = 100000, 
+  n                 = 50000, 
   prevalence        = 0.0001, 
   contact_rate      = 2,
-  prob_transmission = 0.5,
-  prob_recovery     = 1/3
+  transmission_rate = 0.5,
+  recovery_rate     = 1/3
   )
 run(model_sir, ndays = 50, seed = 1912)
 model_sir
@@ -22,7 +22,7 @@ model_sir
 
 #### Designing the Virus
 
-Using the `virus()` function, assign a name the new virus/variant with its corresponding probability of infecting any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the `add_virus()` function by calling the original `epiworldR` model object, the new virus, and the new virus' prevalence (which is set to 0.0001 in this example).
+Using the `virus()` function, assign a name the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the `add_virus()` function by calling the original `epiworldR` model object, the new virus, and the new virus' prevalence (which is set to 0.0001 in this example).
 
 ```{r}
 # Building the virus
@@ -108,9 +108,9 @@ model_comor <- ModelSEIRCONN(
   n                 = 10000, 
   prevalence        = 0.001, 
   contact_rate      = 2.1,
-  prob_transmission = 0.5,
+  transmission_rate = 0.5,
   incubation_days   = 7,
-  prob_recovery     = 1/4
+  recovery_rate     = 1/4
   )
 
 # Without comorbidities
@@ -119,9 +119,9 @@ model_no_comor <- ModelSEIRCONN(
   n                 = 10000, 
   prevalence        = 0.001, 
   contact_rate      = 2.1,
-  prob_transmission = 0.5,
+  transmission_rate = 0.5,
   incubation_days   = 7,
-  prob_recovery     = 1/4
+  recovery_rate     = 1/4
   )
 ```
 
@@ -218,9 +218,72 @@ t.test(X[,2],
 
 The table above shows that the model with comorbidities has fewer recovered agents than the model without comorbidities. Furthermore, the model with no comorbidities still has susceptible agents, which is not the case for the model with comorbidities.
 
+## Network Diffusion
+
+epiworldR also supports diffusion networks to simulate the spread of ideas or 
+rumors throughout a population, for example. The below example demonstrates this 
+capability. 
+
+#### Example
+
+Goal: Create a diffusion network model which simulates the spread of a rumor 
+throughout the UKfaculty population of size n = 81.  
+
+```{r}
+# First, load in the dataset using the igraph library
+library(igraph)
+data(UKfaculty, package="igraphdata")
+
+# Visualizing the Network
+library(netplot)
+nplot(UKfaculty)
+```
+The above plot visualizes the UK faculty network of size 81 and its interaction 
+patterns. 
+
+```{r}
+set.seed(2223)
+
+# Turning the network into an edgelist
+UKfaculty_vertex_data <- as_data_frame(UKfaculty, what = c("vertices"))
+UKfaculty_matrix <- as.matrix(UKfaculty_vertex_data)
+UKfaculty_edgelist <- as_edgelist(UKfaculty)
+
+# Simulate a 2 column numeric matrix and use for data in ModelDiffNet
+# Creating the diffusion model
+library(epiworldR)
+adopt_rumor <- ModelDiffNet(
+  "Rumor",
+  prevalence = .08,
+  prob_adopt = .1,
+  data       = UKfaculty_matrix,
+  params     = c(1, 4)
+)
+
+n <- igraph::vcount(UKfaculty)
+g <- matrix(runif(n ^ 2) < .01, nrow = n)
+diag(g) <- FALSE
+el <- which(g, arr.ind = TRUE) - 1L
+
+# Simulating a population from smallworld - Use agents_from_edgelist
+agents_from_edgelist(adopt_rumor,
+                     source = el[,1],
+                     target = el[,2],
+                     size = n, 
+                     directed = TRUE)
+
+# Running the model for 50 steps
+run(adopt_rumor, 50)
+
+# Plotting the model
+plot(adopt_rumor)
+```
+The number of rumor-adopters steadily increases over time as the number of rumor
+non-adopters decreases, an expected result when considering a social network. 
+
 ## Exercise 1
 
-Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, prob_transmission = 0.5, and prob_recovery = $\frac{1}{4}$ for model initialization. Assume the Delta variant has a prob_infecting = 0.3, prob_recovery = $\frac{1}{4}$, and an initial prevalence = 0.001. When running the model, use seed = 1912.
+Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, transmission_rate = 0.5, and recovery_rate = $\frac{1}{4}$ for model initialization. Assume the Delta variant has a prob_infecting = 0.3, recovery_rate = $\frac{1}{4}$, and an initial prevalence = 0.001. When running the model, use seed = 1912.
 
 After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 

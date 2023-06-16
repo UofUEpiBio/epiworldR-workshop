@@ -52,9 +52,9 @@ model_seirconn <- ModelSEIRCONN(
   n                 = 5000, 
   prevalence        = 0.001, 
   contact_rate      = 2,
-  prob_transmission = 0.5,
+  transmission_rate = 0.5,
   incubation_days   = 7,
-  prob_recovery     = 1/7
+  recovery_rate     = 1/7
   )
 ```
 
@@ -109,9 +109,9 @@ Consider for this exercise that there is a Hepatitis A outbreak. Your goal is to
 - n = 10000\
 - prevalence = 0.01\
 - contact_rate = 2\
-- prob_transmission = 0.5\
+- transmission_rate = 0.5\
 - incubation_days = 2\
-- prob_recovery = $\frac{1}{7}$
+- recovery_rate = $\frac{1}{7}$
 
 ::: {.callout-tip collapse="true"}
 General Steps:\
