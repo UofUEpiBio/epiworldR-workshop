@@ -133,5 +133,6 @@ Simulate a vaccine intervention for the previous exercise's Hepatitis A virus ou
 General Steps:\
 1. Create tool\
 2. Use `globalaction_tool` & `add_global_action`\
-3. Generate saver & `run_multiple` 4. Plot average reproductive number
+3. Generate saver & `run_multiple`  
+4. Plot average reproductive number
 :::
