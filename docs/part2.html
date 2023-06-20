@@ -219,7 +219,7 @@ The final distribution is: 3364 Susceptible, 0 Infected, and 46636 Recovered.</c
 </div>
 </div>
 <section id="designing-the-virus" class="level4"><h4 class="anchored" data-anchor-id="designing-the-virus">Designing the Virus</h4>
-<p>Using the <code>virus()</code> function, assign a name the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the <code>add_virus()</code> function by calling the original <code>epiworldR</code> model object, the new virus, and the new virus’ prevalence (which is set to 0.0001 in this example).</p>
+<p>Using the <code>virus()</code> function, assign a name to the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the <code>add_virus()</code> function by calling the original <code>epiworldR</code> model object, the new virus, and the new virus’ prevalence (which is set to 0.0001 in this example).</p>
 <div class="cell">
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Building the virus</span></span>
 <span id="cb5-2"><a href="#cb5-2"></a>flu <span class="ot">&lt;-</span> <span class="fu">virus</span>(<span class="at">name =</span> <span class="st">"Flu"</span>, <span class="at">prob_infecting =</span> .<span class="dv">3</span>)</span>
@@ -261,7 +261,7 @@ The final distribution is: 3264 Susceptible, 4 Infected, and 46732 Recovered.</c
 </details>
 </div>
 </section></section><section id="using-tools" class="level2"><h2 class="anchored" data-anchor-id="using-tools">Using tools</h2>
-<p>Now, the implementation of tools to fight any viruses and variants in the model will be demonstrated. First, for simplicity, remove the flu virus from the <code>SIR</code> model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the <code>tool()</code> function. These parameters include the tool’s name, any reduction in probabilities for the <code>SIR</code> model parameters, and increased probability of recovery option. To add the tool to the <code>SIR</code> model, use the <code>add_tool()</code> function with the <code>SIR</code> model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.</p>
+<p>Now, the implementation of tools to fight any viruses and variants in the model will be demonstrated. First, remove the flu virus from the <code>SIRCONN</code> model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the <code>tool()</code> function. These parameters include the tool’s name, any reduction in probabilities for the <code>SIRCONN</code> model parameters, and increased probability of recovery option. To add the tool to the <code>SIRCONN</code> model, use the <code>add_tool()</code> function with the <code>SIRCONN</code> model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.</p>
 <div class="cell">
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Removing the flu virus from the model</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a><span class="fu">rm_virus</span>(model_sir, <span class="dv">1</span>)</span>
@@ -535,7 +535,17 @@ mean of x mean of y
 </div>
 <p>The number of rumor-adopters steadily increases over time as the number of rumor non-adopters decreases, an expected result when considering a social network.</p>
 </section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Using a <code>SIRCONN</code> model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses. Assume n = 10000, prevalence = 0.0001, contact_rate = 2.1, transmission_rate = 0.5, and recovery_rate = <span class="math inline">\(\frac{1}{4}\)</span> for model initialization. Assume the Delta variant has a prob_infecting = 0.3, recovery_rate = <span class="math inline">\(\frac{1}{4}\)</span>, and an initial prevalence = 0.001. When running the model, use seed = 1912.</p>
+<p>Using a <code>SIRCONN</code> model to simulate the Flu for 75 days, add the Coronavirus Delta variant to the model. Then plot the model parameters and reproductive numbers over time for both viruses.</p>
+<p>Assume the following for model initialization:<br>
+n = 10000<br>
+prevalence = 0.0001<br>
+contact_rate = 2.1<br>
+transmission_rate = 0.5<br>
+recovery_rate = <span class="math inline">\(\frac{1}{4}\)</span></p>
+<p>Assume the Delta variant has: prob_infecting = 0.3<br>
+recovery_rate = <span class="math inline">\(\frac{1}{4}\)</span><br>
+prevalence = 0.001<br>
+When running the model, use seed = 1912</p>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
 <p>Using the <code>SIRCONN</code> model from exercise 1 (model_sir), remove the Delta variant from the model and add a masking tool called “mask_wearing” with transmission reduction = 0.3 and proportion of complying agents = 0.6. Simulate this scenario for 50 days and plot the model parameters and average reproductive number over time. When running the model, set seed = 1912.</p>

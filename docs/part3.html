@@ -218,7 +218,8 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <p>Next, generate a saver for the purpose of extracting the <code>total_hist</code> and <code>reproductive</code> information from the model object. Keep in mind that you can generate a saver for any metric compatible with the <code>make_saver</code> function (see details section of the <code>make_saver</code> help manual).</p>
 <div class="cell">
 <details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Generating a saver</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># ?make_saver</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="running-the-simulation" class="level4"><h4 class="anchored" data-anchor-id="running-the-simulation">Running the Simulation</h4>
@@ -237,8 +238,7 @@ _________________________________________________________________________
 </section><section id="extracting-results" class="level4"><h4 class="anchored" data-anchor-id="extracting-results">Extracting Results</h4>
 <p>Using the <code>run_multiple_get_results</code> function, extract the results from the model object that was simulated 500 times for comparison across simulations.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>ans <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(model_seirconn)</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">head</span>(ans<span class="sc">$</span>total_hist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">head</span>(<span class="fu">run_multiple_get_results</span>(model_seirconn)<span class="sc">$</span>total_hist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  sim_num date nviruses       state counts
 1       1    0        1 Susceptible   4995
@@ -248,7 +248,7 @@ _________________________________________________________________________
 5       1    1        1 Susceptible   4995
 6       1    1        1     Exposed      5</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">head</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">head</span>(<span class="fu">run_multiple_get_results</span>(model_seirconn)<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  sim_num virus_id   virus source source_exposure_date rt
 1       1        0 Measles    440                   50  0
@@ -306,7 +306,7 @@ Tip
 </div>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
-<p>Simulate a vaccine intervention for the previous exercise’s Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:<br>
+<p>Using the same <code>SEIRCONN</code> model from exercise 1, simulate a vaccine intervention for the previous exercise’s Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:<br>
 - susceptibility_reduction = .9<br>
 - transmission_reduction = .5<br>
 - recovery_enhancer = .5<br>

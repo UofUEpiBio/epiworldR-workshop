@@ -64,6 +64,7 @@ Next, generate a saver for the purpose of extracting the `total_hist` and `repro
 
 ```{r}
 # Generating a saver
+# ?make_saver
 saver <- make_saver("total_hist", "reproductive")
 ```
 
@@ -81,9 +82,8 @@ run_multiple(model_seirconn, ndays = 50, nsims = 500, saver = saver, nthread = 4
 Using the `run_multiple_get_results` function, extract the results from the model object that was simulated 500 times for comparison across simulations.
 
 ```{r extracting-results}
-ans <- run_multiple_get_results(model_seirconn)
-head(ans$total_hist)
-head(ans$reproductive)
+head(run_multiple_get_results(model_seirconn)$total_hist)
+head(run_multiple_get_results(model_seirconn)$reproductive)
 ```
 
 #### Plotting
@@ -123,7 +123,7 @@ General Steps:\
 
 ## Exercise 2
 
-Simulate a vaccine intervention for the previous exercise's Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:\
+Using the same `SEIRCONN` model from exercise 1, simulate a vaccine intervention for the previous exercise's Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:\
 - susceptibility_reduction = .9\
 - transmission_reduction = .5\
 - recovery_enhancer = .5\
@@ -134,5 +134,5 @@ General Steps:\
 1. Create tool\
 2. Use `globalaction_tool` & `add_global_action`\
 3. Generate saver & `run_multiple`  
-4. Plot average reproductive number
+4. Plot average reproductive number  
 :::
