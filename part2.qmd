@@ -298,7 +298,7 @@ contact_rate = 2.1
 transmission_rate = 0.5  
 recovery_rate = $\frac{1}{4}$  
   
-Assume the Delta variant has: 
+Assume the Delta variant has:  
 prob_infecting = 0.3  
 recovery_rate = $\frac{1}{4}$  
 prevalence = 0.001  
