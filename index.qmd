@@ -15,7 +15,7 @@ library(epiworldR)
 # Creating a model
 mymodel <- ModelSEIRCONN(
   name = "Nasty virus", n = 10000, prevalence = .001, contact_rate = 4,
-  prob_transmission = .4, incubation_days = 7, prob_recovery = 1/7
+  transmission_rate = .4, incubation_days = 7, recovery_rate = 1/7
 ) |> verbose_off() 
 
 # Adding a virus
@@ -60,8 +60,8 @@ The [**`epiworldR`**](https://uofuepibio.github.io/epiworldR){target="_blank"} R
 sir <- ModelSIR(
   name           = "COVID-19",
   prevalence     = .01,
-  infectiousness = .5,
-  recovery       = .5
+  transmission_rate = .5,
+  recovery_rate       = .5
   ) |>
     # Adding a Small world population 
     agents_smallworld(n = 500, k = 10, d = FALSE, p = .01) |>
@@ -81,6 +81,14 @@ nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
 ```
 :::
 
+## Schedule
+Setup  (10 min)  
+Part 1 (50 min)  
+Break  (10 min)  
+Part 2 (50 min)  
+Break  (10 min)  
+Part 3 (50 min)  
+ 
 ## **Installation**
 
 You can install the development version of epiworldR from [GitHub](https://github.com/UofUEpiBio/epiworldR) with:
