@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.298">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>epiworldR - Sunbelt 2023 Workshop - Examples</title>
 <style>
@@ -205,8 +205,8 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of variants  : 1
-Last run elapsed t  : 129.00ms
-Last run speed      : 38.63 million agents x day / second
+Last run elapsed t  : 517.00ms
+Last run speed      : 9.65 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -272,8 +272,8 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 100 (of 100)
 Number of variants  : 1
-Last run elapsed t  : 25.00ms
-Last run speed      : 39.52 million agents x day / second
+Last run elapsed t  : 206.00ms
+Last run speed      : 4.84 million agents x day / second
 Rewiring            : off
 
 Global actions:
@@ -292,15 +292,15 @@ Model parameters:
  - Prob. Transmission   : 0.6000
 
 Distribution of the population at time 100:
-  - (0) Susceptible :  9900 -&gt; 69
+  - (0) Susceptible :  9900 -&gt; 91
   - (1) Exposed     :   100 -&gt; 0
   - (2) Infected    :     0 -&gt; 0
-  - (3) Recovered   :     0 -&gt; 9931
+  - (3) Recovered   :     0 -&gt; 9909
 
 Transition Probabilities:
- - Susceptible  0.95  0.05  0.00  0.00
- - Exposed      0.00  0.86  0.14  0.00
- - Infected     0.00  0.00  0.48  0.52
+ - Susceptible  0.96  0.04  0.00  0.00
+ - Exposed      0.00  0.85  0.15  0.00
+ - Infected     0.00  0.00  0.49  0.51
  - Recovered    0.00  0.00  0.00  1.00</code></pre>
 </div>
 </div>
@@ -404,8 +404,11 @@ Agent: 9, state: Recovered (2), Nvirus: 0, NTools: 0, NNeigh: 8
 <span id="cb21-2"><a href="#cb21-2"></a>net <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(sir)</span>
 <span id="cb21-3"><a href="#cb21-3"></a></span>
 <span id="cb21-4"><a href="#cb21-4"></a><span class="do">## Plotting</span></span>
-<span id="cb21-5"><a href="#cb21-5"></a><span class="fu">library</span>(netplot)</span>
-<span id="cb21-6"><a href="#cb21-6"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="fu">library</span>(netplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: grid</code></pre>
+</div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'igraph'</code></pre>
@@ -425,59 +428,59 @@ Attaching package: 'igraph'</code></pre>
 
     union</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>x <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(<span class="fu">as.matrix</span>(net[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb26-2"><a href="#cb26-2"></a></span>
-<span id="cb26-3"><a href="#cb26-3"></a><span class="fu">nplot</span>(x, <span class="at">edge.curvature =</span> <span class="dv">0</span>, <span class="at">edge.color =</span> <span class="st">"gray"</span>, <span class="at">skip.vertex=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>x <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(<span class="fu">as.matrix</span>(net[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb28-2"><a href="#cb28-2"></a></span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="fu">nplot</span>(x, <span class="at">edge.curvature =</span> <span class="dv">0</span>, <span class="at">edge.color =</span> <span class="st">"gray"</span>, <span class="at">skip.vertex=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section><section id="multiple-simulations" class="level2"><h2 class="anchored" data-anchor-id="multiple-simulations">Multiple Simulations</h2>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
-<span id="cb27-2"><a href="#cb27-2"></a>  <span class="at">name =</span> <span class="st">"COVID-19"</span>,</span>
-<span id="cb27-3"><a href="#cb27-3"></a>  <span class="at">prevalence =</span> <span class="fl">0.01</span>,</span>
-<span id="cb27-4"><a href="#cb27-4"></a>  <span class="at">n =</span> <span class="dv">1000</span>,</span>
-<span id="cb27-5"><a href="#cb27-5"></a>  <span class="at">contact_rate =</span> <span class="dv">2</span>,</span>
-<span id="cb27-6"><a href="#cb27-6"></a>  <span class="at">prob_transmission =</span> <span class="fl">0.9</span>, <span class="at">prob_recovery =</span> <span class="fl">0.1</span></span>
-<span id="cb27-7"><a href="#cb27-7"></a>  )</span>
-<span id="cb27-8"><a href="#cb27-8"></a></span>
-<span id="cb27-9"><a href="#cb27-9"></a><span class="do">## Generating a saver</span></span>
-<span id="cb27-10"><a href="#cb27-10"></a>saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span>
-<span id="cb27-11"><a href="#cb27-11"></a></span>
-<span id="cb27-12"><a href="#cb27-12"></a><span class="do">## Running and printing</span></span>
-<span id="cb27-13"><a href="#cb27-13"></a><span class="fu">run_multiple</span>(model_sir, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">nsims =</span> <span class="dv">50</span>, <span class="at">saver =</span> saver, <span class="at">nthread =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
+<span id="cb29-2"><a href="#cb29-2"></a>  <span class="at">name =</span> <span class="st">"COVID-19"</span>,</span>
+<span id="cb29-3"><a href="#cb29-3"></a>  <span class="at">prevalence =</span> <span class="fl">0.01</span>,</span>
+<span id="cb29-4"><a href="#cb29-4"></a>  <span class="at">n =</span> <span class="dv">1000</span>,</span>
+<span id="cb29-5"><a href="#cb29-5"></a>  <span class="at">contact_rate =</span> <span class="dv">2</span>,</span>
+<span id="cb29-6"><a href="#cb29-6"></a>  <span class="at">prob_transmission =</span> <span class="fl">0.9</span>, <span class="at">prob_recovery =</span> <span class="fl">0.1</span></span>
+<span id="cb29-7"><a href="#cb29-7"></a>  )</span>
+<span id="cb29-8"><a href="#cb29-8"></a></span>
+<span id="cb29-9"><a href="#cb29-9"></a><span class="do">## Generating a saver</span></span>
+<span id="cb29-10"><a href="#cb29-10"></a>saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span>
+<span id="cb29-11"><a href="#cb29-11"></a></span>
+<span id="cb29-12"><a href="#cb29-12"></a><span class="do">## Running and printing</span></span>
+<span id="cb29-13"><a href="#cb29-13"></a><span class="fu">run_multiple</span>(model_sir, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">nsims =</span> <span class="dv">50</span>, <span class="at">saver =</span> saver, <span class="at">nthread =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>Starting multiple runs (50)
+<pre><code>Starting multiple runs (50) using 2 thread(s)
 _________________________________________________________________________
 _________________________________________________________________________
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
  done.</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="do">## Retrieving the results</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>ans <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(model_sir)</span>
-<span id="cb29-3"><a href="#cb29-3"></a></span>
-<span id="cb29-4"><a href="#cb29-4"></a><span class="fu">head</span>(ans<span class="sc">$</span>total_hist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="do">## Retrieving the results</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>ans <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(model_sir)</span>
+<span id="cb31-3"><a href="#cb31-3"></a></span>
+<span id="cb31-4"><a href="#cb31-4"></a><span class="fu">head</span>(ans<span class="sc">$</span>total_hist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>  sim_num date nvariants       state counts
-1       1    0         1 Susceptible    990
-2       1    0         1    Infected     10
-3       1    0         1   Recovered      0
-4       1    1         1 Susceptible    980
-5       1    1         1    Infected     18
-6       1    1         1   Recovered      2</code></pre>
+<pre><code>  sim_num thread date nvariants       state counts
+1       1      0    0         1 Susceptible    990
+2       1      0    0         1    Infected     10
+3       1      0    0         1   Recovered      0
+4       1      0    1         1 Susceptible    974
+5       1      0    1         1    Infected     25
+6       1      0    1         1   Recovered      1</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">head</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">head</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>  sim_num variant source source_exposure_date rt
-1       1       0    479                   10  0
-2       1       0    644                   10  0
-3       1       0    647                   10  0
-4       1       0    268                    9  0
-5       1       0    369                    9  0
-6       1       0    461                    9  0</code></pre>
+<pre><code>  sim_num thread variant source source_exposure_date rt
+1       1      0       0    767                   11  0
+2       1      0       0    835                   10  0
+3       1      0       0    466                    9  0
+4       1      0       0    612                    9  0
+5       1      0       0    793                    9  0
+6       1      0       0     20                    8  0</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">plot</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">plot</span>(ans<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <p><img src="examples_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>

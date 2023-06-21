@@ -17,7 +17,7 @@ library(epiworldR)
 # Create a model
 model <- ModelSEIRCONN(
   name              = "COVID-19",
-  n                 = 50000, 
+  n                 = 20000, 
   prevalence        = 0.0001, 
   contact_rate      = 4,
   incubation_days   = 7,
@@ -29,18 +29,22 @@ model <- ModelSEIRCONN(
   add_virus(virus("Flu", 0.5, 1/4), .0001) |>
 
   # Individuals wear a mask
-  add_tool(tool("Mask", 0.2, 0.3, 0, 0), .3) |>
+  add_tool(tool("Mask", 0.2, 0.3, 0, 0), .3)
 
-  # Adding an intervention on day 20 (Vaccines)
-  add_global_action(globalaction_tool(
-    tool("Vaccine", .9, .9, .9, 0),
-    prob = .7,
-    day = 20
-    ))
+# Creating a vaccine to add on day 20
+vaccine <- tool("Vaccine", .9, .9, .9, 0)
+
+# Adding an intervention on day 20 (Vaccines)
+add_global_action(model, globalaction_tool(
+  vaccine,
+  prob = .7,
+  day = 20
+  ))
 ```
 
 ```{r}
 #| label: run-model
+#| eval: true
 # Run the model
 run(model, ndays = 100, seed = 1912)
 model
@@ -49,6 +53,7 @@ model
 ```{r}
 #| label: plot-model
 # Plot the model
+op <- par(mfrow = c(2,2))
 plot_incidence(model)
 abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
 
@@ -57,8 +62,15 @@ abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
 
 plot_generation_time(model)
 abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+par(op)
 
 ```
+
+# General structure of epiworldR
+
+epiworldR is a highly flexible framework for building agent-based-models. Although we do emphasize models of disease transmission, the framework is general enough to build models of any type of diffusion process. The general structure of epiworldR is as follows:
+
+![A brief overview of epiworldR](figs/overview-of-epiworldr.drawio.svg){width="100%"}
 
 ## Example 1: Simulating a SIR model
 

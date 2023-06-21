@@ -51,6 +51,7 @@ The [**`epiworldR`**](https://uofuepibio.github.io/epiworldR){target="_blank"} R
 #| echo: true
 #| warning: false
 #| message: false
+#| fig-cap: "Transmission network built using the netplot R package"
 #| fig-align: center
 #| fig-format: retina
 #| fig-width: 8 
@@ -82,12 +83,19 @@ nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
 :::
 
 ## Schedule
-Setup  (10 min)  
-Part 1 (50 min)  
-Break  (10 min)  
-Part 2 (50 min)  
-Break  (10 min)  
-Part 3 (50 min)  
+
+Thank you for joining the epiworldR workshop at the Sunbelt 2023 conference. Our schedule for today is as follows:
+
+- Setup  (10 min)  
+- Part 1: Basic modeling (50 min)
+- Break  (10 min)  
+- Part 2: Adding multiple diseases & tools (50 min)  
+- Break  (10 min)  
+- Part 3: Multiple runs (50 min)
+
+You are welcome to use your personal computer, but we also have an online RStudio server available for you to use.[^noteposit]
+
+[^noteposit]: Please note that the online RStudio server and your data stored in it will be available for two weeks after the workshop. After that, the server will be shut down and all data will be deleted. If you would like to keep your data, please download it before the server is shut down.
  
 ## **Installation**
 

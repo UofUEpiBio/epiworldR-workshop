@@ -2,7 +2,7 @@ build:
 	quarto preview .
 
 all:
-	quarto preview --render=all .
+	quarto preview --render all
 
 load:
 	module load quarto
