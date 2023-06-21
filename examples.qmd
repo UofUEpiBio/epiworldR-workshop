@@ -15,8 +15,8 @@ library(epiworldR)
 sir <- ModelSIR(
   name           = "COVID-19",
   prevalence     = .01,
-  infectiousness = .7,
-  recovery       = .3
+  transmission_rate  = .7,
+  recovery_rate =  .3
   ) |>
   # Adding a Small world population 
   agents_smallworld(n = 100000, k = 10, d = FALSE, p = .01) |>
@@ -41,8 +41,8 @@ model_seirconn <- ModelSEIRCONN(
   n                   = 10000,
   contact_rate        = 4, 
   incubation_days     = 7, 
-  prob_transmission   = 0.6,
-  prob_recovery       = 0.5
+  transmission_rate   = 0.6,
+  recovery_rate       = 0.5
 )
 
 set.seed(132)
@@ -79,9 +79,9 @@ model_logit <- ModelSIRLogit(
   coefs_infect      = coef_infect,
   coefs_recover     = coef_recover, 
   coef_infect_cols  = 1L:ncol(X),
-  coef_recover_cols = 1L:ncol(X),
+  coef_recover_cols = 1L:ncol(X), 
   prob_infection = .8,
-  prob_recovery = .3,
+  recovery_rate = .3,
   prevalence = .01
 )
 
@@ -107,10 +107,10 @@ get_agents(model_logit)
 
 ```{r}
 sir <- ModelSIR(
-  name           = "COVID-19",
-  prevalence     = .01,
-  infectiousness = .5,
-  recovery       = .5
+  name              = "COVID-19",
+  prevalence        = .01,
+  transmission_rate = .5,
+  recovery_rate     = .5
   ) |>
     # Adding a Small world population 
     agents_smallworld(n = 500, k = 10, d = FALSE, p = .01) |>
@@ -132,11 +132,12 @@ nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
 
 ```{r}
 model_sir <- ModelSIRCONN(
-  name = "COVID-19",
-  prevalence = 0.01,
-  n = 1000,
-  contact_rate = 2,
-  prob_transmission = 0.9, prob_recovery = 0.1
+  name              = "COVID-19",
+  prevalence        = 0.01,
+  n                 = 1000,
+  contact_rate      = 2,
+  transmission_rate = 0.9,
+  recovery_rate     = 0.1
   )
 
 ## Generating a saver
