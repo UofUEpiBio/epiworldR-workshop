@@ -12,34 +12,33 @@ Let's start right away with an example!
 
 ```{r}
 #| label: motivating-example
+# Motivating example
 library(epiworldR)
 
 # Create a model
 model <- ModelSEIRCONN(
-  name              = "COVID-19",
-  n                 = 20000, 
+  name              = "Monkeypox",
+  n                 = 50000, 
   prevalence        = 0.0001, 
   contact_rate      = 4,
   incubation_days   = 7,
   transmission_rate = 0.5,
   recovery_rate     = 1/7
-  ) |>
+  ) 
 
-  # Adding a virus (Flu)
-  add_virus(virus("Flu", 0.5, 1/4), .0001) |>
+# Changing contact rate for Isolation and TV advertisement 
+isolation_day_10 <- globalaction_set_params("Contact rate", 2, day = 10)
+advertisement_day_20 <- globalaction_set_params("Contact rate", 1.5, day = 20)
 
-  # Individuals wear a mask
-  add_tool(tool("Mask", 0.2, 0.3, 0, 0), .3)
+# Adding global actions to model
+add_global_action(model, isolation_day_10)
+add_global_action(model, advertisement_day_20)
 
-# Creating a vaccine to add on day 20
-vaccine <- tool("Vaccine", .9, .9, .9, 0)
+# Running and printing model summary
+run(model, ndays = 60, seed = 1912)
+summary(model)
 
-# Adding an intervention on day 20 (Vaccines)
-add_global_action(model, globalaction_tool(
-  vaccine,
-  prob = .7,
-  day = 20
-  ))
+plot(model)
 ```
 
 ```{r}
@@ -70,7 +69,7 @@ par(op)
 
 epiworldR is a highly flexible framework for building agent-based-models. Although we do emphasize models of disease transmission, the framework is general enough to build models of any type of diffusion process. The general structure of epiworldR is as follows:
 
-![A brief overview of epiworldR](figs/overview-of-epiworldr.drawio.svg){width="100%"} 
+![A brief overview of epiworldR](figs/overview-of-epiworldr.drawio.svg){width="100%"}
 
 ## Example 1: Simulating a SIR model
 
@@ -133,10 +132,10 @@ As evident from the above plot, the SIR model constructed from **`epiworldR`** d
 ::: {.callout-note collapse="true"}
 ## Connected vs Non-connected Models
 
-The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where:   
+The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where:\
 - n = number of agents\
-- k = number of ties in the small world network  
-- d = whether the graph is directed or not  
+- k = number of ties in the small world network\
+- d = whether the graph is directed or not\
 - p = probability of rewiring
 :::
 
@@ -177,6 +176,16 @@ To accomplish this for a SEIR model, you will need to add the model to a smallwo
 
 After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 
+```{r}
+# Your solution here
+
+```
+
 ## Exercise 2
 
 Plot the reproductive number of the COVID-19 simulated SEIR model over 100 days.
+
+```{r}
+# Your solution here
+
+```

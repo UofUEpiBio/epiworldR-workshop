@@ -121,6 +121,11 @@ General Steps:\
 4. Plot average reproductive number
 :::
 
+```{r}
+# Your solution here
+
+```
+
 ## Exercise 2
 
 Using the same `SEIRCONN` model from exercise 1, simulate a vaccine intervention for the previous exercise's Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:\
@@ -133,6 +138,11 @@ Using the same `SEIRCONN` model from exercise 1, simulate a vaccine intervention
 General Steps:\
 1. Create tool\
 2. Use `globalaction_tool` & `add_global_action`\
-3. Generate saver & `run_multiple`  
-4. Plot average reproductive number  
+3. Generate saver & `run_multiple`\
+4. Plot average reproductive number
 :::
+
+```{r}
+# Your solution here
+
+```
