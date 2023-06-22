@@ -1,0 +1,68 @@
+---
+title: "Part 2a: Social Network Analysis"
+---
+
+## Network Diffusion
+
+epiworldR also supports diffusion networks to simulate the spread of ideas or rumors throughout a population, for example. The below example demonstrates this capability.
+
+#### Example
+
+Goal: Create a diffusion network model which simulates the spread of a rumor throughout the UKfaculty population of size n = 81.
+
+```{r, include = FALSE}
+library(igraph)
+library(netplot)
+```
+
+```{r}
+# First, load in the dataset using the igraph library
+# library(igraph)
+data(UKfaculty, package="igraphdata")
+
+# Visualizing the Network
+# library(netplot)
+nplot(UKfaculty)
+```
+
+The above plot visualizes the UK faculty network of size 81 and its interaction patterns.
+
+```{r}
+set.seed(2223)
+
+# Turning the network into an edgelist
+UKfaculty_vertex_data <- as_data_frame(UKfaculty, what = c("vertices"))
+UKfaculty_matrix <- as.matrix(UKfaculty_vertex_data)
+UKfaculty_edgelist <- as_edgelist(UKfaculty)
+
+# Simulate a 2 column numeric matrix and use for data in ModelDiffNet
+# Creating the diffusion model
+library(epiworldR)
+adopt_rumor <- ModelDiffNet(
+  "Rumor",
+  prevalence = .08,
+  prob_adopt = .1,
+  data       = UKfaculty_matrix,
+  params     = c(1, 4)
+)
+
+n <- igraph::vcount(UKfaculty)
+g <- matrix(runif(n ^ 2) < .01, nrow = n)
+diag(g) <- FALSE
+el <- which(g, arr.ind = TRUE) - 1L
+
+# Simulating a population from smallworld - Use agents_from_edgelist
+agents_from_edgelist(adopt_rumor,
+                     source = el[,1],
+                     target = el[,2],
+                     size = n, 
+                     directed = TRUE)
+
+# Running the model for 50 steps
+run(adopt_rumor, 50)
+
+# Plotting the model
+plot(adopt_rumor)
+```
+
+The number of rumor-adopters steadily increases over time as the number of rumor non-adopters decreases, an expected result when considering a social network.

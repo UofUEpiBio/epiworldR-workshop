@@ -1,0 +1,251 @@
+---
+title: "Part 2b: Adding Multiple Diseases & Tools"
+---
+
+`epiworldR` supports multi-variant models, the below code gives instructions on how to implement this. First, build a `SIRCONN` model for COVID-19, which new viruses and tools will then be added to.
+
+## Adding Multiple Viruses & Variants
+
+```{r design-and-add}
+library(epiworldR)
+model_sir <- ModelSIRCONN(
+  name              = "COVID-19",
+  n                 = 50000, 
+  prevalence        = 0.0001, 
+  contact_rate      = 2,
+  transmission_rate = 0.5,
+  recovery_rate     = 1/3
+  )
+run(model_sir, ndays = 50, seed = 1912)
+model_sir
+```
+
+#### Designing the Virus
+
+Using the `virus()` function, assign a name to the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the `add_virus()` function by calling the original `epiworldR` model object, the new virus, and the new virus' prevalence (which is set to 0.0001 in this example).
+
+```{r}
+# Building the virus
+flu <- virus(name = "Flu", prob_infecting = .3)
+
+# Adding the virus to the model
+add_virus(model_sir, flu, .0001)
+```
+
+Next, run the updated model with the new virus for 50 days, the output below describes the simulation. To confirm that the flu is included, notice the presence of "Flu" in the Virus(es) section of the output. All other output is interpretable as specified in previous sections.
+
+```{r}
+run(model_sir, ndays = 50, seed = 1912)
+model_sir
+```
+
+#### Plotting
+
+Plotting the previous model (including the flu) yields the following. Notice the presence of two reproductive numbers plotted over time. Variant 0 refers to COVID-19 and variant 1 refers to the flu.
+
+```{r, fig.height=10}
+repnum2 <- get_reproductive_number(model_sir)
+
+op <- par(mfrow = c(2,1))
+plot(model_sir)
+plot(repnum2, type="b")
+par(op)
+```
+
+## Using tools
+
+Now, the implementation of tools to fight any viruses and variants in the model will be demonstrated. First, remove the flu virus from the `SIRCONN` model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the `tool()` function. These parameters include the tool's name, any reduction in probabilities for the `SIRCONN` model parameters, and increased probability of recovery option. To add the tool to the `SIRCONN` model, use the `add_tool()` function with the `SIRCONN` model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
+
+```{r removing-virus}
+# Removing the flu virus from the model
+rm_virus(model_sir, 1)
+
+vaccine <- tool(
+  name = "Vaccine",
+  susceptibility_reduction = .9,
+  transmission_reduction = .5,
+  recovery_enhancer = .5, 
+  death_reduction = .9
+)
+
+add_tool(model_sir, vaccine, 0.5)
+run(model_sir, ndays = 50, seed = 1231)
+```
+
+#### Plotting
+
+```{r curves-including-vaccine, fig.height=10}
+repnum3 <- get_reproductive_number(model_sir)
+
+op <- par(mfrow = c(2,1))
+plot_incidence(model_sir)
+plot(repnum3, type="b")
+par(op)
+```
+
+## Comorbidities Using Logit Functions
+
+Many times we want to model the effects of comorbidities on the disease. For example, we may want to model the effects of obesity on the probability of recovery from COVID-19. To do this, we can use the `virus_fun_logit()` function to model the probability of recovery.
+
+The steps are the following:
+
+1.  Create the model
+
+2.  Assign the agents' data (a matrix with covariates/features) to the model.
+
+3.  Create a function to model the probability of recovery using the `virus_fun_logit()` function.
+
+4.  Add the function to the virus' recovery rate using `set_prob_recovery_fun()`.
+
+5.  Run the model.
+
+We start by creating two matching models, one with comorbidities and one without.
+
+```{r}
+# With comorbidities
+model_comor <- ModelSEIRCONN(
+  name              = "Flu",
+  n                 = 10000, 
+  prevalence        = 0.001, 
+  contact_rate      = 2.1,
+  transmission_rate = 0.5,
+  incubation_days   = 7,
+  recovery_rate     = 1/4
+  )
+
+# Without comorbidities
+model_no_comor <- ModelSEIRCONN(
+  name              = "Flu",
+  n                 = 10000, 
+  prevalence        = 0.001, 
+  contact_rate      = 2.1,
+  transmission_rate = 0.5,
+  incubation_days   = 7,
+  recovery_rate     = 1/4
+  )
+```
+
+Next, we will create a matrix with the agents' data. As an example, we will create a matrix with two columns, one for the baseline and one for obesity.
+
+```{r}
+# Artificial population with obesity
+set.seed(88)
+X <- cbind(
+  baseline = 1,
+  obese    = sample.int(2, size(model_comor), replace = TRUE) - 1
+  )
+
+# Looking at the data
+head(X)
+```
+
+Let's now link agents' data to the model. This will allow us to use the data to model the probability of recovery.
+
+```{r}
+# Adding the data to the model
+set_agents_data(model_comor, X)
+model_comor
+```
+
+We then use `virus_fun_logit()` to create a function we can use to model the probability of recovery. The function takes in the following arguments:
+
+-   `vars`: the variables to use in the model
+-   `coefs`: the coefficients for each variable
+-   `model`: the model object
+
+```{r}
+# Logit function 
+lfun <- virus_fun_logit(
+  vars  = 0:1,
+  coefs = c(
+    qlogis(.25),
+    qlogis(.25 - .25/2)
+    ), 
+  model_comor
+  )
+
+# Printing
+lfun
+```
+
+The next step is to set the probability of recovery function for the virus. We can do this using the `set_prob_recovery_fun()` function:
+
+```{r}
+# Setting the probability of recovery
+set_prob_recovery_fun(
+  virus = get_virus(model_comor, 0), 
+  model = model_comor,
+  vfun  = lfun
+  )
+```
+
+We are now ready to run the model.
+
+```{r}
+run(model_comor, ndays = 50, seed = 1231)
+run(model_no_comor, ndays = 50, seed = 1231)
+```
+
+And see the result
+
+```{r}
+#| label: curves-comorbidities
+op <- par(mfrow = c(1, 2), cex = .7)
+plot_incidence(model_comor, main = "With comorbidities")
+plot_incidence(model_no_comor, main = "Without comorbidities")
+par(op)
+```
+
+Let's also look at the states of the agents in the model using the `get_state()` and `get_agents()` functions.
+
+```{r}
+states_comor <- sapply(1:size(model_comor), \(i) {
+  get_state(get_agents(model_comor)[i - 1])
+})
+
+states_no_comor <- sapply(1:size(model_comor), \(i) {
+  get_state(get_agents(model_no_comor)[i - 1])
+})
+
+table(states_comor, states_no_comor)
+
+# We can even compute the correlation
+t.test(X[,2],
+  (states_no_comor < 3) - 
+  (states_comor < 3)
+  )
+```
+
+The table above shows that the model with comorbidities has fewer recovered agents than the model without comorbidities. Furthermore, the model with no comorbidities still has susceptible agents, which is not the case for the model with comorbidities.
+
+## Exercise
+
+Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant and a masking tool to the model. Then plot the model parameters and reproductive numbers over time.
+  
+Assume the following for model initialization:\
+-  n = 10000\
+-  prevalence = 0.0001\
+-  contact_rate = 2.1\
+-  transmission_rate = 0.5\
+-  recovery_rate = $\frac{1}{4}$  
+  
+Assume the Delta variant has:\
+-  prob_infecting = 0.3\
+-  recovery_rate = $\frac{1}{4}$\
+-  prevalence = 0.001\
+-  When running the model, use seed = 1912
+  
+Assume the masking tool has:  
+-  transmission_reduction = 0.3    
+-  proportion of complying agents = 0.6 (for adding the tool to the model)  
+  
+After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
+
+::: {.callout-tip collapse="true"}
+Masking only influences the transmission of a disease, thus transmission reduction = 0.3, and all other parameters of this tool will be 0.0.
+:::
+
+```{r}
+# Your solution here
+
+```
