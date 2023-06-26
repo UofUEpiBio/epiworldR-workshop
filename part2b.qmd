@@ -2,64 +2,42 @@
 title: "Part 2b: Adding Multiple Diseases & Tools"
 ---
 
-`epiworldR` supports multi-variant models, the below code gives instructions on how to implement this. First, build a `SIRCONN` model for COVID-19, which new viruses and tools will then be added to.
+`epiworldR` supports multi-virus and tools models, the below code gives instructions on how to implement this. First, build a `SIRCONN` model for COVID-19, which new viruses and tools will then be added to.
 
-## Adding Multiple Viruses & Variants
+## Adding Multiple Viruses & Tools
 
 ```{r design-and-add}
 library(epiworldR)
 model_sir <- ModelSIRCONN(
   name              = "COVID-19",
   n                 = 50000, 
-  prevalence        = 0.0001, 
-  contact_rate      = 2,
+  prevalence        = 0.001, 
+  contact_rate      = 2.5,
   transmission_rate = 0.5,
-  recovery_rate     = 1/3
+  recovery_rate     = 1/4
   )
 run(model_sir, ndays = 50, seed = 1912)
 model_sir
 ```
 
-#### Designing the Virus
+#### Designing a Virus
 
-Using the `virus()` function, assign a name to the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.3. In order to add this new virus to the model, use the `add_virus()` function by calling the original `epiworldR` model object, the new virus, and the new virus' prevalence (which is set to 0.0001 in this example).
+Using the `virus()` function, assign a name to the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.35. In order to add this new virus to the model, use the `add_virus()` function by calling the original `epiworldR` model object, the new virus, and the new virus' prevalence (which is set to 0.001 in this example).
 
-```{r}
+```{r virus_design}
 # Building the virus
-flu <- virus(name = "Flu", prob_infecting = .3)
+flu <- virus(name = "Flu", prob_infecting = .35)
 
 # Adding the virus to the model
-add_virus(model_sir, flu, .0001)
+add_virus(model_sir, flu, proportion = .001)
 ```
 
-Next, run the updated model with the new virus for 50 days, the output below describes the simulation. To confirm that the flu is included, notice the presence of "Flu" in the Virus(es) section of the output. All other output is interpretable as specified in previous sections.
+#### Designing a Tool
 
-```{r}
-run(model_sir, ndays = 50, seed = 1912)
-model_sir
-```
+Provide parameters for the new tool using the `tool()` function. These parameters include the tool's name, any reduction in probabilities for the `SIRCONN` model parameters, and increased probability of recovery option. To add the tool to the `SIRCONN` model, use the `add_tool()` function with the `SIRCONN` model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
 
-#### Plotting
-
-Plotting the previous model (including the flu) yields the following. Notice the presence of two reproductive numbers plotted over time. Variant 0 refers to COVID-19 and variant 1 refers to the flu.
-
-```{r, fig.height=10}
-repnum2 <- get_reproductive_number(model_sir)
-
-op <- par(mfrow = c(2,1))
-plot(model_sir)
-plot(repnum2, type="b")
-par(op)
-```
-
-## Using tools
-
-Now, the implementation of tools to fight any viruses and variants in the model will be demonstrated. First, remove the flu virus from the `SIRCONN` model object (keep in mind the index for the flu virus in the model object is 1). Next, provide parameters for the new tool using the `tool()` function. These parameters include the tool's name, any reduction in probabilities for the `SIRCONN` model parameters, and increased probability of recovery option. To add the tool to the `SIRCONN` model, use the `add_tool()` function with the `SIRCONN` model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
-
-```{r removing-virus}
-# Removing the flu virus from the model
-rm_virus(model_sir, 1)
-
+```{r tool_design}
+# Building the tool
 vaccine <- tool(
   name = "Vaccine",
   susceptibility_reduction = .9,
@@ -68,18 +46,27 @@ vaccine <- tool(
   death_reduction = .9
 )
 
-add_tool(model_sir, vaccine, 0.5)
-run(model_sir, ndays = 50, seed = 1231)
+# Adding the tool to the model
+add_tool(model_sir, vaccine, proportion = 0.5)
+```
+
+Next, run the updated model for 50 days, the output below describes the simulation. To confirm that the flu and vaccine are included, notice the presence of "Flu" in the Virus(es) section of the output, and "Vaccine" in the Tool(s) section. 
+
+```{r}
+run(model_sir, ndays = 50, seed = 1912)
+summary(model_sir)
 ```
 
 #### Plotting
 
-```{r curves-including-vaccine, fig.height=10}
-repnum3 <- get_reproductive_number(model_sir)
+Plotting the model with the additional virus and tool yields the following. Notice the presence of two reproductive numbers plotted over time. Variant 0 refers to COVID-19 and variant 1 refers to the flu.
+
+```{r, fig.height=10}
+repnum2 <- get_reproductive_number(model_sir)
 
 op <- par(mfrow = c(2,1))
-plot_incidence(model_sir)
-plot(repnum3, type="b")
+plot(model_sir)
+plot(repnum2, type="b")
 par(op)
 ```
 
@@ -224,7 +211,7 @@ Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Del
   
 Assume the following for model initialization:\
 -  n = 10000\
--  prevalence = 0.0001\
+-  prevalence = 0.001\
 -  contact_rate = 2.1\
 -  transmission_rate = 0.5\
 -  recovery_rate = $\frac{1}{4}$  
