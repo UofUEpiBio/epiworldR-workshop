@@ -151,14 +151,14 @@
     "href": "index.html",
     "title": "epiworldR Sunbelt 2023 Workshop",
     "section": "",
-    "text": "Codelibrary(epiworldR)\n\n# Creating a model\nmymodel &lt;- ModelSEIRCONN(\n  name = \"Nasty virus\", n = 10000, prevalence = .001, contact_rate = 4,\n  transmission_rate = .4, incubation_days = 7, recovery_rate = 1/7\n) |&gt; verbose_off() \n\n# Adding a virus\nadd_virus(mymodel, virus(\"Nasty virus 2\", .5, .3), proportion = .001)\n\n# Renaming the model\nset_name(mymodel, mname = \"SEIR COVID-19 model\")\n\n# Running the model\nset.seed(8383)\nrun(mymodel, ndays = 100)\n\nop &lt;- par(mfrow = c(2, 2), mar = par()$mar * c(1, 1, 1/2, 0))\nplot(mymodel)\nplot_reproductive_number(mymodel)\nplot_incidence(mymodel)\nplot_generation_time(mymodel)\npar(op)\n\n\n\nFigure 1: ?(caption)\nThe epiworldR R package is a wrapper of the C++ library epiworld. It provides a general framework for modeling disease transmission using agent-based models wiki. Some main features include:"
+    "text": "Codelibrary(epiworldR)\n\n# Creating a model\nmymodel <- ModelSEIRCONN(\n  name = \"Nasty virus\", n = 10000, prevalence = .001, contact_rate = 4,\n  transmission_rate = .4, incubation_days = 7, recovery_rate = 1/7\n) |> verbose_off() \n\n# Adding a virus\nadd_virus(mymodel, virus(\"Nasty virus 2\", .5, .3), proportion = .001)\n\n# Renaming the model\nset_name(mymodel, mname = \"SEIR COVID-19 model\")\n\n# Running the model\nset.seed(8383)\nrun(mymodel, ndays = 100)\n\nop <- par(mfrow = c(2, 2), mar = par()$mar * c(1, 1, 1/2, 0))\nplot(mymodel)\nplot_reproductive_number(mymodel)\nplot_incidence(mymodel)\nplot_generation_time(mymodel)\npar(op)\n\n\n\nFigure 1: ?(caption)\nThe epiworldR R package is a wrapper of the C++ library epiworld. It provides a general framework for modeling disease transmission using agent-based models wiki. Some main features include:"
   },
   {
     "objectID": "index.html#schedule",
     "href": "index.html#schedule",
     "title": "epiworldR Sunbelt 2023 Workshop",
     "section": "Schedule",
-    "text": "Schedule\nThank you for joining the epiworldR workshop at the Sunbelt 2023 conference. Our schedule for today is as follows:\n\nSetup (10 min)\n\nPart 1: Basic modeling (50 min)\nBreak (10 min)\n\nPart 2: Adding multiple diseases & tools (50 min)\n\nBreak (10 min)\n\nPart 3: Multiple runs (50 min)\n\nYou are welcome to use your personal computer, but we also have an online RStudio server available for you to use.1"
+    "text": "Schedule\nThank you for joining the epiworldR workshop at the Sunbelt 2023 conference. Our schedule for today is as follows:\n\nSetup (10 min)\n\nPart 1: Basic modeling (50 min)\nBreak (10 min)\n\nPart 2a: Adding multiple diseases & tools (30 min)\nPart 2b: Social Network Analysis (30 min)\nBreak (10 min)\n\nPart 3: Multiple runs (40 min)\n\nYou are welcome to use your personal computer, but we also have an online RStudio server available for you to use.1"
   },
   {
     "objectID": "index.html#installation",
