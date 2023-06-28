@@ -16,9 +16,8 @@ library(netplot)
 ```
 
 ```{r}
-# First, load in the dataset using the igraph library
-# library(igraph)
-data(UKfaculty, package="igraphdata")
+# Loading the data for the section
+load("part2a.rda")
 
 # Visualizing the Network
 # library(netplot)
@@ -28,13 +27,6 @@ nplot(UKfaculty)
 The above plot visualizes the UK faculty network of size 81 and its interaction patterns.
 
 ```{r}
-set.seed(2223)
-
-# Turning the network into an edgelist
-UKfaculty_vertex_data <- as_data_frame(UKfaculty, what = c("vertices"))
-UKfaculty_matrix <- as.matrix(UKfaculty_vertex_data)
-UKfaculty_edgelist <- as_edgelist(UKfaculty)
-
 # Simulate a 2 column numeric matrix and use for data in ModelDiffNet
 # Creating the diffusion model
 library(epiworldR)
@@ -42,21 +34,19 @@ adopt_rumor <- ModelDiffNet(
   "Rumor",
   prevalence = .08,
   prob_adopt = .1,
-  data       = UKfaculty_matrix,
+  data       = UKfaculty_vertex,
   params     = c(1, 4)
 )
 
-n <- igraph::vcount(UKfaculty)
-g <- matrix(runif(n ^ 2) < .01, nrow = n)
-diag(g) <- FALSE
-el <- which(g, arr.ind = TRUE) - 1L
 
 # Simulating a population from smallworld - Use agents_from_edgelist
-agents_from_edgelist(adopt_rumor,
-                     source = el[,1],
-                     target = el[,2],
-                     size = n, 
-                     directed = TRUE)
+agents_from_edgelist(
+  adopt_rumor,
+  size = 81,
+  source = UKfaculty_edgelist[,1] - 1L,
+  target = UKfaculty_edgelist[,2] - 1L,
+  directed = TRUE
+  )
 
 # Running the model for 50 steps
 run(adopt_rumor, 50)

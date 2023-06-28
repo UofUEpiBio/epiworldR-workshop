@@ -116,14 +116,7 @@ Next, we will create a matrix with the agents' data. As an example, we will crea
 
 ```{r}
 # Artificial population with obesity
-set.seed(88)
-X <- cbind(
-  baseline = 1,
-  obese    = sample.int(2, size(model_comor), replace = TRUE) - 1
-  )
-
-# Looking at the data
-head(X)
+X <- readRDS("part2b_comorb.rds")
 ```
 
 Let's now link agents' data to the model. This will allow us to use the data to model the probability of recovery.
@@ -144,16 +137,17 @@ We then use `virus_fun_logit()` to create a function we can use to model the pro
 # Logit function 
 lfun <- virus_fun_logit(
   vars  = 0:1,
-  coefs = c(
-    qlogis(.25),
-    qlogis(.25 - .25/2)
-    ), 
+  coefs = c(-1.0986, -0.8472), 
   model_comor
   )
 
 # Printing
 lfun
 ```
+
+::: {.callout-note}
+To build the previous model, we used the following: (a) Under the logit model, the coefficient needed for the baseline probability of 0.25 is computed using `qlogis(0.25)`. With that, we can go further and compute the associated coefficient to obese individuals with `plogis(qlogis(.25) + x) = .125` -> `qlogis(.25) + x = plogis(.125)` -> `x = qlogis(.125) - qlogis(.25)`
+:::
 
 The next step is to set the probability of recovery function for the virus. We can do this using the `set_prob_recovery_fun()` function:
 
@@ -183,27 +177,9 @@ plot_incidence(model_no_comor, main = "Without comorbidities")
 par(op)
 ```
 
-Let's also look at the states of the agents in the model using the `get_state()` and `get_agents()` functions.
-
-```{r}
-states_comor <- sapply(1:size(model_comor), \(i) {
-  get_state(get_agents(model_comor)[i - 1])
-})
-
-states_no_comor <- sapply(1:size(model_comor), \(i) {
-  get_state(get_agents(model_no_comor)[i - 1])
-})
-
-table(states_comor, states_no_comor)
-
-# We can even compute the correlation
-t.test(X[,2],
-  (states_no_comor < 3) - 
-  (states_comor < 3)
-  )
-```
-
-The table above shows that the model with comorbidities has fewer recovered agents than the model without comorbidities. Furthermore, the model with no comorbidities still has susceptible agents, which is not the case for the model with comorbidities.
+::: {.callout-tip}
+We can get information about agents' final state using the function `get_agents_state()`.
+:::
 
 ## Exercise
 
