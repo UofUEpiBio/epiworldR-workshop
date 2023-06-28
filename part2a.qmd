@@ -4,16 +4,18 @@ title: "Part 2a: Social Network Analysis"
 
 ## Network Diffusion
 
-epiworldR also supports diffusion networks to simulate the spread of ideas or rumors throughout a population, for example. The below example demonstrates this capability.
+epiworldR also supports diffusion networks to simulate the spread of ideas or rumors throughout a population. The below example demonstrates this capability.
 
 #### Example
 
-Goal: Create a diffusion network model which simulates the spread of a rumor throughout the UKfaculty population of size n = 81.
+Goal: Create a diffusion network model that simulates a rumor's spread throughout the `UKfaculty` network of size n = 81. We start by loading the corresponding R packages and data.
 
 ```{r, include = FALSE}
-library(igraph)
-library(netplot)
+library(igraph)  # For manipulating networks
+library(netplot) # For plotting
 ```
+
+We now load the `UKfaculty` data and visualize the network. The file `part2a.rda` has the network, the vertex attributes as a numeric matrix, and the edge list as a numeric matrix.
 
 ```{r}
 # Loading the data for the section
@@ -22,37 +24,56 @@ load("part2a.rda")
 # Visualizing the Network
 # library(netplot)
 nplot(UKfaculty)
+
+# First few lines of the vertex attributes
+head(UKfaculty_vertex)
+
+# First few lines of the edge list
+head(UKfaculty_edgelist)
 ```
 
-The above plot visualizes the UK faculty network of size 81 and its interaction patterns.
+To simulate the rumor, we use the `ModelDiffNet` function:
 
 ```{r}
-# Simulate a 2 column numeric matrix and use for data in ModelDiffNet
 # Creating the diffusion model
 library(epiworldR)
 adopt_rumor <- ModelDiffNet(
-  "Rumor",
-  prevalence = .08,
+  name       = "The dean is leaving!",
+  prevalence = 2/vcount(UKfaculty), # Two adopter
   prob_adopt = .1,
   data       = UKfaculty_vertex,
-  params     = c(1, 4)
+  params     = c(0, 5)
 )
 
-
-# Simulating a population from smallworld - Use agents_from_edgelist
+# Reading in the network
 agents_from_edgelist(
   adopt_rumor,
-  size = 81,
-  source = UKfaculty_edgelist[,1] - 1L,
-  target = UKfaculty_edgelist[,2] - 1L,
+  size     = vcount(UKfaculty),
+  source   = UKfaculty_edgelist[,1] - 1L,
+  target   = UKfaculty_edgelist[,2] - 1L,
   directed = TRUE
   )
 
 # Running the model for 50 steps
-run(adopt_rumor, 50)
+run(adopt_rumor, 100);adopt_rumor
 
 # Plotting the model
 plot(adopt_rumor)
 ```
 
-The number of rumor-adopters steadily increases over time as the number of rumor non-adopters decreases, an expected result when considering a social network.
+We can extract the adoption network:
+
+
+```{r}
+transmissions <- get_transmissions(adopt_rumor)
+
+# Turning it into a network via igraph
+tnet <- graph_from_data_frame(
+  transmissions[, c(2, 3)] + 1, # To start from 1 (not 0)
+  directed = TRUE,
+  vertices = cbind(id = 1:81, UKfaculty_vertex)
+  )
+
+# Adding back vertex attributes
+nplot(tnet)
+```
