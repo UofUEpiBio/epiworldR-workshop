@@ -89,8 +89,8 @@ Thank you for joining the epiworldR workshop at the Sunbelt 2023 conference. Our
 - Setup  (10 min)  
 - Part 1: Basic modeling (50 min)
 - Break  (10 min)  
-- Part 2a: Adding multiple diseases & tools (30 min)
-- Part 2b: Social Network Analysis (30 min)
+- Part 2a: Social Network Analysis (30 min)
+- Part 2b: Adding multiple diseases & tools (30 min)
 - Break  (10 min)  
 - Part 3: Multiple runs (40 min)
 
