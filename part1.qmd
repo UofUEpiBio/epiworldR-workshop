@@ -27,12 +27,12 @@ model <- ModelSEIRCONN(
   ) 
 
 # Changing contact rate for Isolation and TV advertisement 
-isolation_day_10 <- globalaction_set_params("Contact rate", 2, day = 10)
-advertisement_day_20 <- globalaction_set_params("Contact rate", 1.5, day = 20)
+isolation_day_10 <- globalevent_set_params("Contact rate", 2, day = 10)
+advertisement_day_20 <- globalevent_set_params("Contact rate", 1.5, day = 20)
 
 # Adding global actions to model
-add_global_action(model, isolation_day_10)
-add_global_action(model, advertisement_day_20)
+add_globalevent(model, isolation_day_10)
+add_globalevent(model, advertisement_day_20)
 
 # Running and printing model summary
 run(model, ndays = 60, seed = 1912)

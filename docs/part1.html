@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.298">
+<meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>epiworldR - Sunbelt 2023 Workshop - Part 1: Basic Modeling</title>
+<title>Part 1: Basic Modeling – epiworldR - Sunbelt 2025 Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -74,7 +74,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -83,8 +89,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-CQNCQM1SG1"></script><script type="text/javascript">
 
@@ -92,58 +100,83 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
-</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
+</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">epiworldR - Sunbelt 2023 Workshop</span>
+    <span class="navbar-title">epiworldR - Sunbelt 2025 Workshop</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./part1.html" rel="" target="" aria-current="page">
- <span class="menu-text">Part 1</span></a>
+    <a class="nav-link active" href="./part1.html" aria-current="page"> 
+<span class="menu-text">Part 1</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part2a.html" rel="" target="">
- <span class="menu-text">Part 2a</span></a>
+    <a class="nav-link" href="./part2a.html"> 
+<span class="menu-text">Part 2a</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part2b.html" rel="" target="">
- <span class="menu-text">Part 2b</span></a>
+    <a class="nav-link" href="./part2b.html"> 
+<span class="menu-text">Part 2b</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3.html" rel="" target="">
- <span class="menu-text">Part 3</span></a>
+    <a class="nav-link" href="./part3.html"> 
+<span class="menu-text">Part 3</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./examples.html" rel="" target="">
- <span class="menu-text">Examples</span></a>
+    <a class="nav-link" href="./examples.html"> 
+<span class="menu-text">Examples</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text">GitHub</span></a>
+<span class="menu-text">GitHub</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools">
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -179,11 +212,12 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   </div>
   
 
+
 </header><p><strong><code>epiworldR</code></strong> is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models [ABM]. Some key features of <strong><code>epiworldR</code></strong> are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>Let’s start right away with an example!</p>
 <section id="motivating-example" class="level2"><h2 class="anchored" data-anchor-id="motivating-example">Motivating Example</h2>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Motivating example</span></span>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Motivating example</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(epiworldR)</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Create a model</span></span>
@@ -198,12 +232,12 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <span id="cb1-13"><a href="#cb1-13"></a>  ) </span>
 <span id="cb1-14"><a href="#cb1-14"></a></span>
 <span id="cb1-15"><a href="#cb1-15"></a><span class="co"># Changing contact rate for Isolation and TV advertisement </span></span>
-<span id="cb1-16"><a href="#cb1-16"></a>isolation_day_10 <span class="ot">&lt;-</span> <span class="fu">globalaction_set_params</span>(<span class="st">"Contact rate"</span>, <span class="dv">2</span>, <span class="at">day =</span> <span class="dv">10</span>)</span>
-<span id="cb1-17"><a href="#cb1-17"></a>advertisement_day_20 <span class="ot">&lt;-</span> <span class="fu">globalaction_set_params</span>(<span class="st">"Contact rate"</span>, <span class="fl">1.5</span>, <span class="at">day =</span> <span class="dv">20</span>)</span>
+<span id="cb1-16"><a href="#cb1-16"></a>isolation_day_10 <span class="ot">&lt;-</span> <span class="fu">globalevent_set_params</span>(<span class="st">"Contact rate"</span>, <span class="dv">2</span>, <span class="at">day =</span> <span class="dv">10</span>)</span>
+<span id="cb1-17"><a href="#cb1-17"></a>advertisement_day_20 <span class="ot">&lt;-</span> <span class="fu">globalevent_set_params</span>(<span class="st">"Contact rate"</span>, <span class="fl">1.5</span>, <span class="at">day =</span> <span class="dv">20</span>)</span>
 <span id="cb1-18"><a href="#cb1-18"></a></span>
 <span id="cb1-19"><a href="#cb1-19"></a><span class="co"># Adding global actions to model</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="fu">add_global_action</span>(model, isolation_day_10)</span>
-<span id="cb1-21"><a href="#cb1-21"></a><span class="fu">add_global_action</span>(model, advertisement_day_20)</span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="fu">add_globalevent</span>(model, isolation_day_10)</span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="fu">add_globalevent</span>(model, advertisement_day_20)</span>
 <span id="cb1-22"><a href="#cb1-22"></a></span>
 <span id="cb1-23"><a href="#cb1-23"></a><span class="co"># Running and printing model summary</span></span>
 <span id="cb1-24"><a href="#cb1-24"></a><span class="fu">run</span>(model, <span class="at">ndays =</span> <span class="dv">60</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -213,7 +247,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
 | done.</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 ________________________________________________________________________________
@@ -225,16 +259,17 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 60 (of 60)
 Number of viruses   : 1
-Last run elapsed t  : 1.00s
-Last run speed      : 2.79 million agents x day / second
+Last run elapsed t  : 85.00ms
+Last run speed      : 35.15 million agents x day / second
 Rewiring            : off
 
-Global actions:
+Global events:
+ - Update infected individuals (runs daily)
  - Set Contact rate to 2 (day 10)
  - Set Contact rate to 1.5 (day 20)
 
 Virus(es):
- - Monkeypox (baseline prevalence: 0.01%)
+ - Monkeypox
 
 Tool(s):
  (none)
@@ -246,24 +281,27 @@ Model parameters:
  - Prob. Transmission   : 0.5000
 
 Distribution of the population at time 60:
-  - (0) Susceptible : 49995 -&gt; 0
-  - (1) Exposed     :     5 -&gt; 550
-  - (2) Infected    :     0 -&gt; 2416
-  - (3) Recovered   :     0 -&gt; 47034
+  - (0) Susceptible : 49995 -&gt; 1836
+  - (1) Exposed     :     5 -&gt; 6121
+  - (2) Infected    :     0 -&gt; 9947
+  - (3) Recovered   :     0 -&gt; 32096
 
 Transition Probabilities:
- - Susceptible  0.83  0.17  0.00  0.00
+ - Susceptible  0.95  0.05  0.00  0.00
  - Exposed      0.00  0.86  0.14  0.00
- - Infected     0.00  0.00  0.85  0.15
+ - Infected     0.00  0.00  0.87  0.13
  - Recovered    0.00  0.00  0.00  1.00</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">plot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">plot</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<p><img src="part1_files/figure-html/motivating-example-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="part1_files/figure-html/motivating-example-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Run the model</span></span>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># Run the model</span></span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="fu">run</span>(model, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>_________________________________________________________________________
@@ -271,17 +309,17 @@ Running the model...
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
  done.</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 It features 50000 agents, 1 virus(es), and 0 tool(s).
 The model has 4 states.
-The final distribution is: 352 Susceptible, 199 Exposed, 783 Infected, and 48666 Recovered.</code></pre>
+The final distribution is: 318 Susceptible, 109 Exposed, 399 Infected, and 49174 Recovered.</code></pre>
 </div>
 </div>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Plot the model</span></span>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Plot the model</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
 <span id="cb10-3"><a href="#cb10-3"></a><span class="fu">plot_incidence</span>(model)</span>
 <span id="cb10-4"><a href="#cb10-4"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
@@ -293,15 +331,17 @@ The final distribution is: 352 Susceptible, 199 Exposed, 783 Infected, and 48666
 <span id="cb10-10"><a href="#cb10-10"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
 <span id="cb10-11"><a href="#cb10-11"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<p><img src="part1_files/figure-html/plot-model-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="part1_files/figure-html/plot-model-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section id="general-structure-of-epiworldr" class="level1"><h1>General structure of epiworldR</h1>
 <p>epiworldR is a highly flexible framework for building agent-based-models. Although we do emphasize models of disease transmission, the framework is general enough to build models of any type of diffusion process. The general structure of epiworldR is as follows:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="figs/overview-of-epiworldr.drawio.svg" class="img-fluid figure-img" style="width:100.0%"></p>
-<p></p><figcaption class="figure-caption">A brief overview of epiworldR</figcaption><p></p>
-</figure>
+<figcaption>A brief overview of epiworldR</figcaption></figure>
 </div>
 <section id="example-1-simulating-a-sir-model" class="level2"><h2 class="anchored" data-anchor-id="example-1-simulating-a-sir-model">Example 1: Simulating a SIR model</h2>
 <section id="setup-and-running-the-model" class="level4"><h4 class="anchored" data-anchor-id="setup-and-running-the-model">Setup and running the model</h4>
@@ -316,7 +356,7 @@ The final distribution is: 352 Susceptible, 199 Exposed, 783 Infected, and 48666
 </ul>
 <p>To create this model on <strong><code>epiworldR</code></strong>, we use the <code>ModelSIRCONN()</code> function. From here, the example will take you through the basic features of <strong><code>epiworldR</code></strong>.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(epiworldR)</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(epiworldR)</span>
 <span id="cb11-2"><a href="#cb11-2"></a>model_sirconn <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
 <span id="cb11-3"><a href="#cb11-3"></a>  <span class="at">name              =</span> <span class="st">"COVID-19"</span>,</span>
 <span id="cb11-4"><a href="#cb11-4"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
@@ -329,7 +369,7 @@ The final distribution is: 352 Susceptible, 199 Exposed, 783 Infected, and 48666
 </div>
 <p>Printing the model shows us some information. First, the name of the model, population size, number of entities (think of these as public spaces in which agents can make social contact with one another), the duration in days, number of variants, amount of time the last replicate took to run (last run elapsed t), and rewiring status (on or off). The next piece of information you will see is a list of the viruses used in the model. In this case, COVID-19 was the only disease used. Note that <strong><code>epiworldR</code></strong> has the capability to include more than one virus in a model. Tool(s) lists any tools that agents have to fight the virus. Examples ofthis may include masking, vaccines, social distancing, etc. In this model, no tools are specified. Lastly, the model parameters are listed, which originate from the parameters specified in the model.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>model_sirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>model_sirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 Susceptible-Infected-Removed (SIR) (connected)
@@ -339,14 +379,14 @@ The model has 3 states. The model hasn't been run yet.</code></pre>
 </div>
 <p>To execute the model, use the run function with the SIR model object, number of simulation days, and an optional seed for reproducibility. Next, print out the results from the simulated model using model_sir.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>_________________________________________________________________________
 |Running the model...
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
 | done.</code></pre>
 </div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">summary</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">summary</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 ________________________________________________________________________________
@@ -358,15 +398,15 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of viruses   : 1
-Last run elapsed t  : 339.00ms
-Last run speed      : 7.35 million agents x day / second
+Last run elapsed t  : 72.00ms
+Last run speed      : 34.46 million agents x day / second
 Rewiring            : off
 
-Global actions:
- (none)
+Global events:
+ - Update infected individuals (runs daily)
 
 Virus(es):
- - COVID-19 (baseline prevalence: 0.01%)
+ - COVID-19
 
 Tool(s):
  (none)
@@ -377,13 +417,13 @@ Model parameters:
  - Transmission rate : 0.5000
 
 Distribution of the population at time 50:
-  - (0) Susceptible : 49995 -&gt; 3364
-  - (1) Infected    :     5 -&gt; 0
-  - (2) Recovered   :     0 -&gt; 46636
+  - (0) Susceptible : 49995 -&gt; 3346
+  - (1) Infected    :     5 -&gt; 6
+  - (2) Recovered   :     0 -&gt; 46648
 
 Transition Probabilities:
  - Susceptible  0.95  0.05  0.00
- - Infected     0.00  0.64  0.36
+ - Infected     0.00  0.67  0.33
  - Recovered    0.00  0.00  1.00</code></pre>
 </div>
 </div>
@@ -391,11 +431,11 @@ Transition Probabilities:
 </section><section id="extracting-simulation-data" class="level4"><h4 class="anchored" data-anchor-id="extracting-simulation-data">Extracting Simulation Data</h4>
 <p>After running the <strong><code>epiworldR</code></strong> model, below is a list of all the functions that can be called using the <strong><code>epiworldR</code></strong> model object. To demonstrate, start with the basic plot and get_hist_total functions.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"epiworld_model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"epiworld_model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code> [1] add_tool_n                 add_tool                  
- [3] add_virus_n                add_virus                 
- [5] agents_from_edgelist       agents_smallworld         
+<pre><code> [1] add_param                  add_tool                  
+ [3] add_virus                  agents_from_edgelist      
+ [5] agents_smallworld          get_agents                
  [7] get_hist_tool              get_hist_total            
  [9] get_hist_transition_matrix get_hist_virus            
 [11] get_n_replicates           get_n_tools               
@@ -408,15 +448,19 @@ Transition Probabilities:
 [25] run_multiple               run                       
 [27] set_name                   set_param                 
 [29] size                       summary                   
-[31] verbose_off                verbose_on                
+[31] today                      verbose_off               
+[33] verbose_on                
 see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
 </section><section id="visualization" class="level4"><h4 class="anchored" data-anchor-id="visualization">Visualization</h4>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<p><img src="part1_files/figure-html/plotting-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="part1_files/figure-html/plotting-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>As evident from the above plot, the SIR model constructed from <strong><code>epiworldR</code></strong> displays the changes in susceptible, infected, and recovered case counts over time (days). Notice after a certain amount of time, the curves flatten. Below, a table representation of the above plot is printed, complete with each state within the SIR model, date, and agent counts.</p>
@@ -442,36 +486,39 @@ Connected vs Non-connected Models
 </div>
 </section></section><section id="important-statistics" class="level2"><h2 class="anchored" data-anchor-id="important-statistics">Important Statistics</h2>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(model_sirconn))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(model_sirconn))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  date       state counts
 1    0 Susceptible  49995
 2    0    Infected      5
 3    0   Recovered      0
 4    1 Susceptible  49991
-5    1    Infected      9
-6    1   Recovered      0</code></pre>
+5    1    Infected      8
+6    1   Recovered      1</code></pre>
 </div>
 </div>
 <p>An important statistic in epidemiological models is the reproductive number.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sirconn)</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sirconn)</span>
 <span id="cb23-2"><a href="#cb23-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  virus_id    virus source source_exposure_date rt
-1        0 COVID-19  23811                   44  0
-2        0 COVID-19  38232                   42  1
-3        0 COVID-19  19769                   41  1
-4        0 COVID-19  28486                   40  0
-5        0 COVID-19   6422                   39  0
-6        0 COVID-19   7907                   39  0</code></pre>
+1        0 COVID-19  26792                   47  0
+2        0 COVID-19  12690                   46  0
+3        0 COVID-19   8701                   46  0
+4        0 COVID-19  35250                   45  0
+5        0 COVID-19  46225                   44  0
+6        0 COVID-19  15139                   44  0</code></pre>
 </div>
 </div>
 <p><strong><code>epiworldR</code></strong> has a method to automatically plot the reproductive number. Thisfunction takes the average of values in the above table for each date and repeats until all date have been accounted for. For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 1.7 other individuals.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<p><img src="part1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="part1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
@@ -488,13 +535,13 @@ Connected vs Non-connected Models
 - p = .01</p>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
 <p>Plot the reproductive number of the COVID-19 simulated SEIR model over 100 days.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -537,18 +584,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -580,11 +616,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -594,8 +669,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -607,7 +691,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -651,6 +858,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -676,6 +884,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

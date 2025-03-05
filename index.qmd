@@ -8,18 +8,30 @@ title: "epiworldR Sunbelt 2025 Workshop"
 #| echo: true
 #| code-fold: true
 #| fig-align: center
-#| fig-format: retina
 #| label: fig-epiworldR
 library(epiworldR)
 
 # Creating a model
 mymodel <- ModelSEIRCONN(
-  name = "Nasty virus", n = 10000, prevalence = .001, contact_rate = 4,
-  transmission_rate = .4, incubation_days = 7, recovery_rate = 1/7
+  name = "Nasty virus", 
+  n = 10000, 
+  prevalence = .001, 
+  contact_rate = 4,
+  transmission_rate = .4, 
+  incubation_days = 7, 
+  recovery_rate = 1/7
 ) |> verbose_off() 
 
 # Adding a virus
-add_virus(mymodel, virus("Nasty virus 2", .5, .3), proportion = .001)
+add_virus(
+  mymodel, 
+  virus(
+    name = "Nasty virus 2",
+    prob_infecting = .5,
+    recovery_rate = .3,
+    ), 
+  proportion = .001
+)
 
 # Renaming the model
 set_name(mymodel, mname = "SEIR COVID-19 model")
@@ -53,7 +65,6 @@ The [**`epiworldR`**](https://uofuepibio.github.io/epiworldR){target="_blank"} R
 #| message: false
 #| fig-cap: "Transmission network built using the netplot R package"
 #| fig-align: center
-#| fig-format: retina
 #| fig-width: 8 
 #| fig-height: 8
 #| code-fold: true
