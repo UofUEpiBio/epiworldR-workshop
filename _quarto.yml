@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "epiworldR - Sunbelt 2023 Workshop"
+  title: "epiworldR - Sunbelt 2025 Workshop"
   google-analytics: G-CQNCQM1SG1
   repo-subdir: docs
   repo-url: https://github.com/UofUEpiBio/epiworldR-workshop

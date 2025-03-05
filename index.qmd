@@ -1,5 +1,5 @@
 ---
-title: "epiworldR Sunbelt 2023 Workshop"
+title: "epiworldR Sunbelt 2025 Workshop"
 ---
 
 ::: {style="width: 70%;margin:auto;"}
@@ -84,20 +84,20 @@ nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
 
 ## Schedule
 
-Thank you for joining the epiworldR workshop at the Sunbelt 2023 conference. Our schedule for today is as follows:
+Thank you for joining the epiworldR workshop at the Sunbelt 2025 conference. Our schedule for today is as follows:
 
-- Setup  (10 min)  
-- Part 1: Basic modeling (50 min)
-- Break  (10 min)  
-- Part 2a: Social Network Analysis (30 min)
-- Part 2b: Adding multiple diseases & tools (30 min)
-- Break  (10 min)  
-- Part 3: Multiple runs (40 min)
+-   Setup (10 min)\
+-   Part 1: Basic modeling (50 min)
+-   Break (10 min)\
+-   Part 2a: Social Network Analysis (30 min)
+-   Part 2b: Adding multiple diseases & tools (30 min)
+-   Break (10 min)\
+-   Part 3: Multiple runs (40 min)
 
-You are welcome to use your personal computer, but we also have an online RStudio server available for you to use.[^noteposit]
+You are welcome to use your personal computer, but we also have an online RStudio server available for you to use.[^1]
 
-[^noteposit]: Please note that the online RStudio server and your data stored in it will be available for two weeks after the workshop. After that, the server will be shut down and all data will be deleted. If you would like to keep your data, please download it before the server is shut down.
- 
+[^1]: Please note that the online RStudio server and your data stored in it will be available for two weeks after the workshop. After that, the server will be shut down and all data will be deleted. If you would like to keep your data, please download it before the server is shut down.
+
 ## **Installation**
 
 You can install the development version of epiworldR from [GitHub](https://github.com/UofUEpiBio/epiworldR) with:
