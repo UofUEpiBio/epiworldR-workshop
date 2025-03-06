@@ -142,9 +142,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "epiworldR Sunbelt 2025 Workshop",
+    "title": "epiworldR Workshop - Sunbelt 2025",
     "section": "",
-    "text": "Codelibrary(epiworldR)\n\n# Creating a model\nmymodel &lt;- ModelSEIRCONN(\n  name = \"Nasty virus\", \n  n = 10000, \n  prevalence = .001, \n  contact_rate = 4,\n  transmission_rate = .4, \n  incubation_days = 7, \n  recovery_rate = 1/7\n) |&gt; verbose_off() \n\n# Adding a virus\nadd_virus(\n  mymodel, \n  virus(\n    name = \"Nasty virus 2\",\n    prob_infecting = .5,\n    recovery_rate = .3,\n    ), \n  proportion = .001\n)\n\n# Renaming the model\nset_name(mymodel, mname = \"SEIR COVID-19 model\")\n\n# Running the model\nset.seed(8383)\nrun(mymodel, ndays = 100)\n\nop &lt;- par(mfrow = c(2, 2), mar = par()$mar * c(1, 1, 1/2, 0))\nplot(mymodel)\nplot_reproductive_number(mymodel)\nplot_incidence(mymodel)\nplot_generation_time(mymodel)\npar(op)\n\n\n\n\n\n\nFigure 1\nThe epiworldR R package is a wrapper of the C++ library epiworld. It provides a general framework for modeling disease transmission using agent-based models wiki. Some main features include:"
+    "text": "Codelibrary(epiworldR)\n\n# Create a model\nmymodel &lt;- ModelSEIRCONN(\n  name = \"Nasty virus\", \n  n = 10000, \n  prevalence = .001, \n  contact_rate = 4,\n  transmission_rate = .4, \n  incubation_days = 7, \n  recovery_rate = 1/7\n) |&gt; verbose_off() \n\n# Add a second virus\nadd_virus(\n  mymodel, \n  virus(\n    name = \"Nasty virus 2\",\n    prob_infecting = .5,\n    recovery_rate = .3,\n    ), \n  proportion = .001\n)\n\n# Rename the model\nset_name(mymodel, mname = \"SEIR COVID-19 model\")\n\n# Run the model\nset.seed(8383)\nrun(mymodel, ndays = 100)\n\n# Plot the model\n# - Set graphical parameters to plot in 2x2 grid\nop &lt;- par(mfrow = c(2, 2), mar = par()$mar * c(1, 1, 1/2, 0))\n# - Plot\nplot(mymodel)\nplot_reproductive_number(mymodel)\nplot_incidence(mymodel)\nplot_generation_time(mymodel)\n# - Restore original graphical parameters\npar(op)\n\n\n\n\n\n\nFigure 1\nWelcome to the Sunbelt 2025 workshop Simulating Complex Agent-Based Models with epiworldR. The epiworldR R package is a wrapper of the C++ library epiworld. It provides a general framework for modeling disease transmission using agent-based models.\nKey features include:"
   },
   {
     "objectID": "index.html#schedule",
@@ -156,35 +156,35 @@
   {
     "objectID": "index.html#installation",
     "href": "index.html#installation",
-    "title": "epiworldR Sunbelt 2025 Workshop",
+    "title": "epiworldR Workshop - Sunbelt 2025",
     "section": "Installation",
     "text": "Installation\nYou can install the development version of epiworldR from GitHub with:\n\nCode# install.packages(\"devtools\")\ndevtools::install_github(\"UofUEpiBio/epiworldR\")"
   },
   {
     "objectID": "index.html#agent-based-modeling",
     "href": "index.html#agent-based-modeling",
-    "title": "epiworldR Sunbelt 2025 Workshop",
+    "title": "epiworldR Workshop - Sunbelt 2025",
     "section": "Agent-Based Modeling",
     "text": "Agent-Based Modeling\nAgent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system."
   },
   {
     "objectID": "index.html#terminology",
     "href": "index.html#terminology",
-    "title": "epiworldR Sunbelt 2025 Workshop",
+    "title": "epiworldR Workshop - Sunbelt 2025",
     "section": "Terminology",
     "text": "Terminology\nepiworldR focuses heavily on epidemiological applications to social networking. Below are some common terms that will be used throughout.\nSEIR, SIR, SIS, etc.:\nThese are epidemiological models that are used to analyze the spread and dynamics of diseases in a population. These models are a combination or selection of the states susceptible, exposed, infected, and/or recovered, in which all individuals in a population can be categorized in.\nSEIR connected (SEIRCONN), SIR connected (SIRCONN), etc.:\nThese are epidemiological models that are similar to their above counterparts (SEIR, SIR, etc.), but with the assumption that each individual agent is connected to all other agents.\nReproductive number:\nThe average number of secondary transmissions from one infected person. For example, a reproductive number of 2.0 indicates that one infected person transmits the disease to two other people in the population on average.\nIncidence:\nThe the occurrence of new cases of disease or injury in a population over a specified period of time. Specifically, daily incidence is computed in epiworldR."
   },
   {
     "objectID": "index.html#about-the-instructors",
     "href": "index.html#about-the-instructors",
-    "title": "epiworldR Sunbelt 2025 Workshop",
-    "section": "About the instructors",
-    "text": "About the instructors\nDr. George G. Vega Yon is a Research Assistant Professor of Epidemiology at the Department of Internal Medicine at the University of Utah.\nDerek S. Meyer is a Research Assistant and M.Stat. student in Biostatistics at the Department of Internal Medicine at the University of Utah."
+    "title": "epiworldR Workshop - Sunbelt 2025",
+    "section": "About the Instructors",
+    "text": "About the Instructors\nAndrew Pulsipher is a software developer and Dr. George G. Vega Yon is a Research Assistant Professor of Epidemiology at the University of Utah’s School of Medicine."
   },
   {
     "objectID": "index.html#footnotes",
     "href": "index.html#footnotes",
-    "title": "epiworldR Sunbelt 2025 Workshop",
+    "title": "epiworldR Workshop - Sunbelt 2025",
     "section": "Footnotes",
     "text": "Footnotes\n\nPlease note that the online RStudio server and your data stored in it will be available for two weeks after the workshop. After that, the server will be shut down and all data will be deleted. If you would like to keep your data, please download it before the server is shut down.↩︎"
   },
@@ -236,5 +236,33 @@
     "title": "Part 1: Basic Modeling",
     "section": "Footnotes",
     "text": "Footnotes\n\nThis feature is currently under development. The repository of epiworld contains a branch with this feature.↩︎"
+  },
+  {
+    "objectID": "index.html#workshop-schedule",
+    "href": "index.html#workshop-schedule",
+    "title": "epiworldR Workshop - Sunbelt 2025",
+    "section": "Workshop Schedule",
+    "text": "Workshop Schedule\n\n(10 min) Setup\n(50 min) Part 1: Basic modeling\n(10 min) Break\n(30 min) Part 2a: Social Network Analysis\n(30 min) Part 2b: Adding multiple diseases & tools\n(10 min) Break\n(40 min) Part 3: Multiple runs\n\nYou are welcome to use your personal computer, but we also have an online RStudio server available for you to use.1"
+  },
+  {
+    "objectID": "index.html#workshop-details",
+    "href": "index.html#workshop-details",
+    "title": "epiworldR Workshop - Sunbelt 2025",
+    "section": "Workshop Details",
+    "text": "Workshop Details\nIf you don’t want to use your personal computer, we have an online RStudio server available for you to use.1\nSchedule\n\n(10 min) Setup\n(50 min) Part 1: Basic Modeling\n(10 min) Break\n(30 min) Part 2a: Social Network Analysis\n(30 min) Part 2b: Adding Multiple Diseases & Tools\n(10 min) Break\n(40 min) Part 3: Multiple Runs\nInstall epiworldR\n\nYou can install the latest stable version of epiworldR from CRAN:\n\nCodeinstall.packages(\"epiworldR\")\n\n\nor the latest development version from GitHub:\n\nCode# install.packages(\"devtools\")\ndevtools::install_github(\"UofUEpiBio/epiworldR\")"
+  },
+  {
+    "objectID": "index.html#overview-of-agent-based-modeling",
+    "href": "index.html#overview-of-agent-based-modeling",
+    "title": "epiworldR Workshop - Sunbelt 2025",
+    "section": "Overview of Agent-Based Modeling",
+    "text": "Overview of Agent-Based Modeling\nAgent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system."
+  },
+  {
+    "objectID": "index.html#relevant-terminology",
+    "href": "index.html#relevant-terminology",
+    "title": "epiworldR Workshop - Sunbelt 2025",
+    "section": "Relevant Terminology",
+    "text": "Relevant Terminology\nepiworldR focuses heavily on epidemiological applications to social networking. Below are some common terms that will be used throughout:\n\n\nSEIR, SIR, SIS, etc.: These are epidemiological models that are used to analyze the spread and dynamics of diseases in a population. These models are a combination or selection of the states susceptible, exposed, infected, and/or recovered, in which all individuals in a population can be categorized in.\n\nSEIR connected (SEIRCONN), SIR connected (SIRCONN), etc.: These are epidemiological models that are similar to their above counterparts (SEIR, SIR, etc.), but with the assumption that each individual agent is connected to all other agents.\n\nReproductive number: The average number of secondary transmissions from one infected person. For example, a reproductive number of 2.0 indicates that one infected person transmits the disease to two other people in the population on average.\n\nIncidence: The the occurrence of new cases of disease or injury in a population over a specified period of time. Specifically, daily incidence is computed in epiworldR."
   }
 ]
