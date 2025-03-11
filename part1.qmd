@@ -2,13 +2,34 @@
 title: "Part 1: Basic Modeling"
 ---
 
-**`epiworldR`** is an R package that provides a fast (C++ backend) and highly-customizable framework for building network-based transmission/diffusion agent-based models \[ABM\]. Some key features of **`epiworldR`** are the ability to construct multi-disease models (e.g., models of competing multi-pathogens/multi-rumor,) design mutating pathogens, architect population-level interventions, and build models with an arbitrary number of compartments/states (beyond SIR/SEIR.)[^1]
+## Overview of `epiworldR`
+![General Structure of `epiworldR`](figs/overview-of-epiworldr.drawio.svg){width="100%"}
 
-[^1]: This feature is currently under development. The [repository of epiworld](https://github.com/UofUEpiBio/epiworld){target="_blank"} contains a branch with this feature.
+As shown in the above diagram, `epiworldR` 
 
-Let's start right away with an example!
+Pre-built models:
+-   ModelSIR
+-   ModelSEIR
+-   ModelSIS
+-   ModelDiffNet
+-   ModelSIRCONN
+-   ...
 
-## Motivating Example
+## Monkeypox Example
+
+Using a contact rate of 4, a recovery rate of 1/7, and R0 for monkeypox of 2, we estimate a transmission rate using the R0 equation (R0 = P(transmit) \* Contact Rate / P(Recovery))
+
+```{r}
+monkeypox_contact_rate <- 4
+monkeypox_recovery_rate <- 1/7
+monkeypox_r0 <- 2
+monkeypox_transmission_rate <- monkeypox_r0 * monkeypox_recovery_rate / monkeypox_contact_rate
+```
+
+We then plug these numbers into a SEIR Connected model for Monkeypox with a population of 50,000. We also add two interventions as model events:
+
+-   Beginning on Day 10 of the model, a policy of social isolation is adopted which reduces the contact rate to 2
+-   Beginning on Day 20, a TV advertisement is run increasing awareness of the monkeypox outbreak, reducing the contact rate further to 1.5
 
 ```{r}
 #| label: motivating-example
@@ -16,60 +37,60 @@ Let's start right away with an example!
 library(epiworldR)
 
 # Create a model
-model <- ModelSEIRCONN(
+model_seirconn <- ModelSEIRCONN(
   name              = "Monkeypox",
   n                 = 50000, 
   prevalence        = 0.0001, 
-  contact_rate      = 4,
+  contact_rate      = monkeypox_contact_rate,
   incubation_days   = 7,
-  transmission_rate = 0.5,
-  recovery_rate     = 1/7
-  ) 
+  transmission_rate = monkeypox_transmission_rate,
+  recovery_rate     = monkeypox_recovery_rate
+  )
 
 # Changing contact rate for Isolation and TV advertisement 
 isolation_day_10 <- globalevent_set_params("Contact rate", 2, day = 10)
 advertisement_day_20 <- globalevent_set_params("Contact rate", 1.5, day = 20)
 
 # Adding global actions to model
-add_globalevent(model, isolation_day_10)
-add_globalevent(model, advertisement_day_20)
+add_globalevent(model_seirconn, isolation_day_10)
+add_globalevent(model_seirconn, advertisement_day_20)
 
 # Running and printing model summary
-run(model, ndays = 60, seed = 1912)
-summary(model)
-
-plot(model)
+verbose_off(model_seirconn)
+run(model_seirconn, ndays = 60, seed = 1912)
+plot(model_seirconn)
+summary(model_seirconn)
 ```
+
+epiworldR allows us to re-run the model without needing to re-initialize the model. In the above case, we ran the model for 60 days, now we run it again for 100 days.
 
 ```{r}
 #| label: run-model
 #| eval: true
 # Run the model
-run(model, ndays = 100, seed = 1912)
-model
+run(model_seirconn, ndays = 100, seed = 1912)
+model_seirconn
 ```
+
+Finally, we plot the results of the 100-day model run:
 
 ```{r}
 #| label: plot-model
 # Plot the model
+# - Set graphical parameters to plot in 2x2 grid
 op <- par(mfrow = c(2,2))
-plot_incidence(model)
+# - Plot
+plot_incidence(model_seirconn)
 abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
 
-plot_reproductive_number(model)
+plot_reproductive_number(model_seirconn)
 abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
 
-plot_generation_time(model)
+plot_generation_time(model_seirconn)
 abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+# - Restore original graphical parameters
 par(op)
-
 ```
-
-# General structure of epiworldR
-
-epiworldR is a highly flexible framework for building agent-based-models. Although we do emphasize models of disease transmission, the framework is general enough to build models of any type of diffusion process. The general structure of epiworldR is as follows:
-
-![A brief overview of epiworldR](figs/overview-of-epiworldr.drawio.svg){width="100%"}
 
 ## Example 1: Simulating a SIR model
 

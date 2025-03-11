@@ -167,7 +167,6 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   <li><a href="#install-epiworldr" id="toc-install-epiworldr" class="nav-link" data-scroll-target="#install-epiworldr">Install <code>epiworldR</code></a></li>
   </ul>
 </li>
-  <li><a href="#overview-of-agent-based-modeling" id="toc-overview-of-agent-based-modeling" class="nav-link" data-scroll-target="#overview-of-agent-based-modeling">Overview of Agent-Based Modeling</a></li>
   <li><a href="#relevant-terminology" id="toc-relevant-terminology" class="nav-link" data-scroll-target="#relevant-terminology">Relevant Terminology</a></li>
   <li><a href="#about-the-instructors" id="toc-about-the-instructors" class="nav-link" data-scroll-target="#about-the-instructors">About the Instructors</a></li>
   </ul></nav>
@@ -243,38 +242,80 @@ Figure&nbsp;1
 </div>
 </div>
 </div>
-<p>Welcome to the Sunbelt 2025 workshop <strong>Simulating Complex Agent-Based Models with <code>epiworldR</code></strong>. The <a href="https://uofuepibio.github.io/epiworldR" target="_blank"><strong><code>epiworldR</code></strong></a> R package is a wrapper of the C++ library <a href="https://github.com/UofUEpi/epiworld" target="_blank">epiworld</a>. It provides a general framework for modeling disease transmission using <a href="https://en.wikipedia.org/wiki/Agent-based_model" target="_blank">agent-based models</a>.</p>
-<p>Key features include:</p>
+<p>Welcome to the Sunbelt 2025 workshop <strong>Simulating Complex Agent-Based Models with <code>epiworldR</code></strong>.</p>
+<p>The <a href="https://uofuepibio.github.io/epiworldR" target="_blank"><strong><code>epiworldR</code></strong></a> R package is a wrapper of the C++ library <a href="https://github.com/UofUEpi/epiworld" target="_blank"><code>epiworld</code></a>. It provides a fast, highly customizable framework for building network-based transmission/diffusion <a href="https://en.wikipedia.org/wiki/Agent-based_model" target="_blank">agent-based models</a> (ABM).</p>
+<p>Key features of <code>epiworldR</code> include:</p>
 <ul>
 <li>Fast simulation with an average of 30 million agents/model-step/second</li>
+<li>Multi-disease models (e.g., competing pathogens, multiple rumors, etc.)</li>
+<li>Mutating pathogens</li>
+<li>User-defined interventions (events, tools, politices, etc.) that chagne model behavior while it’s running</li>
 <li>Adapting transmission and recovery rates based on comorbidities</li>
-<li>Simultaneous simulation of multiple diseases</li>
-<li>User-defined intervention policies/tools</li>
 <li>Parallel computing out-of-the-box</li>
+<li>Coming Soon: Models with an arbitrary number of compartments/states beyond SIR/SEIR (available in the <code>epiworld</code> C++ library and currently being ported to R)</li>
 </ul>
+<p>Additionally, while <code>epiworldR</code> was built for models of disease transmission, the <code>epiworld</code> framework is general enough to build models for any type of diffusion process (covered in Part 2a of this workshop).</p>
+<section id="workshop-details" class="level2"><h2 class="anchored" data-anchor-id="workshop-details">Workshop Details</h2>
+<p>If you don’t want to use your personal computer, we have an online RStudio server available for you to use.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<section id="schedule" class="level3"><h3 class="anchored" data-anchor-id="schedule">Schedule</h3>
+<ul>
+<li>(10 min) Setup</li>
+<li>(50 min) Part 1: Basic Modeling</li>
+<li>(10 min) Break</li>
+<li>(30 min) Part 2a: Non-Disease Applications (Social Network Analysis)</li>
+<li>(30 min) Part 2b: Adding Multiple Diseases &amp; Tools</li>
+<li>(10 min) Break</li>
+<li>(40 min) Part 3: Multiple Runs</li>
+</ul></section><section id="install-epiworldr" class="level3"><h3 class="anchored" data-anchor-id="install-epiworldr">Install <code>epiworldR</code>
+</h3>
+<p>You can install the latest stable version of <code>epiworldR</code> from CRAN:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">install.packages</span>(<span class="st">"epiworldR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>or the latest development version from GitHub:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># install.packages("devtools")</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"UofUEpiBio/epiworldR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section></section><section id="relevant-terminology" class="level2"><h2 class="anchored" data-anchor-id="relevant-terminology">Relevant Terminology</h2>
+<p><strong>Agent-based modeling (ABM)</strong>: A powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.</p>
+<p>As <code>epiworldR</code> focuses heavily on epidemiological applications, below are some common epidemiological terms that will be used throughout:</p>
+<ul>
+<li>
+<strong>SEIR, SIR, SIS, etc.:</strong> Epidemiological models used to analyze the spread and dynamics of diseases in a population. The models are named after the different compartments or states that an individual agent can fall into: Susceptible (S), Exposed (E), Infected (I), Recovered (R). So, SEIR has all four states, while SIR doesn’t have the Exposed state.</li>
+<li>
+<strong>SEIR connected (SEIRCONN), SIR connected (SIRCONN), etc.:</strong> Epidemiological models similar to their above counterparts (SEIR, SIR, etc.), but with the added assumption that each individual agent is connected to all other agents.</li>
+<li>
+<strong>Reproductive number:</strong> The average number of secondary transmissions from one infected person. For example, a reproductive number of 2.0 indicates that one infected person transmits the disease to two other people in the population on average.</li>
+<li>
+<strong>Incidence:</strong> The occurrence of new cases of disease or injury in a population over a specified period of time. In <code>epiworldR</code> each step of a model represents a “day”, thus <code>epiworldR</code> computes daily incidence.</li>
+</ul></section><section id="about-the-instructors" class="level2"><h2 class="anchored" data-anchor-id="about-the-instructors">About the Instructors</h2>
+<p>Andrew Pulsipher is a software developer and Dr.&nbsp;George G. Vega Yon is a Research Assistant Professor of Epidemiology, both at the University of Utah’s School of Medicine.</p>
 <div style="width: 70%;margin:auto">
 <div class="cell" data-layout-align="center">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>sir <span class="ot">&lt;-</span> <span class="fu">ModelSIR</span>(</span>
-<span id="cb2-2"><a href="#cb2-2"></a>  <span class="at">name           =</span> <span class="st">"COVID-19"</span>,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>  <span class="at">prevalence     =</span> .<span class="dv">01</span>,</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">transmission_rate =</span> .<span class="dv">5</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">recovery_rate       =</span> .<span class="dv">5</span></span>
-<span id="cb2-6"><a href="#cb2-6"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a>    <span class="co"># Adding a Small world population </span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>    <span class="fu">agents_smallworld</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">k =</span> <span class="dv">10</span>, <span class="at">d =</span> <span class="cn">FALSE</span>, <span class="at">p =</span> .<span class="dv">01</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-9"><a href="#cb2-9"></a>    <span class="co"># Running the model for 50 days</span></span>
-<span id="cb2-10"><a href="#cb2-10"></a>    <span class="fu">verbose_off</span>() <span class="sc">|&gt;</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a>    <span class="fu">run</span>(<span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
-<span id="cb2-12"><a href="#cb2-12"></a></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="do">## Transmission network</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a>net <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(sir)</span>
-<span id="cb2-15"><a href="#cb2-15"></a></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="do">## Plotting</span></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="fu">library</span>(netplot)</span>
-<span id="cb2-18"><a href="#cb2-18"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb2-19"><a href="#cb2-19"></a>x <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(<span class="fu">as.matrix</span>(net[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb2-20"><a href="#cb2-20"></a></span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="fu">nplot</span>(x, <span class="at">edge.curvature =</span> <span class="dv">0</span>, <span class="at">edge.color =</span> <span class="st">"gray"</span>, <span class="at">skip.vertex=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>sir <span class="ot">&lt;-</span> <span class="fu">ModelSIR</span>(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="at">name           =</span> <span class="st">"COVID-19"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="at">prevalence     =</span> .<span class="dv">01</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="at">transmission_rate =</span> .<span class="dv">5</span>,</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="at">recovery_rate       =</span> .<span class="dv">5</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a>    <span class="co"># Adding a Small world population </span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>    <span class="fu">agents_smallworld</span>(<span class="at">n =</span> <span class="dv">500</span>, <span class="at">k =</span> <span class="dv">10</span>, <span class="at">d =</span> <span class="cn">FALSE</span>, <span class="at">p =</span> .<span class="dv">01</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a>    <span class="co"># Running the model for 50 days</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>    <span class="fu">verbose_off</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>    <span class="fu">run</span>(<span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="do">## Transmission network</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>net <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(sir)</span>
+<span id="cb4-15"><a href="#cb4-15"></a></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="do">## Plotting</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="fu">library</span>(netplot)</span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb4-19"><a href="#cb4-19"></a>x <span class="ot">&lt;-</span> <span class="fu">graph_from_edgelist</span>(<span class="fu">as.matrix</span>(net[,<span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>]) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb4-20"><a href="#cb4-20"></a></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="fu">nplot</span>(x, <span class="at">edge.curvature =</span> <span class="dv">0</span>, <span class="at">edge.color =</span> <span class="st">"gray"</span>, <span class="at">skip.vertex=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-epiworldR-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-epiworldR-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -287,45 +328,6 @@ Figure&nbsp;2: Example transmission network generated by epiworldR (plotted with
 </div>
 </div>
 </div>
-<section id="workshop-details" class="level2"><h2 class="anchored" data-anchor-id="workshop-details">Workshop Details</h2>
-<p>If you don’t want to use your personal computer, we have an online RStudio server available for you to use.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<section id="schedule" class="level3"><h3 class="anchored" data-anchor-id="schedule">Schedule</h3>
-<ul>
-<li>(10 min) Setup</li>
-<li>(50 min) Part 1: Basic Modeling</li>
-<li>(10 min) Break</li>
-<li>(30 min) Part 2a: Social Network Analysis</li>
-<li>(30 min) Part 2b: Adding Multiple Diseases &amp; Tools</li>
-<li>(10 min) Break</li>
-<li>(40 min) Part 3: Multiple Runs</li>
-</ul></section><section id="install-epiworldr" class="level3"><h3 class="anchored" data-anchor-id="install-epiworldr">Install <code>epiworldR</code>
-</h3>
-<p>You can install the latest stable version of <code>epiworldR</code> from CRAN:</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">install.packages</span>(<span class="st">"epiworldR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>or the latest development version from GitHub:</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># install.packages("devtools")</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"UofUEpiBio/epiworldR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section></section><section id="overview-of-agent-based-modeling" class="level2"><h2 class="anchored" data-anchor-id="overview-of-agent-based-modeling">Overview of Agent-Based Modeling</h2>
-<p>Agent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.</p>
-</section><section id="relevant-terminology" class="level2"><h2 class="anchored" data-anchor-id="relevant-terminology">Relevant Terminology</h2>
-<p><code>epiworldR</code> focuses heavily on epidemiological applications to social networking. Below are some common terms that will be used throughout:</p>
-<ul>
-<li>
-<strong>SEIR, SIR, SIS, etc.:</strong> These are epidemiological models that are used to analyze the spread and dynamics of diseases in a population. These models are a combination or selection of the states susceptible, exposed, infected, and/or recovered, in which all individuals in a population can be categorized in.</li>
-<li>
-<strong>SEIR connected (SEIRCONN), SIR connected (SIRCONN), etc.:</strong> These are epidemiological models that are similar to their above counterparts (SEIR, SIR, etc.), but with the assumption that each individual agent is connected to all other agents.</li>
-<li>
-<strong>Reproductive number:</strong> The average number of secondary transmissions from one infected person. For example, a reproductive number of 2.0 indicates that one infected person transmits the disease to two other people in the population on average.</li>
-<li>
-<strong>Incidence:</strong> The the occurrence of new cases of disease or injury in a population over a specified period of time. Specifically, daily incidence is computed in <code>epiworldR</code>.</li>
-</ul></section><section id="about-the-instructors" class="level2"><h2 class="anchored" data-anchor-id="about-the-instructors">About the Instructors</h2>
-<p>Andrew Pulsipher is a software developer and Dr.&nbsp;George G. Vega Yon is a Research Assistant Professor of Epidemiology at the University of Utah’s School of Medicine.</p>
 
 
 </section><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>

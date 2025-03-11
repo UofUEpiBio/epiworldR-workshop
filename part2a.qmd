@@ -63,7 +63,6 @@ plot(adopt_rumor)
 
 We can extract the adoption network:
 
-
 ```{r}
 transmissions <- get_transmissions(adopt_rumor)
 

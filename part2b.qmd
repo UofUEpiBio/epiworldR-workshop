@@ -50,7 +50,7 @@ vaccine <- tool(
 add_tool(model_sir, vaccine, proportion = 0.5)
 ```
 
-Next, run the updated model for 50 days, the output below describes the simulation. To confirm that the flu and vaccine are included, notice the presence of "Flu" in the Virus(es) section of the output, and "Vaccine" in the Tool(s) section. 
+Next, run the updated model for 50 days, the output below describes the simulation. To confirm that the flu and vaccine are included, notice the presence of "Flu" in the Virus(es) section of the output, and "Vaccine" in the Tool(s) section.
 
 ```{r}
 run(model_sir, ndays = 50, seed = 1912)
@@ -145,8 +145,8 @@ lfun <- virus_fun_logit(
 lfun
 ```
 
-::: {.callout-note}
-To build the previous model, we used the following: (a) Under the logit model, the coefficient needed for the baseline probability of 0.25 is computed using `qlogis(0.25)`. With that, we can go further and compute the associated coefficient to obese individuals with `plogis(qlogis(.25) + x) = .125` -> `qlogis(.25) + x = plogis(.125)` -> `x = qlogis(.125) - qlogis(.25)`
+::: callout-note
+To build the previous model, we used the following: (a) Under the logit model, the coefficient needed for the baseline probability of 0.25 is computed using `qlogis(0.25)`. With that, we can go further and compute the associated coefficient to obese individuals with `plogis(qlogis(.25) + x) = .125` -\> `qlogis(.25) + x = plogis(.125)` -\> `x = qlogis(.125) - qlogis(.25)`
 :::
 
 The next step is to set the probability of recovery function for the virus. We can do this using the `set_prob_recovery_fun()` function:
@@ -177,31 +177,31 @@ plot_incidence(model_no_comor, main = "Without comorbidities")
 par(op)
 ```
 
-::: {.callout-tip}
+::: callout-tip
 We can get information about agents' final state using the function `get_agents_state()`.
 :::
 
 ## Exercise
 
 Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant and a masking tool to the model. Then plot the model parameters and reproductive numbers over time.
-  
+
 Assume the following for model initialization:\
--  n = 10000\
--  prevalence = 0.001\
--  contact_rate = 2.1\
--  transmission_rate = 0.5\
--  recovery_rate = $\frac{1}{4}$  
-  
+- n = 10000\
+- prevalence = 0.001\
+- contact_rate = 2.1\
+- transmission_rate = 0.5\
+- recovery_rate = $\frac{1}{4}$
+
 Assume the Delta variant has:\
--  prob_infecting = 0.3\
--  recovery_rate = $\frac{1}{4}$\
--  prevalence = 0.001\
--  When running the model, use seed = 1912
-  
-Assume the masking tool has:  
--  transmission_reduction = 0.3    
--  proportion of complying agents = 0.6 (for adding the tool to the model)  
-  
+- prob_infecting = 0.3\
+- recovery_rate = $\frac{1}{4}$\
+- prevalence = 0.001\
+- When running the model, use seed = 1912
+
+Assume the masking tool has:\
+- transmission_reduction = 0.3\
+- proportion of complying agents = 0.6 (for adding the tool to the model)
+
 After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 
 ::: {.callout-tip collapse="true"}
