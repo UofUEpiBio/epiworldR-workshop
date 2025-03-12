@@ -185,16 +185,18 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#monkeypox-example" id="toc-monkeypox-example" class="nav-link active" data-scroll-target="#monkeypox-example">Monkeypox Example</a></li>
+<li><a href="#overview-of-epiworldr" id="toc-overview-of-epiworldr" class="nav-link active" data-scroll-target="#overview-of-epiworldr">Overview of <code>epiworldR</code></a></li>
   <li>
-<a href="#models-included-in-epiworldr" id="toc-models-included-in-epiworldr" class="nav-link" data-scroll-target="#models-included-in-epiworldr">Models included in <code>epiworldR</code></a>
+<a href="#example-scenario-monkeypox-outbreak" id="toc-example-scenario-monkeypox-outbreak" class="nav-link" data-scroll-target="#example-scenario-monkeypox-outbreak">Example Scenario: Monkeypox Outbreak</a>
   <ul class="collapse">
-<li><a href="#example-1-simulating-a-sir-model" id="toc-example-1-simulating-a-sir-model" class="nav-link" data-scroll-target="#example-1-simulating-a-sir-model">Example 1: Simulating a SIR model</a></li>
-  <li><a href="#important-statistics" id="toc-important-statistics" class="nav-link" data-scroll-target="#important-statistics">Important Statistics</a></li>
-  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
-  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
+<li><a href="#set-up-the-model" id="toc-set-up-the-model" class="nav-link" data-scroll-target="#set-up-the-model">Set up the Model</a></li>
+  <li><a href="#run-the-model" id="toc-run-the-model" class="nav-link" data-scroll-target="#run-the-model">Run the Model</a></li>
+  <li><a href="#model-visualization" id="toc-model-visualization" class="nav-link" data-scroll-target="#model-visualization">Model Visualization</a></li>
+  <li><a href="#reproductive-number" id="toc-reproductive-number" class="nav-link" data-scroll-target="#reproductive-number">Reproductive Number</a></li>
   </ul>
 </li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -213,230 +215,74 @@ window.Quarto = {
   
 
 
-</header><section id="monkeypox-example" class="level2"><h2 class="anchored" data-anchor-id="monkeypox-example">Monkeypox Example</h2>
-<p>Using a contact rate of 4, a recovery rate of 1/7, and R0 for monkeypox of 2, we estimate a transmission rate using the R0 equation (R0 = P(transmit) * Contact Rate / P(Recovery))</p>
+</header><section id="overview-of-epiworldr" class="level2"><h2 class="anchored" data-anchor-id="overview-of-epiworldr">Overview of <code>epiworldR</code>
+</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="figs/overview-of-epiworldr.drawio.svg" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption>General Structure of <code>epiworldR</code></figcaption></figure>
+</div>
+<p>As shown in the above diagram, the core component of an <code>epiworldR</code> simulation is the model object. Models can have an arbitrary number of parameters, viruses, tools, and global events, depending on what the user wants to simulate.</p>
+<p>Pre-built models in <code>epiworldR</code> (e.g., ModelSIR, ModelSEIR, ModelDiffNet) typically initialize with a single virus and a few other parameters, such as the population size.</p>
+<p>In this part of the workshop, we’ll walk through a basic modeling example for monkeypox.</p>
+</section><section id="example-scenario-monkeypox-outbreak" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-monkeypox-outbreak">Example Scenario: Monkeypox Outbreak</h2>
+<p>The example implements the following scenario:</p>
+<ul>
+<li>
+<strong>Disease:</strong> Monkeypox</li>
+<li>
+<strong>Population size:</strong> 50,000 agents</li>
+<li>
+<strong>Initial Disease Prevalence:</strong> 0.0001 (5 agents start the simulation exposed to the virus)</li>
+<li>
+<strong>Contact Rate:</strong> 4 (each agent will contact 4 others during each model step/day)</li>
+<li>
+<strong>Incubation Days:</strong> 7 (how long after infection before symptoms appear)</li>
+<li>
+<strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span> (infected agents take 7 days to recover)</li>
+<li>
+<strong>Transmission Rate:</strong> 0.0714 (the probability an infected agent infects another agent)</li>
+</ul>
+<p>The monkeypox transmission rate is computed using the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number" target="_blank">basic reproductive number</a> (R0) equation (R0 = P(transmission) * contact_rate / P(recovery)) with R0 = 2.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>monkeypox_contact_rate <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>monkeypox_recovery_rate <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>monkeypox_r0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>monkeypox_transmission_rate <span class="ot">&lt;-</span> monkeypox_r0 <span class="sc">*</span> monkeypox_recovery_rate <span class="sc">/</span> monkeypox_contact_rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>monkeypox_r0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>monkeypox_contact_rate <span class="ot">&lt;-</span> <span class="dv">4</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>monkeypox_recovery_rate <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># monkeypox_transmission_rate &lt;- monkeypox_r0 * monkeypox_recovery_rate / monkeypox_contact_rate</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>monkeypox_transmission_rate <span class="ot">&lt;-</span> <span class="fl">0.5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>We then plug these numbers into a SEIR Connected model for Monkeypox with a population of 50,000. We also add two interventions as model events:</p>
-<ul>
-<li>Beginning on Day 10 of the model, a policy of social isolation is adopted which reduces the contact rate to 2</li>
-<li>Beginning on Day 20, a TV advertisement is run increasing awareness of the monkeypox outbreak, reducing the contact rate further to 1.5</li>
-</ul>
+<section id="set-up-the-model" class="level3"><h3 class="anchored" data-anchor-id="set-up-the-model">Set up the Model</h3>
+<p>To create the model in <code>epiworldR</code>, we use the <code>ModelSEIRCONN()</code> function.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Motivating example</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># Create a model</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>model_seirconn <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
-<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">name              =</span> <span class="st">"Monkeypox"</span>,</span>
-<span id="cb2-7"><a href="#cb2-7"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
-<span id="cb2-8"><a href="#cb2-8"></a>  <span class="at">prevalence        =</span> <span class="fl">0.0001</span>, </span>
-<span id="cb2-9"><a href="#cb2-9"></a>  <span class="at">contact_rate      =</span> monkeypox_contact_rate,</span>
-<span id="cb2-10"><a href="#cb2-10"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
-<span id="cb2-11"><a href="#cb2-11"></a>  <span class="at">transmission_rate =</span> monkeypox_transmission_rate,</span>
-<span id="cb2-12"><a href="#cb2-12"></a>  <span class="at">recovery_rate     =</span> monkeypox_recovery_rate</span>
-<span id="cb2-13"><a href="#cb2-13"></a>  )</span>
-<span id="cb2-14"><a href="#cb2-14"></a></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="co"># Changing contact rate for Isolation and TV advertisement </span></span>
-<span id="cb2-16"><a href="#cb2-16"></a>isolation_day_10 <span class="ot">&lt;-</span> <span class="fu">globalevent_set_params</span>(<span class="st">"Contact rate"</span>, <span class="dv">2</span>, <span class="at">day =</span> <span class="dv">10</span>)</span>
-<span id="cb2-17"><a href="#cb2-17"></a>advertisement_day_20 <span class="ot">&lt;-</span> <span class="fu">globalevent_set_params</span>(<span class="st">"Contact rate"</span>, <span class="fl">1.5</span>, <span class="at">day =</span> <span class="dv">20</span>)</span>
-<span id="cb2-18"><a href="#cb2-18"></a></span>
-<span id="cb2-19"><a href="#cb2-19"></a><span class="co"># Adding global actions to model</span></span>
-<span id="cb2-20"><a href="#cb2-20"></a><span class="fu">add_globalevent</span>(model_seirconn, isolation_day_10)</span>
-<span id="cb2-21"><a href="#cb2-21"></a><span class="fu">add_globalevent</span>(model_seirconn, advertisement_day_20)</span>
-<span id="cb2-22"><a href="#cb2-22"></a></span>
-<span id="cb2-23"><a href="#cb2-23"></a><span class="co"># Running and printing model summary</span></span>
-<span id="cb2-24"><a href="#cb2-24"></a><span class="fu">verbose_off</span>(model_seirconn)</span>
-<span id="cb2-25"><a href="#cb2-25"></a><span class="fu">run</span>(model_seirconn, <span class="at">ndays =</span> <span class="dv">60</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="fu">plot</span>(model_seirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part1_files/figure-html/motivating-example-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(epiworldR)</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="co"># Create a model</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>monkeypox_model <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">name              =</span> <span class="st">"Monkeypox"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
+<span id="cb2-7"><a href="#cb2-7"></a>  <span class="at">prevalence        =</span> <span class="fl">0.0001</span>, </span>
+<span id="cb2-8"><a href="#cb2-8"></a>  <span class="at">contact_rate      =</span> monkeypox_contact_rate,</span>
+<span id="cb2-9"><a href="#cb2-9"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
+<span id="cb2-10"><a href="#cb2-10"></a>  <span class="at">transmission_rate =</span> monkeypox_transmission_rate,</span>
+<span id="cb2-11"><a href="#cb2-11"></a>  <span class="at">recovery_rate     =</span> monkeypox_recovery_rate</span>
+<span id="cb2-12"><a href="#cb2-12"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-</div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">summary</span>(model_seirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>________________________________________________________________________________
-________________________________________________________________________________
-SIMULATION STUDY
-
-Name of the model   : Susceptible-Exposed-Infected-Removed (SEIR) (connected)
-Population size     : 50000
-Agents' data        : (none)
-Number of entities  : 0
-Days (duration)     : 60 (of 60)
-Number of viruses   : 1
-Last run elapsed t  : 29.00ms
-Last run speed      : 101.18 million agents x day / second
-Rewiring            : off
-
-Global events:
- - Update infected individuals (runs daily)
- - Set Contact rate to 2 (day 10)
- - Set Contact rate to 1.5 (day 20)
-
-Virus(es):
- - Monkeypox
-
-Tool(s):
- (none)
-
-Model parameters:
- - Avg. Incubation days : 7.0000
- - Contact rate         : 1.5000
- - Prob. Recovery       : 0.1429
- - Prob. Transmission   : 0.0714
-
-Distribution of the population at time 60:
-  - (0) Susceptible : 49995 -&gt; 49934
-  - (1) Exposed     :     5 -&gt; 8
-  - (2) Infected    :     0 -&gt; 9
-  - (3) Recovered   :     0 -&gt; 49
-
-Transition Probabilities:
- - Susceptible  1.00  0.00  0.00  0.00
- - Exposed      0.00  0.87  0.13  0.00
- - Infected     0.00  0.00  0.89  0.11
- - Recovered    0.00  0.00  0.00  1.00</code></pre>
-</div>
-</div>
-<p>epiworldR allows us to re-run the model without needing to re-initialize the model. In the above case, we ran the model for 60 days, now we run it again for 100 days.</p>
+<p>With the model initialized, we can print the model with:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Run the model</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">run</span>(model_seirconn, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
-<span id="cb5-3"><a href="#cb5-3"></a>model_seirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>monkeypox_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 It features 50000 agents, 1 virus(es), and 0 tool(s).
-The model has 4 states.
-The final distribution is: 49973 Susceptible, 2 Exposed, 3 Infected, and 22 Recovered.</code></pre>
+The model has 4 states. The model hasn't been run yet.</code></pre>
 </div>
 </div>
-<p>Finally, we plot the results of the 100-day model run:</p>
+<p>Since we haven’t run the model yet, the only new piece of information is the number of tools, which agents use to fight the virus (e.g., masking, vaccines, social distancing, etc.). We’ll cover tools later in the workshop, so our model currently has 0 tools.</p>
+</section><section id="run-the-model" class="level3"><h3 class="anchored" data-anchor-id="run-the-model">Run the Model</h3>
+<p>Here is a list of all the functions available to the “epiworld_model” class:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Plot the model</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="co"># - Set graphical parameters to plot in 2x2 grid</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="co"># - Plot</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="fu">plot_incidence</span>(model_seirconn)</span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb7-7"><a href="#cb7-7"></a></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="fu">plot_reproductive_number</span>(model_seirconn)</span>
-<span id="cb7-9"><a href="#cb7-9"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb7-10"><a href="#cb7-10"></a></span>
-<span id="cb7-11"><a href="#cb7-11"></a><span class="fu">plot_generation_time</span>(model_seirconn)</span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="dv">20</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb7-13"><a href="#cb7-13"></a><span class="co"># - Restore original graphical parameters</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part1_files/figure-html/plot-model-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section><section id="models-included-in-epiworldr" class="level1"><h1>Models included in <code>epiworldR</code>
-</h1>
-<ul>
-<li>ModelSIRCONN</li>
-<li>…</li>
-</ul>
-<section id="example-1-simulating-a-sir-model" class="level2"><h2 class="anchored" data-anchor-id="example-1-simulating-a-sir-model">Example 1: Simulating a SIR model</h2>
-<section id="setup-and-running-the-model" class="level4"><h4 class="anchored" data-anchor-id="setup-and-running-the-model">Setup and running the model</h4>
-<p>This example implements the following scenario:</p>
-<ul>
-<li>The disease name is specified (COVID-19),</li>
-<li>50,000 agents are initialized,</li>
-<li>the disease prevalence of 0.0001 is declared,</li>
-<li>each agent will contact two others (contact_rate),</li>
-<li>the transmission rate of the disease for any given agent is 0.5, and</li>
-<li>the recovery rate is set to <span class="math inline">\(\frac{1}{3}\)</span>.</li>
-</ul>
-<p>To create this model on <strong><code>epiworldR</code></strong>, we use the <code>ModelSIRCONN()</code> function. From here, the example will take you through the basic features of <strong><code>epiworldR</code></strong>.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>model_sirconn <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
-<span id="cb8-3"><a href="#cb8-3"></a>  <span class="at">name              =</span> <span class="st">"COVID-19"</span>,</span>
-<span id="cb8-4"><a href="#cb8-4"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
-<span id="cb8-5"><a href="#cb8-5"></a>  <span class="at">prevalence        =</span> <span class="fl">0.0001</span>, </span>
-<span id="cb8-6"><a href="#cb8-6"></a>  <span class="at">contact_rate      =</span> <span class="dv">2</span>,</span>
-<span id="cb8-7"><a href="#cb8-7"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb8-8"><a href="#cb8-8"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span></span>
-<span id="cb8-9"><a href="#cb8-9"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Printing the model shows us some information. First, the name of the model, population size, number of entities (think of these as public spaces in which agents can make social contact with one another), the duration in days, number of variants, amount of time the last replicate took to run (last run elapsed t), and rewiring status (on or off). The next piece of information you will see is a list of the viruses used in the model. In this case, COVID-19 was the only disease used. Note that <strong><code>epiworldR</code></strong> has the capability to include more than one virus in a model. Tool(s) lists any tools that agents have to fight the virus. Examples ofthis may include masking, vaccines, social distancing, etc. In this model, no tools are specified. Lastly, the model parameters are listed, which originate from the parameters specified in the model.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>model_sirconn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>________________________________________________________________________________
-Susceptible-Infected-Removed (SIR) (connected)
-It features 50000 agents, 1 virus(es), and 0 tool(s).
-The model has 3 states. The model hasn't been run yet.</code></pre>
-</div>
-</div>
-<p>To execute the model, use the run function with the SIR model object, number of simulation days, and an optional seed for reproducibility. Next, print out the results from the simulated model using model_sir.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>_________________________________________________________________________
-|Running the model...
-|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
-| done.</code></pre>
-</div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">summary</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>________________________________________________________________________________
-________________________________________________________________________________
-SIMULATION STUDY
-
-Name of the model   : Susceptible-Infected-Removed (SIR) (connected)
-Population size     : 50000
-Agents' data        : (none)
-Number of entities  : 0
-Days (duration)     : 50 (of 50)
-Number of viruses   : 1
-Last run elapsed t  : 61.00ms
-Last run speed      : 40.56 million agents x day / second
-Rewiring            : off
-
-Global events:
- - Update infected individuals (runs daily)
-
-Virus(es):
- - COVID-19
-
-Tool(s):
- (none)
-
-Model parameters:
- - Contact rate      : 2.0000
- - Recovery rate     : 0.3333
- - Transmission rate : 0.5000
-
-Distribution of the population at time 50:
-  - (0) Susceptible : 49995 -&gt; 3346
-  - (1) Infected    :     5 -&gt; 6
-  - (2) Recovered   :     0 -&gt; 46648
-
-Transition Probabilities:
- - Susceptible  0.95  0.05  0.00
- - Infected     0.00  0.67  0.33
- - Recovered    0.00  0.00  1.00</code></pre>
-</div>
-</div>
-<p>There are two additional sections in the model summary after running the model object summary, the first being the distribution of the population at time 50. This section describes the flow of agents from each state (SIR) after 50 days. The counts for these states will of course, change based on model parameters or simulation run-time. The transmission probabilities section outputs a 3x3 matrix that describes the probability of moving from one state to another. Notice in all cases, there is a probability of 0 to skip states. In other words, it is impossible for an agent to move from the susceptible state to the recovered state; that agent must pass through the infected state in order to then progress to the recovered state. The same logic applies with moving backwards; an agent cannot become susceptible again after being infected.</p>
-</section><section id="extracting-simulation-data" class="level4"><h4 class="anchored" data-anchor-id="extracting-simulation-data">Extracting Simulation Data</h4>
-<p>After running the <strong><code>epiworldR</code></strong> model, below is a list of all the functions that can be called using the <strong><code>epiworldR</code></strong> model object. To demonstrate, start with the basic plot and get_hist_total functions.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"epiworld_model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"epiworld_model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code> [1] add_param                  add_tool                  
  [3] add_virus                  agents_from_edgelist      
@@ -458,30 +304,20 @@ Transition Probabilities:
 see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
-</section><section id="visualization" class="level4"><h4 class="anchored" data-anchor-id="visualization">Visualization</h4>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part1_files/figure-html/plotting-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>As evident from the above plot, the SIR model constructed from <strong><code>epiworldR</code></strong> displays the changes in susceptible, infected, and recovered case counts over time (days). Notice after a certain amount of time, the curves flatten. Below, a table representation of the above plot is printed, complete with each state within the SIR model, date, and agent counts.</p>
+<p>Execute the model using the <code>run()</code> function, passing the model object, the number of simulation days (in this case, 60 days), and an optional seed for reproducibility. Use the <code>verbose_off()</code> function before running the model to suppress output generated by <code>run()</code>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Connected vs Non-connected Models
+Connected vs Non-Connected Models
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>The above example uses a SIR connected model (<code>ModelSIRCONN()</code>), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.<code>ModelSEIR()</code>, <code>ModelSIR()</code>, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the <code>agents_smallworld()</code> function before running the model where:<br>
+<p>This example uses a SEIR connected model (<code>ModelSEIRCONN()</code>), meaning that all agents in the model are connected with each other. Non-connected models (e.g., <code>ModelSEIR()</code>, <code>ModelSIR()</code>) don’t assume all agents are connected, thus a network of agents must be built using the <code>agents_smallworld()</code> function before running the model where:<br>
 - n = number of agents<br>
 - k = number of ties in the small world network<br>
 - d = whether the graph is directed or not<br>
@@ -489,44 +325,140 @@ Connected vs Non-connected Models
 </div>
 </div>
 </div>
-</section></section><section id="important-statistics" class="level2"><h2 class="anchored" data-anchor-id="important-statistics">Important Statistics</h2>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(model_sirconn))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">verbose_off</span>(monkeypox_model)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">run</span>(monkeypox_model, <span class="at">ndays =</span> <span class="dv">60</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a>monkeypox_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>  date       state counts
-1    0 Susceptible  49995
-2    0    Infected      5
-3    0   Recovered      0
-4    1 Susceptible  49991
-5    1    Infected      8
-6    1   Recovered      1</code></pre>
+<pre><code>________________________________________________________________________________
+Susceptible-Exposed-Infected-Removed (SEIR) (connected)
+It features 50000 agents, 1 virus(es), and 0 tool(s).
+The model has 4 states.
+The final distribution is: 0 Susceptible, 474 Exposed, 2263 Infected, and 47263 Recovered.</code></pre>
 </div>
 </div>
-<p>An important statistic in epidemiological models is the reproductive number.</p>
+<p>After running the model, the output is a little more descriptive, giving us the final distribution of agents across the four SEIR states. If we run the model again for a different duration, we’ll see different results. <code>epiworldR</code> allows us to re-run a model without re-initializing it.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sirconn)</span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">run</span>(monkeypox_model, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>monkeypox_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>  virus_id    virus source source_exposure_date rt
-1        0 COVID-19  26792                   47  0
-2        0 COVID-19  12690                   46  0
-3        0 COVID-19   8701                   46  0
-4        0 COVID-19  35250                   45  0
-5        0 COVID-19  46225                   44  0
-6        0 COVID-19  15139                   44  0</code></pre>
+<pre><code>________________________________________________________________________________
+Susceptible-Exposed-Infected-Removed (SEIR) (connected)
+It features 50000 agents, 1 virus(es), and 0 tool(s).
+The model has 4 states.
+The final distribution is: 0 Susceptible, 1 Exposed, 8 Infected, and 49991 Recovered.</code></pre>
 </div>
 </div>
-<p><strong><code>epiworldR</code></strong> has a method to automatically plot the reproductive number. Thisfunction takes the average of values in the above table for each date and repeats until all date have been accounted for. For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 1.7 other individuals.</p>
+<p>For more detailed output, use the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">summary</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>________________________________________________________________________________
+________________________________________________________________________________
+SIMULATION STUDY
+
+Name of the model   : Susceptible-Exposed-Infected-Removed (SEIR) (connected)
+Population size     : 50000
+Agents' data        : (none)
+Number of entities  : 0
+Days (duration)     : 100 (of 100)
+Number of viruses   : 1
+Last run elapsed t  : 109.00ms
+Total elapsed t     : 214.00ms (2 runs)
+Last run speed      : 45.87 million agents x day / second
+Average run speed   : 46.68 million agents x day / second
+Rewiring            : off
+
+Global events:
+ - Update infected individuals (runs daily)
+
+Virus(es):
+ - Monkeypox
+
+Tool(s):
+ (none)
+
+Model parameters:
+ - Avg. Incubation days : 7.0000
+ - Contact rate         : 4.0000
+ - Prob. Recovery       : 0.1429
+ - Prob. Transmission   : 0.5000
+
+Distribution of the population at time 100:
+  - (0) Susceptible : 49995 -&gt; 0
+  - (1) Exposed     :     5 -&gt; 1
+  - (2) Infected    :     0 -&gt; 8
+  - (3) Recovered   :     0 -&gt; 49991
+
+Transition Probabilities:
+ - Susceptible  0.82  0.18  0.00  0.00
+ - Exposed      0.00  0.86  0.14  0.00
+ - Infected     0.00  0.00  0.86  0.14
+ - Recovered    0.00  0.00  0.00  1.00</code></pre>
+</div>
+</div>
+<p>The <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function provides a lot more information on the model:</p>
+<ol type="1">
+<li>Summary of the simulation itself, giving details on the size of the model, the number of entities (think of these are public spaces in which agents can make contact with one another, we’ll cover them later), the elapsed time for the simulation, etc.</li>
+<li>List of global events. The model automatically includes an event to update infected individuals, which runs on each day of the model. During this event, infected agents contact other agents (with a chance to infect them) and/or recover from the disease. Users can define additional events and specify when they run (e.g., daily, weekly, once after 20 days, when the number of infected agents crosses a certain threshold, etc.).</li>
+<li>Lists of viruses and tools. Our example has 1 virus and 0 tools, but <code>epiworldR</code> models can have any number of viruses and tools.</li>
+<li>List of model parameters given at initialization.</li>
+<li>Initial and final distribution of agents across SEIR states.</li>
+<li>Transition Probabilities Matrix, which shows the probability of an agent in one state moving to a different state at a given step of the model. Notice that there is a probability of 0.0 to skip states. In other words, an agent cannot move from Susceptible directly to Recovered; that agent must pass through the Infected state before progressing to Recovered. The same logic applies in the reverse direction; an agent cannot become Susceptible again after being Infected.</li>
+</ol>
+<p>Take some time to familiarize yourself with this output.</p>
+</section><section id="model-visualization" class="level3"><h3 class="anchored" data-anchor-id="model-visualization">Model Visualization</h3>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">plot</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="part1_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="part1_files/figure-html/plot-model-100-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-</section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>The <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> function plots the number of agents in each of the four SEIR states over the course of the model simulation. You can get this data in tabular form with the <code>get_hist_total()</code> function:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(monkeypox_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>  date       state counts
+1    0 Susceptible  49995
+2    0     Exposed      5
+3    0    Infected      0
+4    0   Recovered      0
+5    1 Susceptible  49995
+6    1     Exposed      4</code></pre>
+</div>
+</div>
+</section><section id="reproductive-number" class="level3"><h3 class="anchored" data-anchor-id="reproductive-number">Reproductive Number</h3>
+<p>An important statistic in epidemiological models is the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number#Effective_reproduction_number">reproductive number</a>. We get this from an <code>epiworldR</code> model using the <code>get_reproductive_number()</code> funcion.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(monkeypox_model)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>  virus_id     virus source source_exposure_date rt
+1        0 Monkeypox  13873                   48  0
+2        0 Monkeypox   2890                   48  0
+3        0 Monkeypox  47514                   46  0
+4        0 Monkeypox  34129                   46  0
+5        0 Monkeypox  48375                   45  0
+6        0 Monkeypox  31698                   45  0</code></pre>
+</div>
+</div>
+<p>TODO: Explanation of this output. Does every agent have an rt?</p>
+<p>Plot the reproductive number using:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part1_files/figure-html/plot-repnum-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This function takes the average of values in the above table for each date and repeats until all dates have been accounted for. For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 10 other individuals.</p>
+</section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
 <p>Create a SEIR model using the <code>ModelSEIR()</code> function (not <code>ModelSEIRCONN()</code>) to simulate a COVID-19 outbreak for 100 days in a population with:<br>
 - prevalence = 0.01<br>
 - transmission_rate = 0.9<br>
@@ -540,18 +472,18 @@ Connected vs Non-connected Models
 - p = .01</p>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
 <p>Plot the reproductive number of the COVID-19 simulated SEIR model over 100 days.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");

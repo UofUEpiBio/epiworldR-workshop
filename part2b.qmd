@@ -212,3 +212,73 @@ Masking only influences the transmission of a disease, thus transmission reducti
 # Your solution here
 
 ```
+
+
+
+<!-- ## TODO: Monkeypox Example from Part 1 (with events) -->
+
+<!-- We also add two interventions as model events:
+
+-   Beginning on Day 10 of the model, a policy of social isolation is adopted which reduces the contact rate to 2
+-   Beginning on Day 20, a TV advertisement is run increasing awareness of the monkeypox outbreak, reducing the contact rate further to 1.5 -->
+
+<!-- ```{r}
+#| label: motivating-example
+# Motivating example
+library(epiworldR)
+
+# Create a model
+model_seirconn <- ModelSEIRCONN(
+  name              = "Monkeypox",
+  n                 = 50000, 
+  prevalence        = 0.0001, 
+  contact_rate      = monkeypox_contact_rate,
+  incubation_days   = 7,
+  transmission_rate = monkeypox_transmission_rate,
+  recovery_rate     = monkeypox_recovery_rate
+  )
+
+# Changing contact rate for Isolation and TV advertisement 
+isolation_day_10 <- globalevent_set_params("Contact rate", 2, day = 10)
+advertisement_day_20 <- globalevent_set_params("Contact rate", 1.5, day = 20)
+
+# Adding global actions to model
+add_globalevent(model_seirconn, isolation_day_10)
+add_globalevent(model_seirconn, advertisement_day_20)
+
+# Running and printing model summary
+verbose_off(model_seirconn)
+run(model_seirconn, ndays = 60, seed = 1912)
+plot(model_seirconn)
+summary(model_seirconn)
+```
+
+epiworldR allows us to re-run the model without needing to re-initialize the model. In the above case, we ran the model for 60 days, now we run it again for 100 days.
+
+```{r}
+#| label: run-model
+#| eval: true
+# Run the model
+run(model_seirconn, ndays = 100, seed = 1912)
+model_seirconn
+```
+
+Finally, we plot the results of the 100-day model run:
+
+```{r}
+#| label: plot-model
+# Plot the model
+# - Set graphical parameters to plot in 2x2 grid
+op <- par(mfrow = c(2,2))
+# - Plot
+plot_incidence(model_seirconn)
+abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+
+plot_reproductive_number(model_seirconn)
+abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+
+plot_generation_time(model_seirconn)
+abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+# - Restore original graphical parameters
+par(op)
+``` -->

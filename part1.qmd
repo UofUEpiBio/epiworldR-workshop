@@ -3,41 +3,45 @@ title: "Part 1: Basic Modeling"
 ---
 
 ## Overview of `epiworldR`
-![General Structure of `epiworldR`](figs/overview-of-epiworldr.drawio.svg){width="100%"}
 
-As shown in the above diagram, `epiworldR` 
+![General Structure of `epiworldR`](figs/overview-of-epiworldr.drawio.svg){width="70%"}
 
-Pre-built models:
--   ModelSIR
--   ModelSEIR
--   ModelSIS
--   ModelDiffNet
--   ModelSIRCONN
--   ...
+As shown in the above diagram, the core component of an `epiworldR` simulation is the model object.
+Models can have an arbitrary number of parameters, viruses, tools, and global events, depending on what the user wants to simulate.
 
-## Monkeypox Example
+Pre-built models in `epiworldR` (e.g., ModelSIR, ModelSEIR, ModelDiffNet) typically initialize with a single virus and a few other parameters, such as the population size.
 
-Using a contact rate of 4, a recovery rate of 1/7, and R0 for monkeypox of 2, we estimate a transmission rate using the R0 equation (R0 = P(transmit) \* Contact Rate / P(Recovery))
+In this part of the workshop, we'll walk through a basic modeling example for monkeypox.
 
+## Example Scenario: Monkeypox Outbreak
+The example implements the following scenario:
+
+-   **Disease:** Monkeypox
+-   **Population size:** 50,000 agents
+-   **Initial Disease Prevalence:** 0.0001 (5 agents start the simulation exposed to the virus)
+-   **Contact Rate:** 4 (each agent will contact 4 others during each model step/day)
+-   **Incubation Days:** 7 (how long after infection before symptoms appear)
+-   **Recovery Rate:** $\frac{1}{7}$ (infected agents take 7 days to recover)
+-   **Transmission Rate:** 0.0714 (the probability an infected agent infects another agent)
+
+The monkeypox transmission rate is computed using the [basic reproductive number](https://en.wikipedia.org/wiki/Basic_reproduction_number){target="_blank"} (R0) equation (R0 = P(transmission) \* contact_rate / P(recovery)) with R0 = 2.
 ```{r}
+#| label: R0 equation
+monkeypox_r0 <- 2
 monkeypox_contact_rate <- 4
 monkeypox_recovery_rate <- 1/7
-monkeypox_r0 <- 2
-monkeypox_transmission_rate <- monkeypox_r0 * monkeypox_recovery_rate / monkeypox_contact_rate
+# monkeypox_transmission_rate <- monkeypox_r0 * monkeypox_recovery_rate / monkeypox_contact_rate
+monkeypox_transmission_rate <- 0.5
 ```
 
-We then plug these numbers into a SEIR Connected model for Monkeypox with a population of 50,000. We also add two interventions as model events:
-
--   Beginning on Day 10 of the model, a policy of social isolation is adopted which reduces the contact rate to 2
--   Beginning on Day 20, a TV advertisement is run increasing awareness of the monkeypox outbreak, reducing the contact rate further to 1.5
-
+### Set up the Model
+To create the model in `epiworldR`, we use the `ModelSEIRCONN()` function.
 ```{r}
-#| label: motivating-example
-# Motivating example
+#| label: setup-model
 library(epiworldR)
 
 # Create a model
-model_seirconn <- ModelSEIRCONN(
+monkeypox_model <- ModelSEIRCONN(
   name              = "Monkeypox",
   n                 = 50000, 
   prevalence        = 0.0001, 
@@ -46,138 +50,117 @@ model_seirconn <- ModelSEIRCONN(
   transmission_rate = monkeypox_transmission_rate,
   recovery_rate     = monkeypox_recovery_rate
   )
-
-# Changing contact rate for Isolation and TV advertisement 
-isolation_day_10 <- globalevent_set_params("Contact rate", 2, day = 10)
-advertisement_day_20 <- globalevent_set_params("Contact rate", 1.5, day = 20)
-
-# Adding global actions to model
-add_globalevent(model_seirconn, isolation_day_10)
-add_globalevent(model_seirconn, advertisement_day_20)
-
-# Running and printing model summary
-verbose_off(model_seirconn)
-run(model_seirconn, ndays = 60, seed = 1912)
-plot(model_seirconn)
-summary(model_seirconn)
 ```
 
-epiworldR allows us to re-run the model without needing to re-initialize the model. In the above case, we ran the model for 60 days, now we run it again for 100 days.
+With the model initialized, we can print the model with:
 
 ```{r}
-#| label: run-model
-#| eval: true
-# Run the model
-run(model_seirconn, ndays = 100, seed = 1912)
-model_seirconn
+#| label: print-model-basic
+monkeypox_model
 ```
 
-Finally, we plot the results of the 100-day model run:
+Since we haven't run the model yet, the only new piece of information is the number of tools, which agents use to fight the virus (e.g., masking, vaccines, social distancing, etc.). 
+We'll cover tools later in the workshop, so our model currently has 0 tools.
 
-```{r}
-#| label: plot-model
-# Plot the model
-# - Set graphical parameters to plot in 2x2 grid
-op <- par(mfrow = c(2,2))
-# - Plot
-plot_incidence(model_seirconn)
-abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
-
-plot_reproductive_number(model_seirconn)
-abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
-
-plot_generation_time(model_seirconn)
-abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
-# - Restore original graphical parameters
-par(op)
-```
-
-## Example 1: Simulating a SIR model
-
-#### Setup and running the model
-
-This example implements the following scenario:
-
--   The disease name is specified (COVID-19),
--   50,000 agents are initialized,
--   the disease prevalence of 0.0001 is declared,
--   each agent will contact two others (contact_rate),
--   the transmission rate of the disease for any given agent is 0.5, and
--   the recovery rate is set to $\frac{1}{3}$.
-
-To create this model on **`epiworldR`**, we use the `ModelSIRCONN()` function. From here, the example will take you through the basic features of **`epiworldR`**.
-
-```{r sirconn-setup}
-library(epiworldR)
-model_sirconn <- ModelSIRCONN(
-  name              = "COVID-19",
-  n                 = 50000, 
-  prevalence        = 0.0001, 
-  contact_rate      = 2,
-  transmission_rate = 0.5,
-  recovery_rate     = 1/3
-  )
-```
-
-Printing the model shows us some information. First, the name of the model, population size, number of entities (think of these as public spaces in which agents can make social contact with one another), the duration in days, number of variants, amount of time the last replicate took to run (last run elapsed t), and rewiring status (on or off). The next piece of information you will see is a list of the viruses used in the model. In this case, COVID-19 was the only disease used. Note that **`epiworldR`** has the capability to include more than one virus in a model. Tool(s) lists any tools that agents have to fight the virus. Examples ofthis may include masking, vaccines, social distancing, etc. In this model, no tools are specified. Lastly, the model parameters are listed, which originate from the parameters specified in the model.
-
-```{r}
-model_sirconn
-```
-
-To execute the model, use the run function with the SIR model object, number of simulation days, and an optional seed for reproducibility. Next, print out the results from the simulated model using model_sir.
-
-```{r}
-run(model_sirconn, ndays = 50, seed = 1912)
-summary(model_sirconn)
-```
-
-There are two additional sections in the model summary after running the model object summary, the first being the distribution of the population at time 50. This section describes the flow of agents from each state (SIR) after 50 days. The counts for these states will of course, change based on model parameters or simulation run-time. The transmission probabilities section outputs a 3x3 matrix that describes the probability of moving from one state to another. Notice in all cases, there is a probability of 0 to skip states. In other words, it is impossible for an agent to move from the susceptible state to the recovered state; that agent must pass through the infected state in order to then progress to the recovered state. The same logic applies with moving backwards; an agent cannot become susceptible again after being infected.
-
-#### Extracting Simulation Data
-
-After running the **`epiworldR`** model, below is a list of all the functions that can be called using the **`epiworldR`** model object. To demonstrate, start with the basic plot and get_hist_total functions.
-
+### Run the Model
+Here is a list of all the functions available to the "epiworld_model" class:
 ```{r showing-methods}
 methods(class = "epiworld_model")
 ```
 
-#### Visualization
-
-```{r plotting}
-plot(model_sirconn)
-```
-
-As evident from the above plot, the SIR model constructed from **`epiworldR`** displays the changes in susceptible, infected, and recovered case counts over time (days). Notice after a certain amount of time, the curves flatten. Below, a table representation of the above plot is printed, complete with each state within the SIR model, date, and agent counts.
+Execute the model using the `run()` function, passing the model object, the number of simulation days (in this case, 60 days), and an optional seed for reproducibility.
+Use the `verbose_off()` function before running the model to suppress output generated by `run()`.
 
 ::: {.callout-note collapse="true"}
-## Connected vs Non-connected Models
+## Connected vs Non-Connected Models
 
-The above example uses a SIR connected model (`ModelSIRCONN()`), meaning that all agents in the model are connected with each other. When using a non-connected model (ex.`ModelSEIR()`, `ModelSIR()`, etc.), we do not assume that all agents in the model are connected with each other. Thus, a network of agents must be built using the `agents_smallworld()` function before running the model where:\
+This example uses a SEIR connected model (`ModelSEIRCONN()`), meaning that all agents in the model are connected with each other. 
+Non-connected models (e.g., `ModelSEIR()`, `ModelSIR()`) don't assume all agents are connected, thus a network of agents must be built using the `agents_smallworld()` function before running the model where:\
 - n = number of agents\
 - k = number of ties in the small world network\
 - d = whether the graph is directed or not\
 - p = probability of rewiring
 :::
 
-## Important Statistics
+```{r}
+#| label: run-model-60
+verbose_off(monkeypox_model)
+run(monkeypox_model, ndays = 60, seed = 1912)
 
-```{r get-hist-total}
-head(get_hist_total(model_sirconn))
+monkeypox_model
 ```
 
-An important statistic in epidemiological models is the reproductive number.
+After running the model, the output is a little more descriptive, giving us the final distribution of agents across the four SEIR states.
+If we run the model again for a different duration, we'll see different results.
+`epiworldR` allows us to re-run a model without re-initializing it.
 
-```{r repnum}
-repnum <- get_reproductive_number(model_sirconn)
+```{r}
+#| label: run-model-100
+run(monkeypox_model, ndays = 100, seed = 1912)
+monkeypox_model
+```
+
+For more detailed output, use the `summary()` function:
+
+```{r}
+#| label: summary-model-100
+summary(monkeypox_model)
+```
+
+The `summary()` function provides a lot more information on the model:
+
+1. Summary of the simulation itself, giving details on the size of the model, the number of entities (think of these are public spaces in which agents can make contact with one another, we'll cover them later), the elapsed time for the simulation, etc.
+2. List of global events.
+The model automatically includes an event to update infected individuals, which runs on each day of the model.
+During this event, infected agents contact other agents (with a chance to infect them) and/or recover from the disease.
+Users can define additional events and specify when they run (e.g., daily, weekly, once after 20 days, when the number of infected agents crosses a certain threshold, etc.).
+3. Lists of viruses and tools. 
+Our example has 1 virus and 0 tools, but `epiworldR` models can have any number of viruses and tools.
+4. List of model parameters given at initialization.
+5. Initial and final distribution of agents across SEIR states.
+6. Transition Probabilities Matrix, which shows the probability of an agent in one state moving to a different state at a given step of the model.
+Notice that there is a probability of 0.0 to skip states.
+In other words, an agent cannot move from Susceptible directly to Recovered; that agent must pass through the Infected state before progressing to Recovered. 
+The same logic applies in the reverse direction; an agent cannot become Susceptible again after being Infected.
+
+Take some time to familiarize yourself with this output.
+
+### Model Visualization
+```{r}
+#| label: plot-model-100
+plot(monkeypox_model)
+```
+
+The `plot()` function plots the number of agents in each of the four SEIR states over the course of the model simulation.
+You can get this data in tabular form with the `get_hist_total()` function:
+
+```{r}
+#| label: get-hist-total-100
+head(get_hist_total(monkeypox_model))
+```
+
+### Reproductive Number
+
+An important statistic in epidemiological models is the [reproductive number](https://en.wikipedia.org/wiki/Basic_reproduction_number#Effective_reproduction_number).
+We get this from an `epiworldR` model using the `get_reproductive_number()` funcion.
+
+```{r}
+#| label: get-repnum
+repnum <- get_reproductive_number(monkeypox_model)
 head(repnum)
 ```
 
-**`epiworldR`** has a method to automatically plot the reproductive number. Thisfunction takes the average of values in the above table for each date and repeats until all date have been accounted for. For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 1.7 other individuals.
+TODO: Explanation of this output. Does every agent have an rt?
 
+Plot the reproductive number using:
 ```{r}
+#| label: plot-repnum
 x <- plot(repnum, type="b")
 ```
+
+This function takes the average of values in the above table for each date and repeats until all dates have been accounted for. 
+For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 10 other individuals.
+
 
 ## Exercise 1
 
