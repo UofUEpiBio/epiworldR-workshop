@@ -67,14 +67,14 @@
     "href": "part3.html#exercise-1",
     "title": "Part 3: Multiple Simulation Runs",
     "section": "Exercise 1",
-    "text": "Exercise 1\nConsider for this exercise that there is a Hepatitis A outbreak. Your goal is to observe the average reproductive number over 100 simulations. Using a run_multiple simulation, what is the average reproductive number over the course of the first 20 days? Use a SEIRCONN model with:\n- n = 10000\n- prevalence = 0.01\n- contact_rate = 2\n- transmission_rate = 0.5\n- incubation_days = 2\n- recovery_rate = \\(\\frac{1}{7}\\)\n\n\n\n\n\n\nTip\n\n\n\n\n\nGeneral Steps:\n1. Create epiworldR_model\n2. Generate saver\n3. Run epiworldR_model\n4. Plot average reproductive number\n\n\n\n\nCode# Your solution here"
+    "text": "Exercise 1\nConsider a Hepatitis A outbreak with the following parameters:\n\n\nPopulation size: 10,000 agents\n\nInitial Prevalence: 0.01\n\nContact Rate: 2\n\nTransmission Rate: 0.5\n\nIncubation Days: 2\n\nRecovery Rate: \\(\\frac{1}{7}\\)\n\n\nUsing the ModelSEIRCONN() and run_multiple() functions, run 100 simulations each for 40 days. Plot the average reproductive number for the first 20 days.\n\nCode# Your solution here"
   },
   {
     "objectID": "part3.html#exercise-2",
     "href": "part3.html#exercise-2",
     "title": "Part 3: Multiple Simulation Runs",
     "section": "Exercise 2",
-    "text": "Exercise 2\nUsing the same SEIRCONN model from exercise 1, simulate a vaccine intervention for the previous exercise’s Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:\n- susceptibility_reduction = .9\n- transmission_reduction = .5\n- recovery_enhancer = .5\n- death_reduction = .9\n\n\n\n\n\n\nTip\n\n\n\n\n\nGeneral Steps:\n1. Create tool\n2. Use globalaction_tool & add_global_action\n3. Generate saver & run_multiple\n4. Plot average reproductive number\n\n\n\n\nCode# Your solution here"
+    "text": "Exercise 2\nUsing the ModelSEIRCONN object from Exercise 1, add a vaccine tool (using the tool() function) with the following parameters:\n\n\nSusceptibility Reduction: 0.9\n\nTransmission Reduction: 0.5\n\nDeath Reduction: 0.9\n\nRecovery Enhancer: 0.5\n\nPrevalence: 0.5\n\nHowever, instead of adding the vaccine at the start of the simulation, introduce the vaccine on Day 10 to 50% of the population using the globalevent_tool() and add_globalevent() functions.\nHow does that change the average reproductive number for the first 20 days over 100 simulations?\n\nCode# Your solution here"
   },
   {
     "objectID": "build.html",

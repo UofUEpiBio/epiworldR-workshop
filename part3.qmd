@@ -116,44 +116,35 @@ As expected, the reproductive number on average, decreases over time.
 
 ## Exercise 1
 
-Consider for this exercise that there is a Hepatitis A outbreak. Your goal is to observe the average reproductive number over 100 simulations. Using a `run_multiple` simulation, what is the average reproductive number over the course of the first 20 days? Use a `SEIRCONN` model with:\
-- n = 10000\
-- prevalence = 0.01\
-- contact_rate = 2\
-- transmission_rate = 0.5\
-- incubation_days = 2\
-- recovery_rate = $\frac{1}{7}$
+Consider a Hepatitis A outbreak with the following parameters:
 
-::: {.callout-tip collapse="true"}
-General Steps:\
-1. Create `epiworldR_model`\
-2. Generate saver\
-3. Run `epiworldR_model`\
-4. Plot average reproductive number
-:::
+-   **Population size:** 10,000 agents
+-   **Initial Prevalence:** 0.01
+-   **Contact Rate:** 2
+-   **Transmission Rate:** 0.5
+-   **Incubation Days:** 2
+-   **Recovery Rate:** $\frac{1}{7}$
+
+Using the `ModelSEIRCONN()` and `run_multiple()` functions, run 100 simulations each for 40 days. Plot the average reproductive number for the first 20 days.
 
 ```{r}
 # Your solution here
-
 ```
 
 ## Exercise 2
 
-Using the same `SEIRCONN` model from exercise 1, simulate a vaccine intervention for the previous exercise's Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:\
-- susceptibility_reduction = .9\
-- transmission_reduction = .5\
-- recovery_enhancer = .5\
-- death_reduction = .9
+Using the `ModelSEIRCONN` object from Exercise 1, add a vaccine tool (`tool()`) with the following parameters:
 
-::: {.callout-tip collapse="true"}
-General Steps:\
-1. Create tool\
-2. Use `globalaction_tool` & `add_global_action`\
-3. Generate saver & `run_multiple`\
-4. Plot average reproductive number
-:::
+-   **Susceptibility Reduction:** 0.9
+-   **Transmission Reduction:** 0.5
+-   **Death Reduction:** 0.9
+-   **Recovery Enhancer:** 0.5
+-   **Prevalence:** 0.5
+
+However, instead of adding the vaccine at the start of the simulation, introduce the vaccine on Day 10 to 50% of the population using the `globalevent_tool()` and `add_globalevent()` functions.
+
+How does that change the average reproductive number for the first 20 days over 100 simulations?
 
 ```{r}
 # Your solution here
-
 ```

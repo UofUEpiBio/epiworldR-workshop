@@ -319,63 +319,43 @@ _________________________________________________________________________
 </div>
 <p>As expected, the reproductive number on average, decreases over time.</p>
 </section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Consider for this exercise that there is a Hepatitis A outbreak. Your goal is to observe the average reproductive number over 100 simulations. Using a <code>run_multiple</code> simulation, what is the average reproductive number over the course of the first 20 days? Use a <code>SEIRCONN</code> model with:<br>
-- n = 10000<br>
-- prevalence = 0.01<br>
-- contact_rate = 2<br>
-- transmission_rate = 0.5<br>
-- incubation_days = 2<br>
-- recovery_rate = <span class="math inline">\(\frac{1}{7}\)</span></p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>General Steps:<br>
-1. Create <code>epiworldR_model</code><br>
-2. Generate saver<br>
-3. Run <code>epiworldR_model</code><br>
-4. Plot average reproductive number</p>
-</div>
-</div>
-</div>
+<p>Consider a Hepatitis A outbreak with the following parameters:</p>
+<ul>
+<li>
+<strong>Population size:</strong> 10,000 agents</li>
+<li>
+<strong>Initial Prevalence:</strong> 0.01</li>
+<li>
+<strong>Contact Rate:</strong> 2</li>
+<li>
+<strong>Transmission Rate:</strong> 0.5</li>
+<li>
+<strong>Incubation Days:</strong> 2</li>
+<li>
+<strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span>
+</li>
+</ul>
+<p>Using the <code>ModelSEIRCONN()</code> and <code>run_multiple()</code> functions, run 100 simulations each for 40 days. Plot the average reproductive number for the first 20 days.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
-<p>Using the same <code>SEIRCONN</code> model from exercise 1, simulate a vaccine intervention for the previous exercise’s Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:<br>
-- susceptibility_reduction = .9<br>
-- transmission_reduction = .5<br>
-- recovery_enhancer = .5<br>
-- death_reduction = .9</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>General Steps:<br>
-1. Create tool<br>
-2. Use <code>globalaction_tool</code> &amp; <code>add_global_action</code><br>
-3. Generate saver &amp; <code>run_multiple</code><br>
-4. Plot average reproductive number</p>
-</div>
-</div>
-</div>
+<p>Using the <code>ModelSEIRCONN</code> object from Exercise 1, add a vaccine tool (using the <code>tool()</code> function) with the following parameters:</p>
+<ul>
+<li>
+<strong>Susceptibility Reduction:</strong> 0.9</li>
+<li>
+<strong>Transmission Reduction:</strong> 0.5</li>
+<li>
+<strong>Death Reduction:</strong> 0.9</li>
+<li>
+<strong>Recovery Enhancer:</strong> 0.5</li>
+<li>
+<strong>Prevalence:</strong> 0.5</li>
+</ul>
+<p>However, instead of adding the vaccine at the start of the simulation, introduce the vaccine on Day 10 to 50% of the population using the <code>globalevent_tool()</code> and <code>add_globalevent()</code> functions.</p>
+<p>How does that change the average reproductive number for the first 20 days over 100 simulations?</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>

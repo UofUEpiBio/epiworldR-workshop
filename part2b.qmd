@@ -72,6 +72,8 @@ plot(model_sirconn)
 
 In `epiworldR`, agents use tools to fight diseases. Create the vaccine tool using the `tool()` function, with parameters that indicate how the tool modifies the disease parameters. We set our vaccine to reduce the susceptibility of agents by 10%, the transmission rate of infected agents by 50%, and the death rate by 10%. The vaccine further enhances the recovery rate by 50%.
 
+TODO: verify reduction is 10% not 90%
+
 ```{r}
 #| label: create-vaccine
 vaccine_tool <- tool(
