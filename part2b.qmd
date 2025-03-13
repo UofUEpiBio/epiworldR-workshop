@@ -70,9 +70,7 @@ plot(model_sirconn)
 
 ### Add a Tool (Vaccine)
 
-In `epiworldR`, agents use tools to fight diseases. Create the vaccine tool using the `tool()` function, with parameters that indicate how the tool modifies the disease parameters. We set our vaccine to reduce the susceptibility of agents by 10%, the transmission rate of infected agents by 50%, and the death rate by 10%. The vaccine further enhances the recovery rate by 50%.
-
-TODO: verify reduction is 10% not 90%
+In `epiworldR`, agents use tools to fight diseases. Create the vaccine tool using the `tool()` function, with parameters that indicate how the tool modifies the disease parameters. We set our vaccine to reduce the susceptibility of agents by 90%, the transmission rate of infected agents by 50%, and the death rate by 90%. The vaccine further enhances the recovery rate by 50%.
 
 ```{r}
 #| label: create-vaccine
@@ -82,7 +80,7 @@ vaccine_tool <- tool(
   transmission_reduction = .5,
   recovery_enhancer = .5, 
   death_reduction = .9,
-  prevalence = 0.5, # TODO: is this the same as set_distribution_tool()? If so, use this instead and note it above.
+  prevalence = 0.5,
   as_proportion = TRUE
 )
 ```
@@ -214,8 +212,6 @@ Use the `virus_fun_logit()` function to create a function for the probability of
 -   `vars`: the variables to use in the model
 -   `coefs`: the coefficients for each variable
 -   `model`: the model object
-
-TODO: Explain parameters better and clarify callout note
 
 ```{r}
 #| label: set-logit-fun

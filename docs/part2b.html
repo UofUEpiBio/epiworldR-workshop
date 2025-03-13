@@ -163,8 +163,8 @@ window.Quarto = {
 <span class="menu-text">Part 3</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./examples.html"> 
-<span class="menu-text">Examples</span></a>
+    <a class="nav-link" href="./examples.qmd"> 
+<span class="menu-text">Additional Learning</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -304,7 +304,7 @@ window.Quarto = {
 </div>
 </div>
 </section><section id="add-a-tool-vaccine" class="level3"><h3 class="anchored" data-anchor-id="add-a-tool-vaccine">Add a Tool (Vaccine)</h3>
-<p>In <code>epiworldR</code>, agents use tools to fight diseases. Create the vaccine tool using the <code>tool()</code> function, with parameters that indicate how the tool modifies the disease parameters. We set our vaccine to reduce the susceptibility of agents by 10%, the transmission rate of infected agents by 50%, and the death rate by 10%. The vaccine further enhances the recovery rate by 50%.</p>
+<p>In <code>epiworldR</code>, agents use tools to fight diseases. Create the vaccine tool using the <code>tool()</code> function, with parameters that indicate how the tool modifies the disease parameters. We set our vaccine to reduce the susceptibility of agents by 90%, the transmission rate of infected agents by 50%, and the death rate by 90%. The vaccine further enhances the recovery rate by 50%.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>vaccine_tool <span class="ot">&lt;-</span> <span class="fu">tool</span>(</span>
 <span id="cb6-2"><a href="#cb6-2"></a>  <span class="at">name =</span> <span class="st">"Vaccine"</span>,</span>
@@ -312,7 +312,7 @@ window.Quarto = {
 <span id="cb6-4"><a href="#cb6-4"></a>  <span class="at">transmission_reduction =</span> .<span class="dv">5</span>,</span>
 <span id="cb6-5"><a href="#cb6-5"></a>  <span class="at">recovery_enhancer =</span> .<span class="dv">5</span>, </span>
 <span id="cb6-6"><a href="#cb6-6"></a>  <span class="at">death_reduction =</span> .<span class="dv">9</span>,</span>
-<span id="cb6-7"><a href="#cb6-7"></a>  <span class="at">prevalence =</span> <span class="fl">0.5</span>, <span class="co"># </span><span class="al">TODO</span><span class="co">: is this the same as set_distribution_tool()? If so, use this instead and note it above.</span></span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="at">prevalence =</span> <span class="fl">0.5</span>,</span>
 <span id="cb6-8"><a href="#cb6-8"></a>  <span class="at">as_proportion =</span> <span class="cn">TRUE</span></span>
 <span id="cb6-9"><a href="#cb6-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
@@ -385,10 +385,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of viruses   : 2
-Last run elapsed t  : 91.00ms
-Total elapsed t     : 361.00ms (4 runs)
-Last run speed      : 27.25 million agents x day / second
-Average run speed   : 27.65 million agents x day / second
+Last run elapsed t  : 84.00ms
+Total elapsed t     : 366.00ms (4 runs)
+Last run speed      : 29.57 million agents x day / second
+Average run speed   : 27.28 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -477,7 +477,6 @@ Transition Probabilities:
 <li>
 <code>model</code>: the model object</li>
 </ul>
-<p>TODO: Explain parameters better and clarify callout note</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Logit function </span></span>
 <span id="cb18-2"><a href="#cb18-2"></a>lfun <span class="ot">&lt;-</span> <span class="fu">virus_fun_logit</span>(</span>

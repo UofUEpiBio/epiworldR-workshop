@@ -163,8 +163,8 @@ window.Quarto = {
 <span class="menu-text">Part 3</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./examples.html"> 
-<span class="menu-text">Examples</span></a>
+    <a class="nav-link" href="./examples.qmd"> 
+<span class="menu-text">Additional Learning</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -189,7 +189,7 @@ window.Quarto = {
   <li>
 <a href="#example-scenario-monkeypox-outbreak" id="toc-example-scenario-monkeypox-outbreak" class="nav-link" data-scroll-target="#example-scenario-monkeypox-outbreak">Example Scenario: Monkeypox Outbreak</a>
   <ul class="collapse">
-<li><a href="#set-up-the-model" id="toc-set-up-the-model" class="nav-link" data-scroll-target="#set-up-the-model">Set up the Model</a></li>
+<li><a href="#model-setup" id="toc-model-setup" class="nav-link" data-scroll-target="#model-setup">Model Setup</a></li>
   <li><a href="#run-the-model" id="toc-run-the-model" class="nav-link" data-scroll-target="#run-the-model">Run the Model</a></li>
   <li><a href="#model-summary" id="toc-model-summary" class="nav-link" data-scroll-target="#model-summary">Model Summary</a></li>
   <li><a href="#model-visualization" id="toc-model-visualization" class="nav-link" data-scroll-target="#model-visualization">Model Visualization</a></li>
@@ -266,7 +266,7 @@ see '?methods' for accessing help and source code</code></pre>
 <li>
 <strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span> (infected agents take 7 days to recover)</li>
 </ul>
-<section id="set-up-the-model" class="level3"><h3 class="anchored" data-anchor-id="set-up-the-model">Set up the Model</h3>
+<section id="model-setup" class="level3"><h3 class="anchored" data-anchor-id="model-setup">Model Setup</h3>
 <p>Create the model with the above characteristics using the <code>ModelSEIRCONN()</code> function.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>monkeypox_model <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
@@ -342,10 +342,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 60 (of 60)
 Number of viruses   : 1
-Last run elapsed t  : 104.00ms
-Total elapsed t     : 234.00ms (2 runs)
-Last run speed      : 28.60 million agents x day / second
-Average run speed   : 25.56 million agents x day / second
+Last run elapsed t  : 114.00ms
+Total elapsed t     : 229.00ms (2 runs)
+Last run speed      : 26.29 million agents x day / second
+Average run speed   : 26.16 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -424,7 +424,7 @@ Transition Probabilities:
 6        0 Monkeypox  31698                   45  0</code></pre>
 </div>
 </div>
-<p>TODO: Explanation of this output. Does every agent have an rt?</p>
+<p>Virus listed (each agent has a rt for each day of the model)</p>
 <p>Plot the reproductive number using:</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

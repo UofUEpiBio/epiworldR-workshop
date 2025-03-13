@@ -2,8 +2,6 @@
 title: "Part 2a: Non-Disease Applications - Network Diffusion"
 ---
 
-## Non-Disease Applications: Network Diffusion
-
 Though `epiworldR` focuses primarily on disease modeling, the `epiworld` framework is general enough to model any type of diffusion process, such as simulating the spread of ideas or rumors throughout a population. In this part of the workshop, we'll walk through an example of social network diffusion.
 
 ## Example Scenario: Academic Faculty Rumor
@@ -31,7 +29,7 @@ nplot(UKfaculty)
 
 ### Simulating the Rumor
 
-Using the `ModelDiffNet()` function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1. TODO: Explain the params.
+Using the `ModelDiffNet()` function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1.
 
 ```{r}
 library(epiworldR)

@@ -127,7 +127,7 @@ repnum <- get_reproductive_number(monkeypox_model)
 head(repnum)
 ```
 
-TODO: Explanation of this output. Does every agent have an rt?
+Virus listed (each agent has a rt for each day of the model)
 
 Plot the reproductive number using:
 ```{r}

@@ -65,6 +65,7 @@ Key features of `epiworldR` include:
 -   User-defined interventions (events, tools, politices, etc.) that chagne model behavior while it's running
 -   Adapting transmission and recovery rates based on comorbidities
 -   Parallel computing out-of-the-box
+-   Likelihood-Free Markhov chain Monte Carlo (LFMCMC)
 -   Coming Soon: Models with an arbitrary number of compartments/states beyond SIR/SEIR (available in the `epiworld` C++ library and currently being ported to R)
 
 Additionally, while `epiworldR` was built for models of disease transmission, the `epiworld` framework is general enough to build models for any type of diffusion process (covered in Part 2a of this workshop).

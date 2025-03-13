@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Part 2a: Non-Disease Applications - Network Diffusion – epiworldR - Sunbelt 2025 Workshop</title>
+<title>Part 3a: Multiple Simulation Runs – epiworldR - Sunbelt 2025 Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -100,6 +100,31 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
+</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
 </script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-fixed">
@@ -126,7 +151,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <span class="menu-text">Part 1</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./part2a.html" aria-current="page"> 
+    <a class="nav-link" href="./part2a.html"> 
 <span class="menu-text">Part 2a</span></a>
   </li>  
   <li class="nav-item">
@@ -134,7 +159,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <span class="menu-text">Part 2b</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3a.html"> 
+    <a class="nav-link active" href="./part3a.html" aria-current="page"> 
 <span class="menu-text">Part 3a</span></a>
   </li>  
   <li class="nav-item">
@@ -164,20 +189,22 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#non-disease-applications-network-diffusion" id="toc-non-disease-applications-network-diffusion" class="nav-link active" data-scroll-target="#non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</a></li>
-  <li>
-<a href="#example-scenario-academic-faculty-rumor" id="toc-example-scenario-academic-faculty-rumor" class="nav-link" data-scroll-target="#example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</a>
+<li>
+<a href="#example-scenario-500-simulations-of-measles" id="toc-example-scenario-500-simulations-of-measles" class="nav-link active" data-scroll-target="#example-scenario-500-simulations-of-measles">Example Scenario: 500 Simulations of Measles</a>
   <ul class="collapse">
-<li><a href="#load-packages-and-data" id="toc-load-packages-and-data" class="nav-link" data-scroll-target="#load-packages-and-data">Load Packages and Data</a></li>
-  <li><a href="#simulating-the-rumor" id="toc-simulating-the-rumor" class="nav-link" data-scroll-target="#simulating-the-rumor">Simulating the Rumor</a></li>
-  <li><a href="#view-the-adoption-network" id="toc-view-the-adoption-network" class="nav-link" data-scroll-target="#view-the-adoption-network">View the Adoption Network</a></li>
+<li><a href="#model-setup" id="toc-model-setup" class="nav-link" data-scroll-target="#model-setup">Model Setup</a></li>
+  <li><a href="#generate-saver" id="toc-generate-saver" class="nav-link" data-scroll-target="#generate-saver">Generate Saver</a></li>
+  <li><a href="#run-500-simulations" id="toc-run-500-simulations" class="nav-link" data-scroll-target="#run-500-simulations">Run 500 Simulations</a></li>
+  <li><a href="#visualize-results" id="toc-visualize-results" class="nav-link" data-scroll-target="#visualize-results">Visualize Results</a></li>
   </ul>
 </li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">Part 2a: Non-Disease Applications - Network Diffusion</h1>
+<h1 class="title">Part 3a: Multiple Simulation Runs</h1>
 </div>
 
 
@@ -191,106 +218,155 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   
 
 
-</header><section id="non-disease-applications-network-diffusion" class="level2"><h2 class="anchored" data-anchor-id="non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</h2>
-<p>Though <code>epiworldR</code> focuses primarily on disease modeling, the <code>epiworld</code> framework is general enough to model any type of diffusion process, such as simulating the spread of ideas or rumors throughout a population. In this part of the workshop, we’ll walk through an example of social network diffusion.</p>
-</section><section id="example-scenario-academic-faculty-rumor" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</h2>
+</header><div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part3a_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In statistics, the Law of Large Numbers ensures that as the sample size increases, the sample mean (average) of a random variable will converge to the population mean. The same principle applies when using multiple runs to simulate epidemiological models. As the number of <code>epiworldR</code> simulations increases, the sample means of the reproductive number or model parameters, for example, will converge to their corresponding population means.</p>
+<p>In <code>epiworldR</code>, the <code>run_multiple()</code> function allows us to run a specified number of simulations using the same model object to compare model results across several separate and repeated simulations. In this part of the workshop, we’ll walk through an example of using this function.</p>
+<section id="example-scenario-500-simulations-of-measles" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-500-simulations-of-measles">Example Scenario: 500 Simulations of Measles</h2>
 <p>The example implements the following scenario:</p>
 <ul>
 <li>
-<strong>Rumor:</strong> The dean will resign!</li>
+<strong>Disease:</strong> Measles</li>
 <li>
-<strong>Population Description:</strong> A UK university faculty</li>
+<strong>Population size:</strong> 5,000 agents</li>
 <li>
-<strong>Population size:</strong> 81 agents</li>
+<strong>Initial Disease Prevalence:</strong> 0.001</li>
+<li>
+<strong>Contact Rate:</strong> 2</li>
+<li>
+<strong>Transmission Rate:</strong> 0.5</li>
+<li>
+<strong>Incubation Days:</strong> 7</li>
+<li>
+<strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span>
+</li>
 </ul>
-<section id="load-packages-and-data" class="level3"><h3 class="anchored" data-anchor-id="load-packages-and-data">Load Packages and Data</h3>
-<p>We use the <code>igraph</code> and <code>netplot</code> R packages for manipulating and plotting networks respectively. The file <code>part2a.rda</code> includes the <code>UKfaculty</code> friendship network from the <code>igraphdata</code> package, with the vertex attributes (<code>UKfaculty_vertex</code>) and edge list (<code>UKfaculty_edgelist</code>) as numeric matrices. We load the <code>UKfaculty</code> data and visualize the friendship network.</p>
+<p>We’ll run 500 simulations of this model and compare the results.</p>
+<section id="model-setup" class="level3"><h3 class="anchored" data-anchor-id="model-setup">Model Setup</h3>
+<p>Use the <code>ModelSEIRCONN()</code> function to initialize the measles model.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">load</span>(<span class="st">"part2a.rda"</span>)</span>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">nplot</span>(UKfaculty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section><section id="simulating-the-rumor" class="level3"><h3 class="anchored" data-anchor-id="simulating-the-rumor">Simulating the Rumor</h3>
-<p>Using the <code>ModelDiffNet()</code> function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1. TODO: Explain the params.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>adopt_rumor <span class="ot">&lt;-</span> <span class="fu">ModelDiffNet</span>(</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">name       =</span> <span class="st">"The dean will resign!"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">prevalence =</span> <span class="dv">2</span><span class="sc">/</span><span class="fu">vcount</span>(UKfaculty),</span>
-<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">prob_adopt =</span> .<span class="dv">1</span>,</span>
-<span id="cb2-7"><a href="#cb2-7"></a>  <span class="at">data       =</span> UKfaculty_vertex,</span>
-<span id="cb2-8"><a href="#cb2-8"></a>  <span class="at">params     =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
-<span id="cb2-9"><a href="#cb2-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3"></a>measles_model <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">name              =</span> <span class="st">"Measles"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">n                 =</span> <span class="dv">5000</span>, </span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="at">contact_rate      =</span> <span class="dv">2</span>,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>We then initialize the model agents using the <code>agents_from_edgelist()</code> function.</p>
+</section><section id="generate-saver" class="level3"><h3 class="anchored" data-anchor-id="generate-saver">Generate Saver</h3>
+<p>Use the <code>make_saver()</code> function to create a saver object. The saver will extract the <code>total_hist</code> and <code>reproductive</code> data from the model object after each run so the results can be compared.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can generate a saver for any metric compatible with the <code>make_saver()</code> function. See the details section of the <code>make_saver()</code> help manual for more (<code>?make_saver</code>).</p>
+</div>
+</div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Reading in the network</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">agents_from_edgelist</span>(</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  adopt_rumor,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">size     =</span> <span class="fu">vcount</span>(UKfaculty),</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">source   =</span> UKfaculty_edgelist[,<span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">target   =</span> UKfaculty_edgelist[,<span class="dv">2</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
-<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>measles_saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>We run the model for 100 days and plot the results.</p>
+</section><section id="run-500-simulations" class="level3"><h3 class="anchored" data-anchor-id="run-500-simulations">Run 500 Simulations</h3>
+<p>Use the <code>run_multiple()</code> function to simulate the measles model 500 times (<code>nsims = 500</code>) with each simulation running for 50 days (<code>ndays = 50</code>). Add the saver created in the previous step and set the number of threads to 4 (<code>nthread = 4</code>) for parallel computing.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">verbose_off</span>(adopt_rumor)</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">run</span>(adopt_rumor, <span class="at">ndays =</span> <span class="dv">100</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a>adopt_rumor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">verbose_off</span>(measles_model)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">run_multiple</span>(measles_model, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">nsims =</span> <span class="dv">500</span>, <span class="at">saver =</span> measles_saver, <span class="at">nthread =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>________________________________________________________________________________
-Diffusion of Innovations - The dean will resign!
-It features 81 agents, 1 virus(es), and 0 tool(s).
-The model has 2 states.
-The final distribution is: 0 Non adopters, and 81 Adopters.</code></pre>
-</div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">plot</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<pre><code>Starting multiple runs (500)
+_________________________________________________________________________
+_________________________________________________________________________
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
+ done.</code></pre>
 </div>
 </div>
-</div>
-<p>By day 16 or 17, the entire network had adopted the rumor that the dean will resign.</p>
-</section><section id="view-the-adoption-network" class="level3"><h3 class="anchored" data-anchor-id="view-the-adoption-network">View the Adoption Network</h3>
-<p>The transmission network is not always relevant for a diffusion network model, but in this case we can use it to visualize the spread of the rumor through the network. We get the transmission network using the <code>get_transmissions()</code> function, then plot the network using the <code>igraph</code> and <code>netplot</code> packages.</p>
+<p>Note that we do not run the model with a random seed, because we want each model run to have random differences.</p>
+</section><section id="visualize-results" class="level3"><h3 class="anchored" data-anchor-id="visualize-results">Visualize Results</h3>
+<p>Create a boxplot of the four SEIR states for each day across the 500 simulations using the <code>run_multiple_get_results()</code> function. For this example, we filter the data to observe only the first 20 days.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>transmissions <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>Warning in get_transmissions.epiworld_diffnet(adopt_rumor): The transmission
-network is not necesarily relevant for the diffnet model</code></pre>
-</div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Turning it into a network via igraph</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>tnet <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(</span>
-<span id="cb9-3"><a href="#cb9-3"></a>  transmissions[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)] <span class="sc">+</span> <span class="dv">1</span>, <span class="co"># To start from 1 (not 0)</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-5"><a href="#cb9-5"></a>  <span class="at">vertices =</span> <span class="fu">cbind</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">81</span>, UKfaculty_vertex)</span>
-<span id="cb9-6"><a href="#cb9-6"></a>  )</span>
-<span id="cb9-7"><a href="#cb9-7"></a></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># Adding back vertex attributes</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="fu">nplot</span>(tnet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>seirconn_500 <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(measles_model)<span class="sc">$</span>total_hist</span>
+<span id="cb5-2"><a href="#cb5-2"></a>seirconn_500 <span class="ot">&lt;-</span> seirconn_500[seirconn_500<span class="sc">$</span>date <span class="sc">&lt;=</span> <span class="dv">20</span>,]</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="fu">plot</span>(seirconn_500)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="part3a_files/figure-html/plot-epicurv-multiple-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Create a boxplot of the reproductive number for all 50 days across the 500 simulations using the <code>run_multiple_get_results()</code> function.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>seirconn_500_r <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(measles_model)<span class="sc">$</span>reproductive</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">plot</span>(seirconn_500_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part3a_files/figure-html/plot-reproductive-number-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As expected, the reproductive number on average, decreases over time.</p>
+</section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>Consider a Hepatitis A outbreak with the following parameters:</p>
+<ul>
+<li>
+<strong>Population size:</strong> 10,000 agents</li>
+<li>
+<strong>Initial Prevalence:</strong> 0.01</li>
+<li>
+<strong>Contact Rate:</strong> 2</li>
+<li>
+<strong>Transmission Rate:</strong> 0.5</li>
+<li>
+<strong>Incubation Days:</strong> 2</li>
+<li>
+<strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span>
+</li>
+</ul>
+<p>Using the <code>ModelSEIRCONN()</code> and <code>run_multiple()</code> functions, run 100 simulations each for 40 days. Plot the average reproductive number for the first 20 days.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<p>Using the <code>ModelSEIRCONN</code> object from Exercise 1, add a vaccine tool (<code>tool()</code>) with the following parameters:</p>
+<ul>
+<li>
+<strong>Susceptibility Reduction:</strong> 0.9</li>
+<li>
+<strong>Transmission Reduction:</strong> 0.5</li>
+<li>
+<strong>Death Reduction:</strong> 0.9</li>
+<li>
+<strong>Recovery Enhancer:</strong> 0.5</li>
+<li>
+<strong>Prevalence:</strong> 0.5</li>
+</ul>
+<p>However, instead of adding the vaccine at the start of the simulation, introduce the vaccine on Day 10 to 50% of the population using the <code>globalevent_tool()</code> and <code>add_globalevent()</code> functions.</p>
+<p>How does that change the average reproductive number for the first 20 days over 100 simulations?</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");

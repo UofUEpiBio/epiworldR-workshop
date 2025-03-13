@@ -21,7 +21,7 @@ website:
         text: "Part 2b"
       - href: part3.qmd
         text: "Part 3"
-      - href: examples.qmd
+      - href: additional-learning.qmd
         text: "Additional Learning"
 
     right: 

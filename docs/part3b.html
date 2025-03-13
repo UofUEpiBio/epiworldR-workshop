@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Part 2a: Non-Disease Applications - Network Diffusion – epiworldR - Sunbelt 2025 Workshop</title>
+<title>Part 3b: Likelihood-Free Markhov Chain Monte Carlo (LFMCMC) – epiworldR - Sunbelt 2025 Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -126,7 +126,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <span class="menu-text">Part 1</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./part2a.html" aria-current="page"> 
+    <a class="nav-link" href="./part2a.html"> 
 <span class="menu-text">Part 2a</span></a>
   </li>  
   <li class="nav-item">
@@ -138,11 +138,11 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <span class="menu-text">Part 3a</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3b.html"> 
+    <a class="nav-link active" href="./part3b.html" aria-current="page"> 
 <span class="menu-text">Part 3b</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./examples.html"> 
+    <a class="nav-link" href="./examples.qmd"> 
 <span class="menu-text">Additional Learning</span></a>
   </li>  
 </ul>
@@ -164,20 +164,21 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#non-disease-applications-network-diffusion" id="toc-non-disease-applications-network-diffusion" class="nav-link active" data-scroll-target="#non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</a></li>
+<li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section"></a></li>
   <li>
-<a href="#example-scenario-academic-faculty-rumor" id="toc-example-scenario-academic-faculty-rumor" class="nav-link" data-scroll-target="#example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</a>
+<a href="#example-scenario-calibrate-a-covid-19-sir-model" id="toc-example-scenario-calibrate-a-covid-19-sir-model" class="nav-link" data-scroll-target="#example-scenario-calibrate-a-covid-19-sir-model">Example Scenario: Calibrate a COVID-19 SIR Model</a>
   <ul class="collapse">
-<li><a href="#load-packages-and-data" id="toc-load-packages-and-data" class="nav-link" data-scroll-target="#load-packages-and-data">Load Packages and Data</a></li>
-  <li><a href="#simulating-the-rumor" id="toc-simulating-the-rumor" class="nav-link" data-scroll-target="#simulating-the-rumor">Simulating the Rumor</a></li>
-  <li><a href="#view-the-adoption-network" id="toc-view-the-adoption-network" class="nav-link" data-scroll-target="#view-the-adoption-network">View the Adoption Network</a></li>
+<li><a href="#create-a-true-covid-19-model" id="toc-create-a-true-covid-19-model" class="nav-link" data-scroll-target="#create-a-true-covid-19-model">Create a True COVID-19 Model</a></li>
+  <li><a href="#setup-lfmcmc" id="toc-setup-lfmcmc" class="nav-link" data-scroll-target="#setup-lfmcmc">Setup LFMCMC</a></li>
+  <li><a href="#run-lfmcmc" id="toc-run-lfmcmc" class="nav-link" data-scroll-target="#run-lfmcmc">Run LFMCMC</a></li>
+  <li><a href="#check-results" id="toc-check-results" class="nav-link" data-scroll-target="#check-results">Check Results</a></li>
   </ul>
 </li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">Part 2a: Non-Disease Applications - Network Diffusion</h1>
+<h1 class="title">Part 3b: Likelihood-Free Markhov Chain Monte Carlo (LFMCMC)</h1>
 </div>
 
 
@@ -191,103 +192,162 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   
 
 
-</header><section id="non-disease-applications-network-diffusion" class="level2"><h2 class="anchored" data-anchor-id="non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</h2>
-<p>Though <code>epiworldR</code> focuses primarily on disease modeling, the <code>epiworld</code> framework is general enough to model any type of diffusion process, such as simulating the spread of ideas or rumors throughout a population. In this part of the workshop, we’ll walk through an example of social network diffusion.</p>
-</section><section id="example-scenario-academic-faculty-rumor" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</h2>
-<p>The example implements the following scenario:</p>
+</header><section id="section" class="level2"><h2 class="anchored" data-anchor-id="section"></h2>
+<p>Often in network simulations, we don’t know the model parameters that will produce an accurate model. Likelihood-Free Markhov chain Monte Carlo (LFMCMC) runs a base model over a specified number of simulations, each time modifying the parameters used by the model to bring the model results closer to the observed data we’re trying to model. In <code>epiworldR</code>, the <code>LFMCMC()</code> function creates an LFMCMC object that can perform this calibration. In this part of the workshop, we’ll walk through an example.</p>
+</section><section id="example-scenario-calibrate-a-covid-19-sir-model" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-calibrate-a-covid-19-sir-model">Example Scenario: Calibrate a COVID-19 SIR Model</h2>
+<section id="create-a-true-covid-19-model" class="level3"><h3 class="anchored" data-anchor-id="create-a-true-covid-19-model">Create a True COVID-19 Model</h3>
+<p>Assume that the true parameters of COVID-19 for a given population of 2,000 agents are as follows:</p>
 <ul>
 <li>
-<strong>Rumor:</strong> The dean will resign!</li>
+<strong>Initial Disease Prevalence:</strong> 0.01</li>
 <li>
-<strong>Population Description:</strong> A UK university faculty</li>
+<strong>Transmission Rate:</strong> 0.1</li>
 <li>
-<strong>Population size:</strong> 81 agents</li>
+<strong>Recovery Rate:</strong> 1/7</li>
 </ul>
-<section id="load-packages-and-data" class="level3"><h3 class="anchored" data-anchor-id="load-packages-and-data">Load Packages and Data</h3>
-<p>We use the <code>igraph</code> and <code>netplot</code> R packages for manipulating and plotting networks respectively. The file <code>part2a.rda</code> includes the <code>UKfaculty</code> friendship network from the <code>igraphdata</code> package, with the vertex attributes (<code>UKfaculty_vertex</code>) and edge list (<code>UKfaculty_edgelist</code>) as numeric matrices. We load the <code>UKfaculty</code> data and visualize the friendship network.</p>
+<p>We would represent that disease in <code>epiworldR</code> using the <code>ModelSIR()</code> and <code>agents_smallworld()</code> functions.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">load</span>(<span class="st">"part2a.rda"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">nplot</span>(UKfaculty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section><section id="simulating-the-rumor" class="level3"><h3 class="anchored" data-anchor-id="simulating-the-rumor">Simulating the Rumor</h3>
-<p>Using the <code>ModelDiffNet()</code> function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1. TODO: Explain the params.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb2-2"><a href="#cb2-2"></a></span>
-<span id="cb2-3"><a href="#cb2-3"></a>adopt_rumor <span class="ot">&lt;-</span> <span class="fu">ModelDiffNet</span>(</span>
-<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">name       =</span> <span class="st">"The dean will resign!"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">prevalence =</span> <span class="dv">2</span><span class="sc">/</span><span class="fu">vcount</span>(UKfaculty),</span>
-<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">prob_adopt =</span> .<span class="dv">1</span>,</span>
-<span id="cb2-7"><a href="#cb2-7"></a>  <span class="at">data       =</span> UKfaculty_vertex,</span>
-<span id="cb2-8"><a href="#cb2-8"></a>  <span class="at">params     =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
-<span id="cb2-9"><a href="#cb2-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>model_seed <span class="ot">&lt;-</span> <span class="dv">122</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a>true_covid_model <span class="ot">&lt;-</span> <span class="fu">ModelSIR</span>(</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="at">name =</span> <span class="st">"COVID-19"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>    <span class="at">prevalence =</span> .<span class="dv">01</span>,</span>
+<span id="cb1-7"><a href="#cb1-7"></a>    <span class="at">transmission_rate =</span> .<span class="dv">1</span>,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>    <span class="at">recovery_rate =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>    )</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="fu">agents_smallworld</span>(</span>
+<span id="cb1-12"><a href="#cb1-12"></a>  true_covid_model,</span>
+<span id="cb1-13"><a href="#cb1-13"></a>  <span class="at">n =</span> <span class="dv">2000</span>,</span>
+<span id="cb1-14"><a href="#cb1-14"></a>  <span class="at">k =</span> <span class="dv">5</span>,</span>
+<span id="cb1-15"><a href="#cb1-15"></a>  <span class="at">d =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1-16"><a href="#cb1-16"></a>  <span class="at">p =</span> <span class="fl">0.01</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>We then initialize the model agents using the <code>agents_from_edgelist()</code> function.</p>
+<p>Running the true model for 50 days results in the following final distribution of agents across the three SIR states:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Reading in the network</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">agents_from_edgelist</span>(</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  adopt_rumor,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">size     =</span> <span class="fu">vcount</span>(UKfaculty),</span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">source   =</span> UKfaculty_edgelist[,<span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">target   =</span> UKfaculty_edgelist[,<span class="dv">2</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
-<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>We run the model for 100 days and plot the results.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">verbose_off</span>(adopt_rumor)</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">run</span>(adopt_rumor, <span class="at">ndays =</span> <span class="dv">100</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a>adopt_rumor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">verbose_off</span>(true_covid_model)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">run</span>(true_covid_model, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> model_seed)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>observed_data <span class="ot">&lt;-</span> <span class="fu">get_today_total</span>(true_covid_model)</span>
+<span id="cb2-4"><a href="#cb2-4"></a>observed_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>________________________________________________________________________________
-Diffusion of Innovations - The dean will resign!
-It features 81 agents, 1 virus(es), and 0 tool(s).
-The model has 2 states.
-The final distribution is: 0 Non adopters, and 81 Adopters.</code></pre>
-</div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">plot</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<pre><code>Susceptible    Infected   Recovered 
+       1865           0         135 </code></pre>
 </div>
 </div>
-</div>
-<p>By day 16 or 17, the entire network had adopted the rumor that the dean will resign.</p>
-</section><section id="view-the-adoption-network" class="level3"><h3 class="anchored" data-anchor-id="view-the-adoption-network">View the Adoption Network</h3>
-<p>The transmission network is not always relevant for a diffusion network model, but in this case we can use it to visualize the spread of the rumor through the network. We get the transmission network using the <code>get_transmissions()</code> function, then plot the network using the <code>igraph</code> and <code>netplot</code> packages.</p>
+<p>For the rest of the example, we’ll assume we don’t know the true disease parameters, but that we have the <code>observed_data</code> (e.g., from public health records). We’ll use LFMCMC to recover the transmission and recovery rates from the true model and use the <code>observed_data</code> to check how close each simulation is to the true values.</p>
+</section><section id="setup-lfmcmc" class="level3"><h3 class="anchored" data-anchor-id="setup-lfmcmc">Setup LFMCMC</h3>
+<p>Frist, set up a new SIR model for LFMCMC to use. Since we don’t know the true parameters, we’ll guess. It won’t matter what we choose for the recovery and transmission rates, as we’ll define the initial parameters for LFMCMC before running it.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>transmissions <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>Warning in get_transmissions.epiworld_diffnet(adopt_rumor): The transmission
-network is not necesarily relevant for the diffnet model</code></pre>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIR</span>(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>    <span class="at">name =</span> <span class="st">"COVID-19"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>    <span class="at">prevalence =</span> .<span class="dv">01</span>,</span>
+<span id="cb4-4"><a href="#cb4-4"></a>    <span class="at">transmission_rate =</span> .<span class="dv">9</span>, <span class="co">#TODO:?</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="at">recovery_rate =</span> .<span class="dv">3</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>    )</span>
+<span id="cb4-7"><a href="#cb4-7"></a></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="fu">agents_smallworld</span>(</span>
+<span id="cb4-9"><a href="#cb4-9"></a>  model_sir,</span>
+<span id="cb4-10"><a href="#cb4-10"></a>  <span class="at">n =</span> <span class="dv">2000</span>,</span>
+<span id="cb4-11"><a href="#cb4-11"></a>  <span class="at">k =</span> <span class="dv">5</span>,</span>
+<span id="cb4-12"><a href="#cb4-12"></a>  <span class="at">d =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-13"><a href="#cb4-13"></a>  <span class="at">p =</span> <span class="fl">0.01</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>)</span>
+<span id="cb4-15"><a href="#cb4-15"></a></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="fu">verbose_off</span>(model_sir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Turning it into a network via igraph</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>tnet <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(</span>
-<span id="cb9-3"><a href="#cb9-3"></a>  transmissions[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)] <span class="sc">+</span> <span class="dv">1</span>, <span class="co"># To start from 1 (not 0)</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb9-5"><a href="#cb9-5"></a>  <span class="at">vertices =</span> <span class="fu">cbind</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">81</span>, UKfaculty_vertex)</span>
-<span id="cb9-6"><a href="#cb9-6"></a>  )</span>
-<span id="cb9-7"><a href="#cb9-7"></a></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># Adding back vertex attributes</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a><span class="fu">nplot</span>(tnet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<p>Next, define the LFMCMC functions (described in more detail <a href="https://cran.r-project.org/web/packages/epiworldR/vignettes/likelihood-free-mcmc.html" target="_blank">here</a>). Since we are trying to recover the Transmission and Recovery rates, our simulation function will test a new set of those two parameters during each iteration of LFMCMC.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Define the simulation function</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>simulation_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(params, lfmcmc_obj) {</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">set_param</span>(model_sir, <span class="st">"Recovery rate"</span>, params[<span class="dv">1</span>])</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="fu">set_param</span>(model_sir, <span class="st">"Transmission rate"</span>, params[<span class="dv">2</span>])</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a>  res <span class="ot">&lt;-</span> <span class="fu">get_today_total</span>(model_sir)</span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb5-8"><a href="#cb5-8"></a>}</span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># Define the summary function</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>summary_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(data, lfmcmc_obj) {</span>
+<span id="cb5-12"><a href="#cb5-12"></a>  <span class="fu">return</span>(data)</span>
+<span id="cb5-13"><a href="#cb5-13"></a>}</span>
+<span id="cb5-14"><a href="#cb5-14"></a></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co"># Define the proposal function</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a>proposal_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(old_params, lfmcmc_obj) {</span>
+<span id="cb5-17"><a href="#cb5-17"></a>  res <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">qlogis</span>(old_params) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(old_params), <span class="at">sd =</span> .<span class="dv">1</span>))</span>
+<span id="cb5-18"><a href="#cb5-18"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb5-19"><a href="#cb5-19"></a>}</span>
+<span id="cb5-20"><a href="#cb5-20"></a></span>
+<span id="cb5-21"><a href="#cb5-21"></a><span class="co"># Define the kernel function</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a>kernel_fun <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb5-23"><a href="#cb5-23"></a>    simulated_stats, observed_stats, epsilon, lfmcmc_obj</span>
+<span id="cb5-24"><a href="#cb5-24"></a>    ) {</span>
+<span id="cb5-25"><a href="#cb5-25"></a></span>
+<span id="cb5-26"><a href="#cb5-26"></a>  diff <span class="ot">&lt;-</span> ((simulated_stats <span class="sc">-</span> observed_stats)<span class="sc">^</span><span class="dv">2</span>)<span class="sc">^</span>epsilon</span>
+<span id="cb5-27"><a href="#cb5-27"></a>  <span class="fu">dnorm</span>(<span class="fu">sqrt</span>(<span class="fu">sum</span>(diff)))</span>
+<span id="cb5-28"><a href="#cb5-28"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Finally, use the <code>LFMCMC()</code> function to create the LFMCMC object, add the LFMCMC functions defined above, and pass in the observed COVID-19 data.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>lfmcmc_model <span class="ot">&lt;-</span> <span class="fu">LFMCMC</span>(model_sir) <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">set_simulation_fun</span>(simulation_fun) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">set_summary_fun</span>(summary_fun) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="fu">set_proposal_fun</span>(proposal_fun) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="fu">set_kernel_fun</span>(kernel_fun) <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="fu">set_observed_data</span>(observed_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="run-lfmcmc" class="level3"><h3 class="anchored" data-anchor-id="run-lfmcmc">Run LFMCMC</h3>
+<p>Before running LFMCMC, we need to pick the initial parameters (recovery rate = 0.3, transmission rate = 0.3) and choose an epsilon for the kernel function (<code>epsilon = 1.0</code>). We’ll run LFMCMC for 2000 iterations or samples (<code>n_samples = 2000</code>).</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Set initial parameters</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>init_params <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.3</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>epsilon <span class="ot">&lt;-</span> <span class="fl">1.0</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>n_samples <span class="ot">&lt;-</span> <span class="dv">2000</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co"># Run the LFMCMC simulation</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="fu">verbose_off</span>(lfmcmc_model)</span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="fu">run_lfmcmc</span>(</span>
+<span id="cb7-9"><a href="#cb7-9"></a>  <span class="at">lfmcmc =</span> lfmcmc_model,</span>
+<span id="cb7-10"><a href="#cb7-10"></a>  <span class="at">params_init =</span> init_params,</span>
+<span id="cb7-11"><a href="#cb7-11"></a>  <span class="at">n_samples =</span> n_samples,</span>
+<span id="cb7-12"><a href="#cb7-12"></a>  <span class="at">epsilon =</span> epsilon,</span>
+<span id="cb7-13"><a href="#cb7-13"></a>  <span class="at">seed =</span> model_seed</span>
+<span id="cb7-14"><a href="#cb7-14"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="check-results" class="level3"><h3 class="anchored" data-anchor-id="check-results">Check Results</h3>
+<p>Print the LFMCMC object with a burn-in period of 1,500.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">set_stats_names</span>(lfmcmc_model, <span class="fu">get_states</span>(model_sir))</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">set_params_names</span>(lfmcmc_model, <span class="fu">c</span>(<span class="st">"Recovery rate"</span>, <span class="st">"Transmission rate"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="fu">print</span>(lfmcmc_model, <span class="at">burnin =</span> <span class="dv">1500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>___________________________________________
+
+LIKELIHOOD-FREE MARKOV CHAIN MONTE CARLO
+
+N Samples (total) : 2000
+N Samples (after burn-in period) : 500
+Elapsed t : 1.00s
+
+Parameters:
+  -Recovery rate     :  0.14 [ 0.13,  0.15] (initial :  0.30)
+  -Transmission rate :  0.09 [ 0.09,  0.10] (initial :  0.30)
+
+Statistics:
+  -Susceptible :  1865.49 [ 1864.00,  1866.00] (Observed:  1865.00)
+  -Infected    :     0.00 [    0.00,     0.00] (Observed:     0.00)
+  -Recovered   :   134.51 [  134.00,   136.00] (Observed:   135.00)
+___________________________________________</code></pre>
 </div>
 </div>
-</div>
+<p>Out LFMCMC calibration was successful! The average LFMCMC Recovery rate was 0.14 (true value was 1/7 or 0.1428) and the average Transmission rate was 0.09 (true value was 0.1). The average number of Susceptible agents at Day 50 was 1,865.49 (observed value was 1865) and the average number of Recovered agents was 134.51 (observed value was 135).</p>
 
 
 </section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
