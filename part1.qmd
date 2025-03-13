@@ -4,7 +4,7 @@ title: "Part 1: Basic Modeling"
 
 ## Overview of `epiworldR`
 
-![General Structure of `epiworldR`](figs/overview-of-epiworldr.drawio.svg){width="70%"}
+![General Structure of `epiworldR`](figs/overview-of-epiworldr.drawio.svg){width="60%"}
 
 As shown in the above diagram, the core component of an `epiworldR` simulation is the model object.
 Models can have an arbitrary number of parameters, viruses, tools, and global events, depending on what the user wants to simulate.

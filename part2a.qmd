@@ -1,50 +1,53 @@
 ---
-title: "Part 2a: Social Network Analysis"
+title: "Part 2a: Non-Disease Applications - Network Diffusion"
 ---
 
-## Network Diffusion
+## Non-Disease Applications: Network Diffusion
 
-epiworldR also supports diffusion networks to simulate the spread of ideas or rumors throughout a population. The below example demonstrates this capability.
+Though `epiworldR` focuses primarily on disease modeling, the `epiworld` framework is general enough to model any type of diffusion process, such as simulating the spread of ideas or rumors throughout a population. In this part of the workshop, we'll walk through an example of social network diffusion.
 
-#### Example
+## Example Scenario: Academic Faculty Rumor
 
-Goal: Create a diffusion network model that simulates a rumor's spread throughout the `UKfaculty` network of size n = 81. We start by loading the corresponding R packages and data.
+The example implements the following scenario:
 
-```{r, include = FALSE}
+-   **Rumor:** The dean will resign!
+-   **Population Description:** A UK university faculty
+-   **Population size:** 81 agents
+
+### Load Packages and Data
+
+We use the `igraph` and `netplot` R packages for manipulating and plotting networks respectively. The file `part2a.rda` includes the `UKfaculty` friendship network from the `igraphdata` package, with the vertex attributes (`UKfaculty_vertex`) and edge list (`UKfaculty_edgelist`) as numeric matrices. We load the `UKfaculty` data and visualize the friendship network.
+
+```{r include=FALSE}
 library(igraph)  # For manipulating networks
 library(netplot) # For plotting
 ```
 
-We now load the `UKfaculty` data and visualize the network. The file `part2a.rda` has the network, the vertex attributes as a numeric matrix, and the edge list as a numeric matrix.
-
 ```{r}
-# Loading the data for the section
 load("part2a.rda")
 
-# Visualizing the Network
-# library(netplot)
 nplot(UKfaculty)
-
-# First few lines of the vertex attributes
-head(UKfaculty_vertex)
-
-# First few lines of the edge list
-head(UKfaculty_edgelist)
 ```
 
-To simulate the rumor, we use the `ModelDiffNet` function:
+### Simulating the Rumor
+
+Using the `ModelDiffNet()` function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1. TODO: Explain the params.
 
 ```{r}
-# Creating the diffusion model
 library(epiworldR)
+
 adopt_rumor <- ModelDiffNet(
-  name       = "The dean is leaving!",
-  prevalence = 2/vcount(UKfaculty), # Two adopter
+  name       = "The dean will resign!",
+  prevalence = 2/vcount(UKfaculty),
   prob_adopt = .1,
   data       = UKfaculty_vertex,
   params     = c(0, 5)
 )
+```
 
+We then initialize the model agents using the `agents_from_edgelist()` function.
+
+```{r}
 # Reading in the network
 agents_from_edgelist(
   adopt_rumor,
@@ -53,15 +56,24 @@ agents_from_edgelist(
   target   = UKfaculty_edgelist[,2] - 1L,
   directed = TRUE
   )
+```
 
-# Running the model for 50 steps
-run(adopt_rumor, 100);adopt_rumor
+We run the model for 100 days and plot the results.
 
-# Plotting the model
+```{r}
+verbose_off(adopt_rumor)
+run(adopt_rumor, ndays = 100)
+
+adopt_rumor
+
 plot(adopt_rumor)
 ```
 
-We can extract the adoption network:
+By day 16 or 17, the entire network had adopted the rumor that the dean will resign.
+
+### View the Adoption Network
+
+The transmission network is not always relevant for a diffusion network model, but in this case we can use it to visualize the spread of the rumor through the network. We get the transmission network using the `get_transmissions()` function, then plot the network using the `igraph` and `netplot` packages.
 
 ```{r}
 transmissions <- get_transmissions(adopt_rumor)

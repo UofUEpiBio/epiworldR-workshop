@@ -219,7 +219,7 @@ window.Quarto = {
 </header><section id="overview-of-epiworldr" class="level2"><h2 class="anchored" data-anchor-id="overview-of-epiworldr">Overview of <code>epiworldR</code>
 </h2>
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="figs/overview-of-epiworldr.drawio.svg" class="img-fluid figure-img" style="width:70.0%"></p>
+<figure class="figure"><p><img src="figs/overview-of-epiworldr.drawio.svg" class="img-fluid figure-img" style="width:60.0%"></p>
 <figcaption>General Structure of <code>epiworldR</code></figcaption></figure>
 </div>
 <p>As shown in the above diagram, the core component of an <code>epiworldR</code> simulation is the model object. Models can have an arbitrary number of parameters, viruses, tools, and global events, depending on what the user wants to simulate. Pre-built models in <code>epiworldR</code> (e.g., ModelSIR, ModelSEIR, ModelDiffNet) typically initialize with a single virus and a few other parameters, such as the population size. All <code>epiworldR</code> models inherit the “epiworld_model” class, which gives them access to the following functions:</p>
@@ -247,7 +247,7 @@ window.Quarto = {
 see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
-<p>In this part of the workshop, we’ll use several of those functions as we walk through a basic modeling example for monkeypox.</p>
+<p>In this part of the workshop, we’ll use several of these functions as we walk through a basic modeling example for monkeypox.</p>
 </section><section id="example-scenario-monkeypox-outbreak" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-monkeypox-outbreak">Example Scenario: Monkeypox Outbreak</h2>
 <p>The example implements the following scenario:</p>
 <ul>
@@ -342,10 +342,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 60 (of 60)
 Number of viruses   : 1
-Last run elapsed t  : 101.00ms
-Total elapsed t     : 209.00ms (2 runs)
-Last run speed      : 29.56 million agents x day / second
-Average run speed   : 28.68 million agents x day / second
+Last run elapsed t  : 104.00ms
+Total elapsed t     : 234.00ms (2 runs)
+Last run speed      : 28.60 million agents x day / second
+Average run speed   : 25.56 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -410,7 +410,7 @@ Transition Probabilities:
 </div>
 </div>
 </section><section id="reproductive-number" class="level3"><h3 class="anchored" data-anchor-id="reproductive-number">Reproductive Number</h3>
-<p>An important statistic in epidemiological models is the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number#Effective_reproduction_number">reproductive number</a>. We get this from an <code>epiworldR</code> model using the <code>get_reproductive_number()</code> funcion.</p>
+<p>An important statistic in epidemiological models is the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number#Effective_reproduction_number">reproductive number</a>. We get this from an <code>epiworldR</code> model using the <code>get_reproductive_number()</code> function.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(monkeypox_model)</span>
 <span id="cb13-2"><a href="#cb13-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

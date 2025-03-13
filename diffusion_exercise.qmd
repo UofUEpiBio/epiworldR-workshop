@@ -2,8 +2,8 @@
 title: "Diffusion Exercise"
 ---
 
-Create a diffusion network model which simulates the diffusion of a rumor 
-throughout the UKfaculty population of size n = 81. Use set.seed(2223).  
+Create a diffusion network model which simulates the diffusion of a rumor throughout the UKfaculty population of size n = 81. Use set.seed(2223).
+
 ```{r}
 set.seed(2223)
 

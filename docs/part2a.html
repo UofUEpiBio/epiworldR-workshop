@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Part 2a: Social Network Analysis – epiworldR - Sunbelt 2025 Workshop</title>
+<title>Part 2a: Non-Disease Applications - Network Diffusion – epiworldR - Sunbelt 2025 Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -160,12 +160,20 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#network-diffusion" id="toc-network-diffusion" class="nav-link active" data-scroll-target="#network-diffusion">Network Diffusion</a></li>
+<li><a href="#non-disease-applications-network-diffusion" id="toc-non-disease-applications-network-diffusion" class="nav-link active" data-scroll-target="#non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</a></li>
+  <li>
+<a href="#example-scenario-academic-faculty-rumor" id="toc-example-scenario-academic-faculty-rumor" class="nav-link" data-scroll-target="#example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</a>
+  <ul class="collapse">
+<li><a href="#load-packages-and-data" id="toc-load-packages-and-data" class="nav-link" data-scroll-target="#load-packages-and-data">Load Packages and Data</a></li>
+  <li><a href="#simulating-the-rumor" id="toc-simulating-the-rumor" class="nav-link" data-scroll-target="#simulating-the-rumor">Simulating the Rumor</a></li>
+  <li><a href="#view-the-adoption-network" id="toc-view-the-adoption-network" class="nav-link" data-scroll-target="#view-the-adoption-network">View the Adoption Network</a></li>
+  </ul>
+</li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">Part 2a: Social Network Analysis</h1>
+<h1 class="title">Part 2a: Non-Disease Applications - Network Diffusion</h1>
 </div>
 
 
@@ -179,116 +187,102 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   
 
 
-</header><section id="network-diffusion" class="level2"><h2 class="anchored" data-anchor-id="network-diffusion">Network Diffusion</h2>
-<p>epiworldR also supports diffusion networks to simulate the spread of ideas or rumors throughout a population. The below example demonstrates this capability.</p>
-<section id="example" class="level4"><h4 class="anchored" data-anchor-id="example">Example</h4>
-<p>Goal: Create a diffusion network model that simulates a rumor’s spread throughout the <code>UKfaculty</code> network of size n = 81. We start by loading the corresponding R packages and data.</p>
-<p>We now load the <code>UKfaculty</code> data and visualize the network. The file <code>part2a.rda</code> has the network, the vertex attributes as a numeric matrix, and the edge list as a numeric matrix.</p>
+</header><section id="non-disease-applications-network-diffusion" class="level2"><h2 class="anchored" data-anchor-id="non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</h2>
+<p>Though <code>epiworldR</code> focuses primarily on disease modeling, the <code>epiworld</code> framework is general enough to model any type of diffusion process, such as simulating the spread of ideas or rumors throughout a population. In this part of the workshop, we’ll walk through an example of social network diffusion.</p>
+</section><section id="example-scenario-academic-faculty-rumor" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</h2>
+<p>The example implements the following scenario:</p>
+<ul>
+<li>
+<strong>Rumor:</strong> The dean will resign!</li>
+<li>
+<strong>Population Description:</strong> A UK university faculty</li>
+<li>
+<strong>Population size:</strong> 81 agents</li>
+</ul>
+<section id="load-packages-and-data" class="level3"><h3 class="anchored" data-anchor-id="load-packages-and-data">Load Packages and Data</h3>
+<p>We use the <code>igraph</code> and <code>netplot</code> R packages for manipulating and plotting networks respectively. The file <code>part2a.rda</code> includes the <code>UKfaculty</code> friendship network from the <code>igraphdata</code> package, with the vertex attributes (<code>UKfaculty_vertex</code>) and edge list (<code>UKfaculty_edgelist</code>) as numeric matrices. We load the <code>UKfaculty</code> data and visualize the friendship network.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Loading the data for the section</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">load</span>(<span class="st">"part2a.rda"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># Visualizing the Network</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="co"># library(netplot)</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">nplot</span>(UKfaculty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>This graph was created by an old(er) igraph version.
-ℹ Call `igraph::upgrade_graph()` on it to use with the current igraph version.
-For now we convert it on the fly...</code></pre>
-</div>
-<div class="cell-output-display">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">load</span>(<span class="st">"part2a.rda"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">nplot</span>(UKfaculty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># First few lines of the vertex attributes</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">head</span>(UKfaculty_vertex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>  Group age
-1     3  34
-2     1  47
-3     3  56
-4     3  42
-5     2  63
-6     2  65</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># First few lines of the edge list</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">head</span>(UKfaculty_edgelist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2]
-[1,]   57   52
-[2,]   76   42
-[3,]   12   69
-[4,]   43   34
-[5,]   28   47
-[6,]   58   51</code></pre>
-</div>
-</div>
-<p>To simulate the rumor, we use the <code>ModelDiffNet</code> function:</p>
+</section><section id="simulating-the-rumor" class="level3"><h3 class="anchored" data-anchor-id="simulating-the-rumor">Simulating the Rumor</h3>
+<p>Using the <code>ModelDiffNet()</code> function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1. TODO: Explain the params.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Creating the diffusion model</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb7-3"><a href="#cb7-3"></a>adopt_rumor <span class="ot">&lt;-</span> <span class="fu">ModelDiffNet</span>(</span>
-<span id="cb7-4"><a href="#cb7-4"></a>  <span class="at">name       =</span> <span class="st">"The dean is leaving!"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5"></a>  <span class="at">prevalence =</span> <span class="dv">2</span><span class="sc">/</span><span class="fu">vcount</span>(UKfaculty), <span class="co"># Two adopter</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a>  <span class="at">prob_adopt =</span> .<span class="dv">1</span>,</span>
-<span id="cb7-7"><a href="#cb7-7"></a>  <span class="at">data       =</span> UKfaculty_vertex,</span>
-<span id="cb7-8"><a href="#cb7-8"></a>  <span class="at">params     =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
-<span id="cb7-9"><a href="#cb7-9"></a>)</span>
-<span id="cb7-10"><a href="#cb7-10"></a></span>
-<span id="cb7-11"><a href="#cb7-11"></a><span class="co"># Reading in the network</span></span>
-<span id="cb7-12"><a href="#cb7-12"></a><span class="fu">agents_from_edgelist</span>(</span>
-<span id="cb7-13"><a href="#cb7-13"></a>  adopt_rumor,</span>
-<span id="cb7-14"><a href="#cb7-14"></a>  <span class="at">size     =</span> <span class="fu">vcount</span>(UKfaculty),</span>
-<span id="cb7-15"><a href="#cb7-15"></a>  <span class="at">source   =</span> UKfaculty_edgelist[,<span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
-<span id="cb7-16"><a href="#cb7-16"></a>  <span class="at">target   =</span> UKfaculty_edgelist[,<span class="dv">2</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
-<span id="cb7-17"><a href="#cb7-17"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span></span>
-<span id="cb7-18"><a href="#cb7-18"></a>  )</span>
-<span id="cb7-19"><a href="#cb7-19"></a></span>
-<span id="cb7-20"><a href="#cb7-20"></a><span class="co"># Running the model for 50 steps</span></span>
-<span id="cb7-21"><a href="#cb7-21"></a><span class="fu">run</span>(adopt_rumor, <span class="dv">100</span>);adopt_rumor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>_________________________________________________________________________
-Running the model...
-||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
- done.</code></pre>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(epiworldR)</span>
+<span id="cb2-2"><a href="#cb2-2"></a></span>
+<span id="cb2-3"><a href="#cb2-3"></a>adopt_rumor <span class="ot">&lt;-</span> <span class="fu">ModelDiffNet</span>(</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="at">name       =</span> <span class="st">"The dean will resign!"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="at">prevalence =</span> <span class="dv">2</span><span class="sc">/</span><span class="fu">vcount</span>(UKfaculty),</span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="at">prob_adopt =</span> .<span class="dv">1</span>,</span>
+<span id="cb2-7"><a href="#cb2-7"></a>  <span class="at">data       =</span> UKfaculty_vertex,</span>
+<span id="cb2-8"><a href="#cb2-8"></a>  <span class="at">params     =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)</span>
+<span id="cb2-9"><a href="#cb2-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<div class="cell-output cell-output-stdout">
+<p>We then initialize the model agents using the <code>agents_from_edgelist()</code> function.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Reading in the network</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">agents_from_edgelist</span>(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  adopt_rumor,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">size     =</span> <span class="fu">vcount</span>(UKfaculty),</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">source   =</span> UKfaculty_edgelist[,<span class="dv">1</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">target   =</span> UKfaculty_edgelist[,<span class="dv">2</span>] <span class="sc">-</span> <span class="dv">1</span>L,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>We run the model for 100 days.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">verbose_off</span>(adopt_rumor)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">run</span>(adopt_rumor, <span class="at">ndays =</span> <span class="dv">100</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a>adopt_rumor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
-Diffusion of Innovations - The dean is leaving!
+Diffusion of Innovations - The dean will resign!
 It features 81 agents, 1 virus(es), and 0 tool(s).
 The model has 2 states.
 The final distribution is: 0 Non adopters, and 81 Adopters.</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Plotting the model</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="fu">plot</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we plot the model.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">plot</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>We can extract the adoption network:</p>
+<p>As demonstrated in the plot, by day 20, the entire network had adopted the rumor that the dean was resigning.</p>
+</section><section id="view-the-adoption-network" class="level3"><h3 class="anchored" data-anchor-id="view-the-adoption-network">View the Adoption Network</h3>
+<p>The transmission network is not always relevant for a diffusion network model, but in this case we can use it to visualize the spread of the rumor through the network. We get the transmission network using the <code>get_transmissions()</code> function, then plot the network using <code>igraph</code> and <code>netplot</code></p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>transmissions <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>transmissions <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stderr">
 <pre><code>Warning in get_transmissions.epiworld_diffnet(adopt_rumor): The transmission
 network is not necesarily relevant for the diffnet model</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Turning it into a network via igraph</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a>tnet <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(</span>
-<span id="cb13-3"><a href="#cb13-3"></a>  transmissions[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)] <span class="sc">+</span> <span class="dv">1</span>, <span class="co"># To start from 1 (not 0)</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-5"><a href="#cb13-5"></a>  <span class="at">vertices =</span> <span class="fu">cbind</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">81</span>, UKfaculty_vertex)</span>
-<span id="cb13-6"><a href="#cb13-6"></a>  )</span>
-<span id="cb13-7"><a href="#cb13-7"></a></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="co"># Adding back vertex attributes</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a><span class="fu">nplot</span>(tnet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Turning it into a network via igraph</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>tnet <span class="ot">&lt;-</span> <span class="fu">graph_from_data_frame</span>(</span>
+<span id="cb9-3"><a href="#cb9-3"></a>  transmissions[, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)] <span class="sc">+</span> <span class="dv">1</span>, <span class="co"># To start from 1 (not 0)</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">directed =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="at">vertices =</span> <span class="fu">cbind</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">81</span>, UKfaculty_vertex)</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  )</span>
+<span id="cb9-7"><a href="#cb9-7"></a></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co"># Adding back vertex attributes</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="fu">nplot</span>(tnet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
