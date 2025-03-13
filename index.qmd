@@ -82,7 +82,7 @@ If you don't want to use your personal computer, we have an online RStudio serve
 -   (50 min) Part 1: Basic Modeling
 -   (10 min) Break
 -   (30 min) Part 2a: Non-Disease Applications - Network Diffusion
--   (30 min) Part 2b: Adding Multiple Diseases & Tools
+-   (30 min) Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events
 -   (10 min) Break
 -   (40 min) Part 3: Multiple Runs
 

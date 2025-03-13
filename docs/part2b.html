@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>Part 2b: Adding Multiple Diseases &amp; Tools – epiworldR - Sunbelt 2025 Workshop</title>
+<title>Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events – epiworldR - Sunbelt 2025 Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -185,14 +185,25 @@ window.Quarto = {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#adding-multiple-viruses-tools" id="toc-adding-multiple-viruses-tools" class="nav-link active" data-scroll-target="#adding-multiple-viruses-tools">Adding Multiple Viruses &amp; Tools</a></li>
-  <li><a href="#comorbidities-using-logit-functions" id="toc-comorbidities-using-logit-functions" class="nav-link" data-scroll-target="#comorbidities-using-logit-functions">Comorbidities Using Logit Functions</a></li>
+<li>
+<a href="#example-scenario-simultaneous-covid-19-and-flu-outbreaks" id="toc-example-scenario-simultaneous-covid-19-and-flu-outbreaks" class="nav-link active" data-scroll-target="#example-scenario-simultaneous-covid-19-and-flu-outbreaks">Example Scenario: Simultaneous COVID-19 and Flu Outbreaks</a>
+  <ul class="collapse">
+<li><a href="#set-up-the-model" id="toc-set-up-the-model" class="nav-link" data-scroll-target="#set-up-the-model">Set up the Model</a></li>
+  <li><a href="#add-the-flu-virus" id="toc-add-the-flu-virus" class="nav-link" data-scroll-target="#add-the-flu-virus">Add the Flu Virus</a></li>
+  <li><a href="#add-a-tool-vaccine" id="toc-add-a-tool-vaccine" class="nav-link" data-scroll-target="#add-a-tool-vaccine">Add a Tool (Vaccine)</a></li>
+  <li><a href="#add-events" id="toc-add-events" class="nav-link" data-scroll-target="#add-events">Add Events</a></li>
+  <li><a href="#full-model-summary" id="toc-full-model-summary" class="nav-link" data-scroll-target="#full-model-summary">Full Model Summary</a></li>
+  <li><a href="#reproductive-numbers" id="toc-reproductive-numbers" class="nav-link" data-scroll-target="#reproductive-numbers">Reproductive Numbers</a></li>
+  </ul>
+</li>
+  <li><a href="#example-scenario-2-comorbidities-using-logit-functions" id="toc-example-scenario-2-comorbidities-using-logit-functions" class="nav-link" data-scroll-target="#example-scenario-2-comorbidities-using-logit-functions">Example Scenario 2: Comorbidities Using Logit Functions</a></li>
   <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#todo-monkeypox-example-from-part-1-with-events" id="toc-todo-monkeypox-example-from-part-1-with-events" class="nav-link" data-scroll-target="#todo-monkeypox-example-from-part-1-with-events">TODO: Monkeypox Example from Part 1 (with events)</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">Part 2b: Adding Multiple Diseases &amp; Tools</h1>
+<h1 class="title">Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events</h1>
 </div>
 
 
@@ -206,85 +217,156 @@ window.Quarto = {
   
 
 
-</header><p><code>epiworldR</code> supports multi-virus and tools models, the below code gives instructions on how to implement this. First, build a <code>SIRCONN</code> model for COVID-19, which new viruses and tools will then be added to.</p>
-<section id="adding-multiple-viruses-tools" class="level2"><h2 class="anchored" data-anchor-id="adding-multiple-viruses-tools">Adding Multiple Viruses &amp; Tools</h2>
+</header><p>As mentioned in Part 1, <code>epiworldR</code> models can have multiple viruses, tools, and events. In this part of the workshop, we’ll walk through an example of an advanced model with multiple interacting pieces.</p>
+<section id="example-scenario-simultaneous-covid-19-and-flu-outbreaks" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-simultaneous-covid-19-and-flu-outbreaks">Example Scenario: Simultaneous COVID-19 and Flu Outbreaks</h2>
+<p>The example implements the following scenario:</p>
+<ul>
+<li>
+<strong>Diseases:</strong> COVID-19 and Flu</li>
+<li>
+<strong>Population size:</strong> 50,000 agents</li>
+<li>
+<strong>Contact Rate:</strong> 4</li>
+<li>
+<strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{4}\)</span> (same for both diseases)</li>
+<li>
+<em>COVID-19 Parameters</em>
+<ul>
+<li>
+<strong>Initial Prevalence:</strong> 0.001</li>
+<li>
+<strong>Transmission Rate:</strong> 0.5</li>
+</ul>
+</li>
+<li>
+<em>Flu Parameters</em>
+<ul>
+<li>
+<strong>Initial Prevalence:</strong> 0.001</li>
+<li>
+<strong>Transmission Rate:</strong> 0.35</li>
+</ul>
+</li>
+</ul>
+<p>We’ll go through the process step-by-step. After each step, we’ll run the model for 50 days and plot it to illustrate how each added component changes the base model.</p>
+<section id="set-up-the-model" class="level3"><h3 class="anchored" data-anchor-id="set-up-the-model">Set up the Model</h3>
+<p>We start with a <code>ModelSIRCONN</code> model for COVID-19. We’ll add the flu virus and our tools and events to this base model.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>model_sir <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="at">name              =</span> <span class="st">"COVID-19"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
-<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">contact_rate      =</span> <span class="fl">2.5</span>,</span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>  )</span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>_________________________________________________________________________
-|Running the model...
-|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
-| done.</code></pre>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>model_sirconn <span class="ot">&lt;-</span> <span class="fu">ModelSIRCONN</span>(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">name              =</span> <span class="st">"COVID-19"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">contact_rate      =</span> <span class="dv">4</span>,</span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>model_sir</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>________________________________________________________________________________
-Susceptible-Infected-Removed (SIR) (connected)
-It features 50000 agents, 1 virus(es), and 0 tool(s).
-The model has 3 states.
-The final distribution is: 521 Susceptible, 0 Infected, and 49479 Recovered.</code></pre>
-</div>
-</div>
-<section id="designing-a-virus" class="level4"><h4 class="anchored" data-anchor-id="designing-a-virus">Designing a Virus</h4>
-<p>Using the <code>virus()</code> function, assign a name to the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.35. In order to add this new virus to the model, use the <code>add_virus()</code> function by calling the original <code>epiworldR</code> model object, the new virus, and the new virus’ prevalence (which is set to 0.001 in this example).</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Building the virus</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>flu <span class="ot">&lt;-</span> <span class="fu">virus</span>(<span class="at">name =</span> <span class="st">"Flu"</span>, <span class="at">prob_infecting =</span> .<span class="dv">35</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>Warning in virus(name = "Flu", prob_infecting = 0.35): Starting version 0.3-0,
-the 'prevalence' argument is required. It will be set to be 0.5. Next versions
-will fail with an error.</code></pre>
-</div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Adding the virus to the model</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">add_virus</span>(model_sir, flu, <span class="at">proportion =</span> .<span class="dv">001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>Warning in add_virus(model_sir, flu, proportion = 0.001): The argument
-'proportion' is deprecated and will be removed in the next version.</code></pre>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">verbose_off</span>(model_sirconn)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part2b_files/figure-html/run-base-model-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-</section><section id="designing-a-tool" class="level4"><h4 class="anchored" data-anchor-id="designing-a-tool">Designing a Tool</h4>
-<p>Provide parameters for the new tool using the <code>tool()</code> function. These parameters include the tool’s name, any reduction in probabilities for the <code>SIRCONN</code> model parameters, and increased probability of recovery option. To add the tool to the <code>SIRCONN</code> model, use the <code>add_tool()</code> function with the <code>SIRCONN</code> model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.</p>
+</div>
+</section><section id="add-the-flu-virus" class="level3"><h3 class="anchored" data-anchor-id="add-the-flu-virus">Add the Flu Virus</h3>
+<p>Create the second virus using the <code>virus()</code> function. The parameter <code>prob_infecting</code> is the transmission rate. The parameter <code>as_proportion</code> tells the function to interpret the prevalence as a proportion of the population, rather than a fixed value.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Building the tool</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>vaccine <span class="ot">&lt;-</span> <span class="fu">tool</span>(</span>
-<span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">name =</span> <span class="st">"Vaccine"</span>,</span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">susceptibility_reduction =</span> .<span class="dv">9</span>,</span>
-<span id="cb9-5"><a href="#cb9-5"></a>  <span class="at">transmission_reduction =</span> .<span class="dv">5</span>,</span>
-<span id="cb9-6"><a href="#cb9-6"></a>  <span class="at">recovery_enhancer =</span> .<span class="dv">5</span>, </span>
-<span id="cb9-7"><a href="#cb9-7"></a>  <span class="at">death_reduction =</span> .<span class="dv">9</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>Warning in tool(name = "Vaccine", susceptibility_reduction = 0.9,
-transmission_reduction = 0.5, : Starting version 0.3-0, the 'prevalence'
-argument is required. It will be set to be 0.5. Next versions will fail with an
-error.</code></pre>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>flu_virus <span class="ot">&lt;-</span> <span class="fu">virus</span>(<span class="at">name =</span> <span class="st">"Flu"</span>, <span class="at">prob_infecting =</span> .<span class="dv">35</span>, <span class="at">prevalence =</span> <span class="fl">0.001</span>, <span class="at">as_proportion =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Adding the tool to the model</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="fu">add_tool</span>(model_sir, vaccine, <span class="at">proportion =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stderr">
-<pre><code>Warning in add_tool(model_sir, vaccine, proportion = 0.5): The 'proportion'
-argument is deprecated. Use 'set_distribution_tool' instead.</code></pre>
-</div>
-</div>
-<p>Next, run the updated model for 50 days, the output below describes the simulation. To confirm that the flu and vaccine are included, notice the presence of “Flu” in the Virus(es) section of the output, and “Vaccine” in the Tool(s) section.</p>
+<p>Add the virus to the model with the <code>add_virus()</code> function.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">run</span>(model_sir, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>_________________________________________________________________________
-|Running the model...
-|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
-| done.</code></pre>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">add_virus</span>(model_sirconn, flu_virus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">summary</span>(model_sir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part2b_files/figure-html/run-model-flu-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="add-a-tool-vaccine" class="level3"><h3 class="anchored" data-anchor-id="add-a-tool-vaccine">Add a Tool (Vaccine)</h3>
+<p>In <code>epiworldR</code>, agents use tools to fight diseases. Create the vaccine tool using the <code>tool()</code> function, with parameters that indicate how the tool modifies the disease parameters. We set our vaccine to reduce the susceptibility of agents by 10%, the transmission rate of infected agents by 50%, and the death rate by 10%. The vaccine further enhances the recovery rate by 50%.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>vaccine_tool <span class="ot">&lt;-</span> <span class="fu">tool</span>(</span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="at">name =</span> <span class="st">"Vaccine"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="at">susceptibility_reduction =</span> .<span class="dv">9</span>,</span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="at">transmission_reduction =</span> .<span class="dv">5</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="at">recovery_enhancer =</span> .<span class="dv">5</span>, </span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="at">death_reduction =</span> .<span class="dv">9</span>,</span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="at">prevalence =</span> <span class="fl">0.5</span>, <span class="co"># </span><span class="al">TODO</span><span class="co">: is this the same as set_distribution_tool()? If so, use this instead and note it above.</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a>  <span class="at">as_proportion =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Use the <code>set_distribution_tool()</code> function to define the proportion of the population to receive the tool (set here to 50%).</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">set_distribution_tool</span>(</span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="at">tool =</span> vaccine_tool,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="at">distfun =</span> <span class="fu">distribute_tool_randomly</span>(<span class="fl">0.5</span>, <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Add the vaccine to the model using the <code>add_tool()</code> function.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">add_tool</span>(model_sirconn, vaccine_tool)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part2b_files/figure-html/run-model-vaccine-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note how the vaccine severely limits the number of infected agents.</p>
+</section><section id="add-events" class="level3"><h3 class="anchored" data-anchor-id="add-events">Add Events</h3>
+<p>In <code>epiworldR</code>, all models automatically have a global event that runs each day to update the agents. For this example, we’ll add two additional events that represent public health interventions that start partway through the simulation as the dual-disease outbreak begins to gain traction:</p>
+<ul>
+<li>Beginning on Day 10, a policy of social isolation is adopted which reduces the contact rate to 2</li>
+<li>Beginning on Day 20, a TV advertisement is run increasing awareness of the outbreak, reducing the contact rate further to 1.5</li>
+</ul>
+<p>Create these events using the <code>globalevent_set_params()</code> function, specifying the day to run the event.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>isolation_day_10 <span class="ot">&lt;-</span> <span class="fu">globalevent_set_params</span>(<span class="st">"Contact rate"</span>, <span class="dv">2</span>, <span class="at">day =</span> <span class="dv">10</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>advertisement_day_20 <span class="ot">&lt;-</span> <span class="fu">globalevent_set_params</span>(<span class="st">"Contact rate"</span>, <span class="fl">1.5</span>, <span class="at">day =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Add the events to the model with the <code>add_globalevent()</code> function.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">add_globalevent</span>(model_sirconn, isolation_day_10)</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="fu">add_globalevent</span>(model_sirconn, advertisement_day_20)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">run</span>(model_sirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">plot</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part2b_files/figure-html/run-full-model-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note the sharp change to the infected curve corresponding to adoptiong of the social isolation policy.</p>
+</section><section id="full-model-summary" class="level3"><h3 class="anchored" data-anchor-id="full-model-summary">Full Model Summary</h3>
+<p>With our advanced model complete, we can view the summary, noting the events, viruses, and tools we added to the model.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">summary</span>(model_sirconn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 ________________________________________________________________________________
@@ -296,14 +378,16 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of viruses   : 2
-Last run elapsed t  : 91.00ms
-Total elapsed t     : 169.00ms (2 runs)
-Last run speed      : 27.40 million agents x day / second
-Average run speed   : 29.44 million agents x day / second
+Last run elapsed t  : 104.00ms
+Total elapsed t     : 360.00ms (4 runs)
+Last run speed      : 23.86 million agents x day / second
+Average run speed   : 27.77 million agents x day / second
 Rewiring            : off
 
 Global events:
  - Update infected individuals (runs daily)
+ - Set Contact rate to 2 (day 10)
+ - Set Contact rate to 1.5 (day 20)
 
 Virus(es):
  - COVID-19
@@ -313,39 +397,34 @@ Tool(s):
  - Vaccine
 
 Model parameters:
- - Contact rate      : 2.5000
+ - Contact rate      : 1.5000
  - Recovery rate     : 0.2500
  - Transmission rate : 0.5000
 
 Distribution of the population at time 50:
-  - (0) Susceptible : 49900 -&gt; 22316
-  - (1) Infected    :   100 -&gt; 78
-  - (2) Recovered   :     0 -&gt; 27606
+  - (0) Susceptible : 49900 -&gt; 23297
+  - (1) Infected    :   100 -&gt; 9
+  - (2) Recovered   :     0 -&gt; 26694
 
 Transition Probabilities:
  - Susceptible  0.98  0.02  0.00
- - Infected     0.00  0.69  0.31
+ - Infected     0.00  0.72  0.28
  - Recovered    0.00  0.00  1.00</code></pre>
 </div>
 </div>
-</section><section id="plotting" class="level4"><h4 class="anchored" data-anchor-id="plotting">Plotting</h4>
-<p>Plotting the model with the additional virus and tool yields the following. Notice the presence of two reproductive numbers plotted over time. Variant 0 refers to COVID-19 and variant 1 refers to the flu.</p>
+</section><section id="reproductive-numbers" class="level3"><h3 class="anchored" data-anchor-id="reproductive-numbers">Reproductive Numbers</h3>
+<p>The model computes two reproductive numbers, one for each virus.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>repnum2 <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sir)</span>
-<span id="cb17-2"><a href="#cb17-2"></a></span>
-<span id="cb17-3"><a href="#cb17-3"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>))</span>
-<span id="cb17-4"><a href="#cb17-4"></a><span class="fu">plot</span>(model_sir)</span>
-<span id="cb17-5"><a href="#cb17-5"></a><span class="fu">plot</span>(repnum2, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>repnum2 <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(model_sirconn)</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="fu">plot</span>(repnum2, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
-<figure class="figure"><p><img src="part2b_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<figure class="figure"><p><img src="part2b_files/figure-html/reproductive-numbers-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
-</section></section><section id="comorbidities-using-logit-functions" class="level2"><h2 class="anchored" data-anchor-id="comorbidities-using-logit-functions">Comorbidities Using Logit Functions</h2>
+</section></section><section id="example-scenario-2-comorbidities-using-logit-functions" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-2-comorbidities-using-logit-functions">Example Scenario 2: Comorbidities Using Logit Functions</h2>
 <p>Many times we want to model the effects of comorbidities on the disease. For example, we may want to model the effects of obesity on the probability of recovery from COVID-19. To do this, we can use the <code>virus_fun_logit()</code> function to model the probability of recovery.</p>
 <p>The steps are the following:</p>
 <ol type="1">
@@ -357,40 +436,40 @@ Transition Probabilities:
 </ol>
 <p>We start by creating two matching models, one with comorbidities and one without.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># With comorbidities</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a>model_comor <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
-<span id="cb19-3"><a href="#cb19-3"></a>  <span class="at">name              =</span> <span class="st">"Flu"</span>,</span>
-<span id="cb19-4"><a href="#cb19-4"></a>  <span class="at">n                 =</span> <span class="dv">10000</span>, </span>
-<span id="cb19-5"><a href="#cb19-5"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
-<span id="cb19-6"><a href="#cb19-6"></a>  <span class="at">contact_rate      =</span> <span class="fl">2.1</span>,</span>
-<span id="cb19-7"><a href="#cb19-7"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb19-8"><a href="#cb19-8"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
-<span id="cb19-9"><a href="#cb19-9"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
-<span id="cb19-10"><a href="#cb19-10"></a>  )</span>
-<span id="cb19-11"><a href="#cb19-11"></a></span>
-<span id="cb19-12"><a href="#cb19-12"></a><span class="co"># Without comorbidities</span></span>
-<span id="cb19-13"><a href="#cb19-13"></a>model_no_comor <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
-<span id="cb19-14"><a href="#cb19-14"></a>  <span class="at">name              =</span> <span class="st">"Flu"</span>,</span>
-<span id="cb19-15"><a href="#cb19-15"></a>  <span class="at">n                 =</span> <span class="dv">10000</span>, </span>
-<span id="cb19-16"><a href="#cb19-16"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
-<span id="cb19-17"><a href="#cb19-17"></a>  <span class="at">contact_rate      =</span> <span class="fl">2.1</span>,</span>
-<span id="cb19-18"><a href="#cb19-18"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb19-19"><a href="#cb19-19"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
-<span id="cb19-20"><a href="#cb19-20"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
-<span id="cb19-21"><a href="#cb19-21"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># With comorbidities</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>model_comor <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
+<span id="cb16-3"><a href="#cb16-3"></a>  <span class="at">name              =</span> <span class="st">"Flu"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4"></a>  <span class="at">n                 =</span> <span class="dv">10000</span>, </span>
+<span id="cb16-5"><a href="#cb16-5"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
+<span id="cb16-6"><a href="#cb16-6"></a>  <span class="at">contact_rate      =</span> <span class="fl">2.1</span>,</span>
+<span id="cb16-7"><a href="#cb16-7"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
+<span id="cb16-8"><a href="#cb16-8"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
+<span id="cb16-9"><a href="#cb16-9"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
+<span id="cb16-10"><a href="#cb16-10"></a>  )</span>
+<span id="cb16-11"><a href="#cb16-11"></a></span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="co"># Without comorbidities</span></span>
+<span id="cb16-13"><a href="#cb16-13"></a>model_no_comor <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
+<span id="cb16-14"><a href="#cb16-14"></a>  <span class="at">name              =</span> <span class="st">"Flu"</span>,</span>
+<span id="cb16-15"><a href="#cb16-15"></a>  <span class="at">n                 =</span> <span class="dv">10000</span>, </span>
+<span id="cb16-16"><a href="#cb16-16"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
+<span id="cb16-17"><a href="#cb16-17"></a>  <span class="at">contact_rate      =</span> <span class="fl">2.1</span>,</span>
+<span id="cb16-18"><a href="#cb16-18"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
+<span id="cb16-19"><a href="#cb16-19"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
+<span id="cb16-20"><a href="#cb16-20"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
+<span id="cb16-21"><a href="#cb16-21"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Next, we will create a matrix with the agents’ data. As an example, we will create a matrix with two columns, one for the baseline and one for obesity.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Artificial population with obesity</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>X <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"part2b_comorb.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Artificial population with obesity</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>X <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"part2b_comorb.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Let’s now link agents’ data to the model. This will allow us to use the data to model the probability of recovery.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Adding the data to the model</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="fu">set_agents_data</span>(model_comor, X)</span>
-<span id="cb21-3"><a href="#cb21-3"></a>model_comor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Adding the data to the model</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">set_agents_data</span>(model_comor, X)</span>
+<span id="cb18-3"><a href="#cb18-3"></a>model_comor</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 Susceptible-Exposed-Infected-Removed (SEIR) (connected)
@@ -408,15 +487,15 @@ The model has 4 states. The model hasn't been run yet.</code></pre>
 <code>model</code>: the model object</li>
 </ul>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># Logit function </span></span>
-<span id="cb23-2"><a href="#cb23-2"></a>lfun <span class="ot">&lt;-</span> <span class="fu">virus_fun_logit</span>(</span>
-<span id="cb23-3"><a href="#cb23-3"></a>  <span class="at">vars  =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
-<span id="cb23-4"><a href="#cb23-4"></a>  <span class="at">coefs =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.0986</span>, <span class="sc">-</span><span class="fl">0.8472</span>), </span>
-<span id="cb23-5"><a href="#cb23-5"></a>  model_comor</span>
-<span id="cb23-6"><a href="#cb23-6"></a>  )</span>
-<span id="cb23-7"><a href="#cb23-7"></a></span>
-<span id="cb23-8"><a href="#cb23-8"></a><span class="co"># Printing</span></span>
-<span id="cb23-9"><a href="#cb23-9"></a>lfun</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Logit function </span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>lfun <span class="ot">&lt;-</span> <span class="fu">virus_fun_logit</span>(</span>
+<span id="cb20-3"><a href="#cb20-3"></a>  <span class="at">vars  =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
+<span id="cb20-4"><a href="#cb20-4"></a>  <span class="at">coefs =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.0986</span>, <span class="sc">-</span><span class="fl">0.8472</span>), </span>
+<span id="cb20-5"><a href="#cb20-5"></a>  model_comor</span>
+<span id="cb20-6"><a href="#cb20-6"></a>  )</span>
+<span id="cb20-7"><a href="#cb20-7"></a></span>
+<span id="cb20-8"><a href="#cb20-8"></a><span class="co"># Printing</span></span>
+<span id="cb20-9"><a href="#cb20-9"></a>lfun</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>An epiworld_virus_function object.
 (model: Susceptible-Exposed-Infected-Removed (SEIR) (connected))
@@ -440,24 +519,24 @@ Note
 </div>
 <p>The next step is to set the probability of recovery function for the virus. We can do this using the <code>set_prob_recovery_fun()</code> function:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Setting the probability of recovery</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a><span class="fu">set_prob_recovery_fun</span>(</span>
-<span id="cb25-3"><a href="#cb25-3"></a>  <span class="at">virus =</span> <span class="fu">get_virus</span>(model_comor, <span class="dv">0</span>), </span>
-<span id="cb25-4"><a href="#cb25-4"></a>  <span class="at">model =</span> model_comor,</span>
-<span id="cb25-5"><a href="#cb25-5"></a>  <span class="at">vfun  =</span> lfun</span>
-<span id="cb25-6"><a href="#cb25-6"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Setting the probability of recovery</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="fu">set_prob_recovery_fun</span>(</span>
+<span id="cb22-3"><a href="#cb22-3"></a>  <span class="at">virus =</span> <span class="fu">get_virus</span>(model_comor, <span class="dv">0</span>), </span>
+<span id="cb22-4"><a href="#cb22-4"></a>  <span class="at">model =</span> model_comor,</span>
+<span id="cb22-5"><a href="#cb22-5"></a>  <span class="at">vfun  =</span> lfun</span>
+<span id="cb22-6"><a href="#cb22-6"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>We are now ready to run the model.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">run</span>(model_comor, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">run</span>(model_comor, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>_________________________________________________________________________
 |Running the model...
 |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
 | done.</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">run</span>(model_no_comor, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="fu">run</span>(model_no_comor, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>_________________________________________________________________________
 |Running the model...
@@ -467,16 +546,16 @@ Note
 </div>
 <p>And see the result</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">cex =</span> .<span class="dv">7</span>)</span>
-<span id="cb30-2"><a href="#cb30-2"></a><span class="fu">plot_incidence</span>(model_comor, <span class="at">main =</span> <span class="st">"With comorbidities"</span>)</span>
-<span id="cb30-3"><a href="#cb30-3"></a><span class="fu">plot_incidence</span>(model_no_comor, <span class="at">main =</span> <span class="st">"Without comorbidities"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">cex =</span> .<span class="dv">7</span>)</span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="fu">plot_incidence</span>(model_comor, <span class="at">main =</span> <span class="st">"With comorbidities"</span>)</span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="fu">plot_incidence</span>(model_no_comor, <span class="at">main =</span> <span class="st">"Without comorbidities"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="part2b_files/figure-html/curves-comorbidities-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -526,7 +605,25 @@ Tip
 </div>
 </div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="todo-monkeypox-example-from-part-1-with-events" class="level2"><h2 class="anchored" data-anchor-id="todo-monkeypox-example-from-part-1-with-events">TODO: Monkeypox Example from Part 1 (with events)</h2>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># # Plot the model</span></span>
+<span id="cb30-2"><a href="#cb30-2"></a><span class="co"># # - Set graphical parameters to plot in 2x2 grid</span></span>
+<span id="cb30-3"><a href="#cb30-3"></a><span class="co"># op &lt;- par(mfrow = c(2,2))</span></span>
+<span id="cb30-4"><a href="#cb30-4"></a><span class="co"># # - Plot</span></span>
+<span id="cb30-5"><a href="#cb30-5"></a><span class="co"># plot_incidence(model_seirconn)</span></span>
+<span id="cb30-6"><a href="#cb30-6"></a><span class="co"># abline(v = 20, col = "steelblue", lwd = 2, lty = 2)</span></span>
+<span id="cb30-7"><a href="#cb30-7"></a></span>
+<span id="cb30-8"><a href="#cb30-8"></a><span class="co"># plot_reproductive_number(model_seirconn)</span></span>
+<span id="cb30-9"><a href="#cb30-9"></a><span class="co"># abline(v = 20, col = "steelblue", lwd = 2, lty = 2)</span></span>
+<span id="cb30-10"><a href="#cb30-10"></a></span>
+<span id="cb30-11"><a href="#cb30-11"></a><span class="co"># plot_generation_time(model_seirconn)</span></span>
+<span id="cb30-12"><a href="#cb30-12"></a><span class="co"># abline(v = 20, col = "steelblue", lwd = 2, lty = 2)</span></span>
+<span id="cb30-13"><a href="#cb30-13"></a><span class="co"># # - Restore original graphical parameters</span></span>
+<span id="cb30-14"><a href="#cb30-14"></a><span class="co"># par(op)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 

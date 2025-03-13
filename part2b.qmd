@@ -1,78 +1,168 @@
 ---
-title: "Part 2b: Adding Multiple Diseases & Tools"
+title: "Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events"
 ---
 
-`epiworldR` supports multi-virus and tools models, the below code gives instructions on how to implement this. First, build a `SIRCONN` model for COVID-19, which new viruses and tools will then be added to.
+As mentioned in Part 1, `epiworldR` models can have multiple viruses, tools, and events. In this part of the workshop, we'll walk through an example of an advanced model with multiple interacting pieces.
 
-## Adding Multiple Viruses & Tools
+## Example Scenario: Simultaneous COVID-19 and Flu Outbreaks
 
-```{r design-and-add}
+The example implements the following scenario:
+
+-   **Diseases:** COVID-19 and Flu
+-   **Population size:** 50,000 agents
+-   **Contact Rate:** 4
+-   **Recovery Rate:** $\frac{1}{4}$ (same for both diseases)
+-   *COVID-19 Parameters*
+    -   **Initial Prevalence:** 0.001
+    -   **Transmission Rate:** 0.5
+-   *Flu Parameters*
+    -   **Initial Prevalence:** 0.001
+    -   **Transmission Rate:** 0.35
+
+We'll go through the process step-by-step. After each step, we'll run the model for 50 days and plot it to illustrate how each added component changes the base model.
+
+### Set up the Model
+
+We start with a `ModelSIRCONN` model for COVID-19. We'll add the flu virus and our tools and events to this base model.
+
+```{r}
+#| label: create-base-model
 library(epiworldR)
-model_sir <- ModelSIRCONN(
+
+model_sirconn <- ModelSIRCONN(
   name              = "COVID-19",
   n                 = 50000, 
-  prevalence        = 0.001, 
-  contact_rate      = 2.5,
-  transmission_rate = 0.5,
-  recovery_rate     = 1/4
+  contact_rate      = 4,
+  recovery_rate     = 1/4,
+  prevalence        = 0.001,
+  transmission_rate = 0.5
   )
-run(model_sir, ndays = 50, seed = 1912)
-model_sir
 ```
 
-#### Designing a Virus
-
-Using the `virus()` function, assign a name to the new virus/variant with its corresponding rate of transmission to any given agent. In this example, prob_infecting = 0.35. In order to add this new virus to the model, use the `add_virus()` function by calling the original `epiworldR` model object, the new virus, and the new virus' prevalence (which is set to 0.001 in this example).
-
-```{r virus_design}
-# Building the virus
-flu <- virus(name = "Flu", prob_infecting = .35)
-
-# Adding the virus to the model
-add_virus(model_sir, flu, proportion = .001)
+```{r}
+#| label: run-base-model
+verbose_off(model_sirconn)
+run(model_sirconn, ndays = 50, seed = 1912)
+plot(model_sirconn)
 ```
 
-#### Designing a Tool
+### Add the Flu Virus
 
-Provide parameters for the new tool using the `tool()` function. These parameters include the tool's name, any reduction in probabilities for the `SIRCONN` model parameters, and increased probability of recovery option. To add the tool to the `SIRCONN` model, use the `add_tool()` function with the `SIRCONN` model object, new tool, and prevalence of the tool. In this example, assume that 50% of the population will have received the vaccination.
+Create the second virus using the `virus()` function. The parameter `prob_infecting` is the transmission rate. The parameter `as_proportion` tells the function to interpret the prevalence as a proportion of the population, rather than a fixed value.
 
-```{r tool_design}
-# Building the tool
-vaccine <- tool(
+```{r}
+#| label: create-flu-virus
+flu_virus <- virus(name = "Flu", prob_infecting = .35, prevalence = 0.001, as_proportion = TRUE)
+```
+
+Add the virus to the model with the `add_virus()` function.
+
+```{r}
+#| label: add-flu
+add_virus(model_sirconn, flu_virus)
+```
+
+```{r}
+#| label: run-model-flu
+run(model_sirconn, ndays = 50, seed = 1912)
+plot(model_sirconn)
+```
+
+### Add a Tool (Vaccine)
+
+In `epiworldR`, agents use tools to fight diseases. Create the vaccine tool using the `tool()` function, with parameters that indicate how the tool modifies the disease parameters. We set our vaccine to reduce the susceptibility of agents by 10%, the transmission rate of infected agents by 50%, and the death rate by 10%. The vaccine further enhances the recovery rate by 50%.
+
+```{r}
+#| label: create-vaccine
+vaccine_tool <- tool(
   name = "Vaccine",
   susceptibility_reduction = .9,
   transmission_reduction = .5,
   recovery_enhancer = .5, 
-  death_reduction = .9
+  death_reduction = .9,
+  prevalence = 0.5, # TODO: is this the same as set_distribution_tool()? If so, use this instead and note it above.
+  as_proportion = TRUE
 )
-
-# Adding the tool to the model
-add_tool(model_sir, vaccine, proportion = 0.5)
 ```
 
-Next, run the updated model for 50 days, the output below describes the simulation. To confirm that the flu and vaccine are included, notice the presence of "Flu" in the Virus(es) section of the output, and "Vaccine" in the Tool(s) section.
+Use the `set_distribution_tool()` function to define the proportion of the population to receive the tool (set here to 50%).
 
 ```{r}
-run(model_sir, ndays = 50, seed = 1912)
-summary(model_sir)
+#| label: set-vaccine-distribution
+set_distribution_tool(
+  tool = vaccine_tool,
+  distfun = distribute_tool_randomly(0.5, TRUE)
+)
 ```
 
-#### Plotting
+Add the vaccine to the model using the `add_tool()` function.
 
-Plotting the model with the additional virus and tool yields the following. Notice the presence of two reproductive numbers plotted over time. Variant 0 refers to COVID-19 and variant 1 refers to the flu.
+```{r}
+#| label: add-vaccine
+add_tool(model_sirconn, vaccine_tool)
+```
 
-```{r, fig.height=10}
-repnum2 <- get_reproductive_number(model_sir)
+```{r}
+#| label: run-model-vaccine
+run(model_sirconn, ndays = 50, seed = 1912)
+plot(model_sirconn)
+```
 
-op <- par(mfrow = c(2,1))
-plot(model_sir)
+Note how the vaccine severely limits the number of infected agents.
+
+### Add Events
+
+In `epiworldR`, all models automatically have a global event that runs each day to update the agents. For this example, we'll add two additional events that represent public health interventions that start partway through the simulation as the dual-disease outbreak begins to gain traction:
+
+-   Beginning on Day 10, a policy of social isolation is adopted which reduces the contact rate to 2
+-   Beginning on Day 20, a TV advertisement is run increasing awareness of the outbreak, reducing the contact rate further to 1.5
+
+Create these events using the `globalevent_set_params()` function, specifying the day to run the event.
+
+```{r}
+#| label: set-events
+isolation_day_10 <- globalevent_set_params("Contact rate", 2, day = 10)
+advertisement_day_20 <- globalevent_set_params("Contact rate", 1.5, day = 20)
+```
+
+Add the events to the model with the `add_globalevent()` function.
+
+```{r}
+#| label: add-events
+add_globalevent(model_sirconn, isolation_day_10)
+add_globalevent(model_sirconn, advertisement_day_20)
+```
+
+```{r}
+#| label: run-full-model
+run(model_sirconn, ndays = 50, seed = 1912)
+plot(model_sirconn)
+```
+
+Note the sharp change to the infected curve corresponding to adoptiong of the social isolation policy.
+
+### Full Model Summary
+
+With our advanced model complete, we can view the summary, noting the events, viruses, and tools we added to the model.
+
+```{r}
+#| label: model-summary
+summary(model_sirconn)
+```
+
+### Reproductive Numbers
+
+The model computes two reproductive numbers, one for each virus.
+
+```{r}
+#| label: reproductive-numbers
+repnum2 <- get_reproductive_number(model_sirconn)
 plot(repnum2, type="b")
-par(op)
 ```
 
-## Comorbidities Using Logit Functions
+## Example Scenario 2: Comorbidities Using Logit Functions
 
-Many times we want to model the effects of comorbidities on the disease. For example, we may want to model the effects of obesity on the probability of recovery from COVID-19. To do this, we can use the `virus_fun_logit()` function to model the probability of recovery.
+Often, we want to model the effects of comorbidities on the disease. For example, we may want to model the effects of obesity on the probability of recovery from COVID-19. To do this, we can use the `virus_fun_logit()` function to model the probability of recovery.
 
 The steps are the following:
 
@@ -213,72 +303,22 @@ Masking only influences the transmission of a disease, thus transmission reducti
 
 ```
 
-
-
-<!-- ## TODO: Monkeypox Example from Part 1 (with events) -->
-
-<!-- We also add two interventions as model events:
-
--   Beginning on Day 10 of the model, a policy of social isolation is adopted which reduces the contact rate to 2
--   Beginning on Day 20, a TV advertisement is run increasing awareness of the monkeypox outbreak, reducing the contact rate further to 1.5 -->
-
-<!-- ```{r}
-#| label: motivating-example
-# Motivating example
-library(epiworldR)
-
-# Create a model
-model_seirconn <- ModelSEIRCONN(
-  name              = "Monkeypox",
-  n                 = 50000, 
-  prevalence        = 0.0001, 
-  contact_rate      = monkeypox_contact_rate,
-  incubation_days   = 7,
-  transmission_rate = monkeypox_transmission_rate,
-  recovery_rate     = monkeypox_recovery_rate
-  )
-
-# Changing contact rate for Isolation and TV advertisement 
-isolation_day_10 <- globalevent_set_params("Contact rate", 2, day = 10)
-advertisement_day_20 <- globalevent_set_params("Contact rate", 1.5, day = 20)
-
-# Adding global actions to model
-add_globalevent(model_seirconn, isolation_day_10)
-add_globalevent(model_seirconn, advertisement_day_20)
-
-# Running and printing model summary
-verbose_off(model_seirconn)
-run(model_seirconn, ndays = 60, seed = 1912)
-plot(model_seirconn)
-summary(model_seirconn)
-```
-
-epiworldR allows us to re-run the model without needing to re-initialize the model. In the above case, we ran the model for 60 days, now we run it again for 100 days.
-
-```{r}
-#| label: run-model
-#| eval: true
-# Run the model
-run(model_seirconn, ndays = 100, seed = 1912)
-model_seirconn
-```
-
-Finally, we plot the results of the 100-day model run:
+## TODO: Monkeypox Example from Part 1 (with events)
 
 ```{r}
 #| label: plot-model
-# Plot the model
-# - Set graphical parameters to plot in 2x2 grid
-op <- par(mfrow = c(2,2))
-# - Plot
-plot_incidence(model_seirconn)
-abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+# # Plot the model
+# # - Set graphical parameters to plot in 2x2 grid
+# op <- par(mfrow = c(2,2))
+# # - Plot
+# plot_incidence(model_seirconn)
+# abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
 
-plot_reproductive_number(model_seirconn)
-abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+# plot_reproductive_number(model_seirconn)
+# abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
 
-plot_generation_time(model_seirconn)
-abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
-# - Restore original graphical parameters
-par(op)
-``` -->
+# plot_generation_time(model_seirconn)
+# abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
+# # - Restore original graphical parameters
+# par(op)
+```
