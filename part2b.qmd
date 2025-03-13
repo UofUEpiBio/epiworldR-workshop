@@ -2,9 +2,9 @@
 title: "Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events"
 ---
 
-As mentioned in Part 1, `epiworldR` models can have multiple viruses, tools, and events. In this part of the workshop, we'll walk through an example of an advanced model with multiple interacting pieces.
+As mentioned in Part 1, `epiworldR` models can have multiple viruses, tools, and events. In this part of the workshop, we'll walk through an example of an advanced model with multiple interacting pieces. We'll then look at an example of modeling comorbidities.
 
-## Example Scenario: Simultaneous COVID-19 and Flu Outbreaks
+## Example Scenario 1: Simultaneous COVID-19 and Flu Outbreaks
 
 The example implements the following scenario:
 
@@ -21,7 +21,7 @@ The example implements the following scenario:
 
 We'll go through the process step-by-step. After each step, we'll run the model for 50 days and plot it to illustrate how each added component changes the base model.
 
-### Set up the Model
+### Set Up the Model
 
 We start with a `ModelSIRCONN` model for COVID-19. We'll add the flu virus and our tools and events to this base model.
 
@@ -162,25 +162,16 @@ plot(repnum2, type="b")
 
 ## Example Scenario 2: Comorbidities Using Logit Functions
 
-Often, we want to model the effects of comorbidities on the disease. For example, we may want to model the effects of obesity on the probability of recovery from COVID-19. To do this, we can use the `virus_fun_logit()` function to model the probability of recovery.
+Often, we want to model the effects of comorbidities on a disease. In this example, we'll examine the effects of obesity on the probability of recovery from the flu.
 
-The steps are the following:
+### Set Up the Models
 
-1.  Create the model
-
-2.  Assign the agents' data (a matrix with covariates/features) to the model.
-
-3.  Create a function to model the probability of recovery using the `virus_fun_logit()` function.
-
-4.  Add the function to the virus' recovery rate using `set_prob_recovery_fun()`.
-
-5.  Run the model.
-
-We start by creating two matching models, one with comorbidities and one without.
+Create two identical models using the `ModelSEIRCONN()` function. One will have comorbidities, the other will not.
 
 ```{r}
+#| label: model-setup-comorb
 # With comorbidities
-model_comor <- ModelSEIRCONN(
+model_comorbid <- ModelSEIRCONN(
   name              = "Flu",
   n                 = 10000, 
   prevalence        = 0.001, 
@@ -191,7 +182,7 @@ model_comor <- ModelSEIRCONN(
   )
 
 # Without comorbidities
-model_no_comor <- ModelSEIRCONN(
+model_no_comorbid <- ModelSEIRCONN(
   name              = "Flu",
   n                 = 10000, 
   prevalence        = 0.001, 
@@ -202,123 +193,107 @@ model_no_comor <- ModelSEIRCONN(
   )
 ```
 
-Next, we will create a matrix with the agents' data. As an example, we will create a matrix with two columns, one for the baseline and one for obesity.
+### Add Comorbidities
+
+The file `part2b_comorb.rds` contains obesity data for the agents. This is formatted as a matrix with two columns: `baseline` and `obesity`. We'll read this in and assign it to the agents of the comorbidity model using the `set_agents_data()` function.
 
 ```{r}
-# Artificial population with obesity
-X <- readRDS("part2b_comorb.rds")
+#| label: add-obesity-data
+obesity_data <- readRDS("part2b_comorb.rds")
+set_agents_data(model_comorbid, obesity_data)
 ```
 
-Let's now link agents' data to the model. This will allow us to use the data to model the probability of recovery.
+Now that population includes some agents with the obesity condition.
 
-```{r}
-# Adding the data to the model
-set_agents_data(model_comor, X)
-model_comor
-```
+### Set Recovery Rate Based on Comorbidity
 
-We then use `virus_fun_logit()` to create a function we can use to model the probability of recovery. The function takes in the following arguments:
+Use the `virus_fun_logit()` function to create a function for the probability of recovery. The function takes the following parameters:
 
 -   `vars`: the variables to use in the model
 -   `coefs`: the coefficients for each variable
 -   `model`: the model object
 
+TODO: Explain parameters better and clarify callout note
+
 ```{r}
+#| label: set-logit-fun
 # Logit function 
 lfun <- virus_fun_logit(
   vars  = 0:1,
   coefs = c(-1.0986, -0.8472), 
-  model_comor
+  model_comorbid
   )
-
-# Printing
-lfun
 ```
 
 ::: callout-note
-To build the previous model, we used the following: (a) Under the logit model, the coefficient needed for the baseline probability of 0.25 is computed using `qlogis(0.25)`. With that, we can go further and compute the associated coefficient to obese individuals with `plogis(qlogis(.25) + x) = .125` -\> `qlogis(.25) + x = plogis(.125)` -\> `x = qlogis(.125) - qlogis(.25)`
+To build the logit function, we used the following: (a) Under the logit model, the coefficient needed for the baseline probability of 0.25 is computed using `qlogis(0.25)`. With that, we can compute the associated coefficient to obese individuals with `plogis(qlogis(.25) + x) = .125` -\> `qlogis(.25) + x = plogis(.125)` -\> `x = qlogis(.125) - qlogis(.25)`
 :::
 
-The next step is to set the probability of recovery function for the virus. We can do this using the `set_prob_recovery_fun()` function:
+Use the `set_prob_recovery_fun()` function to set the probability of recovery function for the virus to the logit function.
 
 ```{r}
-# Setting the probability of recovery
+#| label: set-prob-recovery-fun
 set_prob_recovery_fun(
-  virus = get_virus(model_comor, 0), 
-  model = model_comor,
+  virus = get_virus(model_comorbid, 0), 
+  model = model_comorbid,
   vfun  = lfun
   )
 ```
 
-We are now ready to run the model.
+### Run the Model
+
+Run both models for the 50 days with the same random seed and compare the results.
 
 ```{r}
-run(model_comor, ndays = 50, seed = 1231)
-run(model_no_comor, ndays = 50, seed = 1231)
-```
+#| label: run-comorbid-models
+verbose_off(model_comorbid)
+verbose_off(model_no_comorbid)
+run(model_comorbid, ndays = 50, seed = 1231)
+run(model_no_comorbid, ndays = 50, seed = 1231)
 
-And see the result
-
-```{r}
-#| label: curves-comorbidities
 op <- par(mfrow = c(1, 2), cex = .7)
-plot_incidence(model_comor, main = "With comorbidities")
-plot_incidence(model_no_comor, main = "Without comorbidities")
+plot_incidence(model_no_comorbid, main = "Without Comorbidities")
+plot_incidence(model_comorbid, main = "With Comorbidities")
 par(op)
 ```
 
-::: callout-tip
-We can get information about agents' final state using the function `get_agents_state()`.
+Notice how the comorbidity of obesity results in many more infected agents than the when the comorbidity isn't present. Also, note how the `plot_incidence()` function output differs from that of the `plot()` function.
+
+::: callout-note
+If you want to drill further into this data, you can get the agents' final states using the function `get_agents_states()`.
 :::
 
 ## Exercise
 
-Using a `SIRCONN` model to simulate the Flu for 75 days, add the Coronavirus Delta variant and a masking tool to the model. Then plot the model parameters and reproductive numbers over time.
+Using the `ModelSIRCONN()` function, create a 75-day simulation of the flu and the Coronavirus Delta variant with a masking tool. Initialize the model with the flu and add the Delta variant and tool to the flu model.
 
-Assume the following for model initialization:\
-- n = 10000\
-- prevalence = 0.001\
-- contact_rate = 2.1\
-- transmission_rate = 0.5\
-- recovery_rate = $\frac{1}{4}$
+Assume the following:
 
-Assume the Delta variant has:\
-- prob_infecting = 0.3\
-- recovery_rate = $\frac{1}{4}$\
-- prevalence = 0.001\
-- When running the model, use seed = 1912
-
-Assume the masking tool has:\
-- transmission_reduction = 0.3\
-- proportion of complying agents = 0.6 (for adding the tool to the model)
-
-After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
+-   **Population size:** 10,000 agents
+-   **Contact Rate:** 2.1
+-   **Recovery Rate:** $\frac{1}{4}$ (same for both diseases)
+-   *Flu Parameters*
+    -   **Initial Prevalence:** 0.001
+    -   **Transmission Rate:** 0.5
+-   *Delta variant Parameters*
+    -   **Initial Prevalence:** 0.001
+    -   **Transmission Rate:** 0.3
+-   *Masking Tool Parameters:*
+    -   **Transmission_reduction:** 0.3
+    -   **Prevalence:** 0.6
 
 ::: {.callout-tip collapse="true"}
 Masking only influences the transmission of a disease, thus transmission reduction = 0.3, and all other parameters of this tool will be 0.0.
 :::
 
+Run the model with `seed = 1912` and plot the model parameters and reproductive numbers over time.
+
 ```{r}
 # Your solution here
-
 ```
 
-## TODO: Monkeypox Example from Part 1 (with events)
+After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 
 ```{r}
-#| label: plot-model
-# # Plot the model
-# # - Set graphical parameters to plot in 2x2 grid
-# op <- par(mfrow = c(2,2))
-# # - Plot
-# plot_incidence(model_seirconn)
-# abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
-
-# plot_reproductive_number(model_seirconn)
-# abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
-
-# plot_generation_time(model_seirconn)
-# abline(v = 20, col = "steelblue", lwd = 2, lty = 2)
-# # - Restore original graphical parameters
-# par(op)
+# Your solution here
 ```
