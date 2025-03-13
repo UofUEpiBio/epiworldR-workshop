@@ -166,10 +166,9 @@ head(mult_sim_results$total_hist)
 plot(mult_sim_results$reproductive)
 ```
 
-
 ## Likelihood-Free Markhov Chain Monte Carlo (LFMCMC)
 
-Often in network simulations, we don't know the model parameters that will produce an accurate model. Likelihood-Free Markhov chain Monte Carlo (LFMCMC) runs a base model over a specified number of simulations, each time modifying the parameters used by the model to bring the model results closer to the observed data we're trying to model. In `epiworldR`, the `LFMCMC()` function creates an LFMCMC object that can perform this calibration. In this example, we use LFMCMC to calibrate a COVID-19 SIR Model.
+Often in network simulations, we don't know the model parameters that will produce an accurate model. Likelihood-Free Markhov chain Monte Carlo (LFMCMC) runs a base model over a specified number of simulations, each time modifying the parameters used by the model to bring the model results closer to the observed data we're trying to model. In `epiworldR`, the `LFMCMC()` function creates an LFMCMC object that can perform this calibration. In this example, we use LFMCMC to calibrate a COVID-19 SIR Model. For an example of using `epiworldR` and the `LFMCMC()` function specifically to calibrate a model on real-world data, see the [epiworld-forecasts](https://github.com/EpiForeSITE/epiworld-forecasts){target="_blank"} project.
 
 ### Create a True COVID-19 Model
 
@@ -318,6 +317,4 @@ set_params_names(lfmcmc_model, c("Recovery rate", "Transmission rate"))
 print(lfmcmc_model, burnin = 1500)
 ```
 
-Out LFMCMC calibration was successful!
-The average LFMCMC Recovery rate was 0.14 (true value was 1/7 or 0.1428) and the average Transmission rate was 0.09 (true value was 0.1).
-The average number of Susceptible agents at Day 50 was 1,865.49 (observed value was 1865) and the average number of Recovered agents was 134.51 (observed value was 135).
+Out LFMCMC calibration was successful! The average LFMCMC Recovery rate was 0.14 (true value was 1/7 or 0.1428) and the average Transmission rate was 0.09 (true value was 0.1). The average number of Susceptible agents at Day 50 was 1,865.49 (observed value was 1865) and the average number of Recovered agents was 134.51 (observed value was 135).
