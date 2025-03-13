@@ -188,7 +188,7 @@ window.Quarto = {
 <li>
 <a href="#example-scenario-1-simultaneous-covid-19-and-flu-outbreaks" id="toc-example-scenario-1-simultaneous-covid-19-and-flu-outbreaks" class="nav-link active" data-scroll-target="#example-scenario-1-simultaneous-covid-19-and-flu-outbreaks">Example Scenario 1: Simultaneous COVID-19 and Flu Outbreaks</a>
   <ul class="collapse">
-<li><a href="#set-up-the-model" id="toc-set-up-the-model" class="nav-link" data-scroll-target="#set-up-the-model">Set Up the Model</a></li>
+<li><a href="#model-setup" id="toc-model-setup" class="nav-link" data-scroll-target="#model-setup">Model Setup</a></li>
   <li><a href="#add-the-flu-virus" id="toc-add-the-flu-virus" class="nav-link" data-scroll-target="#add-the-flu-virus">Add the Flu Virus</a></li>
   <li><a href="#add-a-tool-vaccine" id="toc-add-a-tool-vaccine" class="nav-link" data-scroll-target="#add-a-tool-vaccine">Add a Tool (Vaccine)</a></li>
   <li><a href="#add-events" id="toc-add-events" class="nav-link" data-scroll-target="#add-events">Add Events</a></li>
@@ -199,7 +199,7 @@ window.Quarto = {
   <li>
 <a href="#example-scenario-2-comorbidities-using-logit-functions" id="toc-example-scenario-2-comorbidities-using-logit-functions" class="nav-link" data-scroll-target="#example-scenario-2-comorbidities-using-logit-functions">Example Scenario 2: Comorbidities Using Logit Functions</a>
   <ul class="collapse">
-<li><a href="#set-up-the-models" id="toc-set-up-the-models" class="nav-link" data-scroll-target="#set-up-the-models">Set Up the Models</a></li>
+<li><a href="#model-setup-1" id="toc-model-setup-1" class="nav-link" data-scroll-target="#model-setup-1">Model Setup</a></li>
   <li><a href="#add-comorbidities" id="toc-add-comorbidities" class="nav-link" data-scroll-target="#add-comorbidities">Add Comorbidities</a></li>
   <li><a href="#set-recovery-rate-based-on-comorbidity" id="toc-set-recovery-rate-based-on-comorbidity" class="nav-link" data-scroll-target="#set-recovery-rate-based-on-comorbidity">Set Recovery Rate Based on Comorbidity</a></li>
   <li><a href="#run-the-model" id="toc-run-the-model" class="nav-link" data-scroll-target="#run-the-model">Run the Model</a></li>
@@ -256,7 +256,7 @@ window.Quarto = {
 </li>
 </ul>
 <p>We’ll go through the process step-by-step. After each step, we’ll run the model for 50 days and plot it to illustrate how each added component changes the base model.</p>
-<section id="set-up-the-model" class="level3"><h3 class="anchored" data-anchor-id="set-up-the-model">Set Up the Model</h3>
+<section id="model-setup" class="level3"><h3 class="anchored" data-anchor-id="model-setup">Model Setup</h3>
 <p>We start with a <code>ModelSIRCONN</code> model for COVID-19. We’ll add the flu virus and our tools and events to this base model.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
@@ -385,10 +385,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of viruses   : 2
-Last run elapsed t  : 82.00ms
-Total elapsed t     : 326.00ms (4 runs)
-Last run speed      : 30.47 million agents x day / second
-Average run speed   : 30.59 million agents x day / second
+Last run elapsed t  : 91.00ms
+Total elapsed t     : 361.00ms (4 runs)
+Last run speed      : 27.25 million agents x day / second
+Average run speed   : 27.65 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -433,7 +433,7 @@ Transition Probabilities:
 </div>
 </section></section><section id="example-scenario-2-comorbidities-using-logit-functions" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-2-comorbidities-using-logit-functions">Example Scenario 2: Comorbidities Using Logit Functions</h2>
 <p>Often, we want to model the effects of comorbidities on a disease. In this example, we’ll examine the effects of obesity on the probability of recovery from the flu.</p>
-<section id="set-up-the-models" class="level3"><h3 class="anchored" data-anchor-id="set-up-the-models">Set Up the Models</h3>
+<section id="model-setup-1" class="level3"><h3 class="anchored" data-anchor-id="model-setup-1">Model Setup</h3>
 <p>Create two identical models using the <code>ModelSEIRCONN()</code> function. One will have comorbidities, the other will not.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># With comorbidities</span></span>
@@ -544,7 +544,7 @@ Note
 </div>
 </div>
 </section></section><section id="exercise" class="level2"><h2 class="anchored" data-anchor-id="exercise">Exercise</h2>
-<p>Using <code>ModelSIRCONN()</code>, create a 75-day simulation of the flu and the Coronavirus Delta variant with a masking tool. Initialize the model with the flu and add the Delta variant and tool to the flu model.</p>
+<p>Using the <code>ModelSIRCONN()</code> function, create a 75-day simulation of the flu and the Coronavirus Delta variant with a masking tool. Initialize the model with the flu and add the Delta variant and tool to the flu model.</p>
 <p>Assume the following:</p>
 <ul>
 <li>

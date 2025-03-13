@@ -28,7 +28,7 @@ The example implements the following scenario:
 -   **Transmission Rate:** 0.5 (the probability an infected agent infects another agent)
 -   **Recovery Rate:** $\frac{1}{7}$ (infected agents take 7 days to recover)
 
-### Set Up the Model
+### Model Setup
 Create the model with the above characteristics using the `ModelSEIRCONN()` function.
 ```{r}
 #| label: setup-model

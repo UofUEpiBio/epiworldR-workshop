@@ -21,7 +21,7 @@ The example implements the following scenario:
 
 We'll go through the process step-by-step. After each step, we'll run the model for 50 days and plot it to illustrate how each added component changes the base model.
 
-### Set Up the Model
+### Model Setup
 
 We start with a `ModelSIRCONN` model for COVID-19. We'll add the flu virus and our tools and events to this base model.
 
@@ -164,7 +164,7 @@ plot(repnum2, type="b")
 
 Often, we want to model the effects of comorbidities on a disease. In this example, we'll examine the effects of obesity on the probability of recovery from the flu.
 
-### Set Up the Models
+### Model Setup
 
 Create two identical models using the `ModelSEIRCONN()` function. One will have comorbidities, the other will not.
 
