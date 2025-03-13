@@ -258,7 +258,7 @@ see '?methods' for accessing help and source code</code></pre>
 <li>
 <strong>Initial Disease Prevalence:</strong> 0.0001 (5 agents start the simulation exposed to the virus)</li>
 <li>
-<strong>Contact Rate:</strong> 4 (each agent will contact 4 others during each model step/day)</li>
+<strong>Contact Rate:</strong> 4 (how many other agents each agent will contact during each model step/day)</li>
 <li>
 <strong>Incubation Days:</strong> 7 (how long after infection before symptoms appear)</li>
 <li>
@@ -266,18 +266,27 @@ see '?methods' for accessing help and source code</code></pre>
 <li>
 <strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span> (infected agents take 7 days to recover)</li>
 </ul>
+<p>Using the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number" target="_blank">basic reproductive number</a> equation (R0) equation (R0 = P(transmission) * contact_rate / P(recovery)) and <code>R0_monkeypox = 2.44</code>, the contact rate is computed as about 0.571 as follows:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>monkeypox_r0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>monkeypox_transmission_rate <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>monkeypox_recovery_rate <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a>monkeypox_contact_rate <span class="ot">&lt;-</span> monkeypox_r0 <span class="sc">*</span> monkeypox_recovery_rate <span class="sc">/</span> monkeypox_transmission_rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <section id="model-setup" class="level3"><h3 class="anchored" data-anchor-id="model-setup">Model Setup</h3>
 <p>Create the model with the above characteristics using the <code>ModelSEIRCONN()</code> function.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>monkeypox_model <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
-<span id="cb3-2"><a href="#cb3-2"></a>  <span class="at">name              =</span> <span class="st">"Monkeypox"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
-<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">prevalence        =</span> <span class="fl">0.0001</span>, </span>
-<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">contact_rate      =</span> <span class="dv">4</span>,</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
-<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb3-8"><a href="#cb3-8"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
-<span id="cb3-9"><a href="#cb3-9"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>monkeypox_model <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="at">name              =</span> <span class="st">"Monkeypox"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="at">n                 =</span> <span class="dv">50000</span>, </span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="at">prevalence        =</span> <span class="fl">0.0001</span>, </span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="at">contact_rate      =</span> monkeypox_contact_rate,</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="at">transmission_rate =</span> monkeypox_transmission_rate,</span>
+<span id="cb4-8"><a href="#cb4-8"></a>  <span class="at">recovery_rate     =</span> monkeypox_recovery_rate</span>
+<span id="cb4-9"><a href="#cb4-9"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="run-the-model" class="level3"><h3 class="anchored" data-anchor-id="run-the-model">Run the Model</h3>
@@ -303,34 +312,34 @@ Connected vs Non-Connected Models
 </div>
 </div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">verbose_off</span>(monkeypox_model)</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">run</span>(monkeypox_model, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
-<span id="cb4-3"><a href="#cb4-3"></a></span>
-<span id="cb4-4"><a href="#cb4-4"></a>monkeypox_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">verbose_off</span>(monkeypox_model)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">run</span>(monkeypox_model, <span class="at">ndays =</span> <span class="dv">100</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a>monkeypox_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 It features 50000 agents, 1 virus(es), and 0 tool(s).
 The model has 4 states.
-The final distribution is: 0 Susceptible, 1 Exposed, 8 Infected, and 49991 Recovered.</code></pre>
+The final distribution is: 48982 Susceptible, 265 Exposed, 209 Infected, and 544 Recovered.</code></pre>
 </div>
 </div>
 <p>After running the model, printing it gives the final distribution of agents across the four SEIR states. If we want to re-run the model for a different duraction, <code>epiworldR</code> allows us to do this without re-initializing the model.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">run</span>(monkeypox_model, <span class="at">ndays =</span> <span class="dv">60</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a>monkeypox_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">run</span>(monkeypox_model, <span class="at">ndays =</span> <span class="dv">300</span>, <span class="at">seed =</span> <span class="dv">1912</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>monkeypox_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 It features 50000 agents, 1 virus(es), and 0 tool(s).
 The model has 4 states.
-The final distribution is: 0 Susceptible, 474 Exposed, 2263 Infected, and 47263 Recovered.</code></pre>
+The final distribution is: 10212 Susceptible, 18 Exposed, 29 Infected, and 39741 Recovered.</code></pre>
 </div>
 </div>
 </section><section id="model-summary" class="level3"><h3 class="anchored" data-anchor-id="model-summary">Model Summary</h3>
 <p>For more detailed output than the simple print, use the <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">summary</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">summary</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>________________________________________________________________________________
 ________________________________________________________________________________
@@ -340,12 +349,12 @@ Name of the model   : Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 Population size     : 50000
 Agents' data        : (none)
 Number of entities  : 0
-Days (duration)     : 60 (of 60)
+Days (duration)     : 300 (of 300)
 Number of viruses   : 1
-Last run elapsed t  : 97.00ms
-Total elapsed t     : 205.00ms (2 runs)
-Last run speed      : 30.82 million agents x day / second
-Average run speed   : 29.23 million agents x day / second
+Last run elapsed t  : 201.00ms
+Total elapsed t     : 265.00ms (2 runs)
+Last run speed      : 74.31 million agents x day / second
+Average run speed   : 113.02 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -359,20 +368,20 @@ Tool(s):
 
 Model parameters:
  - Avg. Incubation days : 7.0000
- - Contact rate         : 4.0000
+ - Contact rate         : 0.5714
  - Prob. Recovery       : 0.1429
  - Prob. Transmission   : 0.5000
 
-Distribution of the population at time 60:
-  - (0) Susceptible : 49995 -&gt; 0
-  - (1) Exposed     :     5 -&gt; 474
-  - (2) Infected    :     0 -&gt; 2263
-  - (3) Recovered   :     0 -&gt; 47263
+Distribution of the population at time 300:
+  - (0) Susceptible : 49995 -&gt; 10212
+  - (1) Exposed     :     5 -&gt; 18
+  - (2) Infected    :     0 -&gt; 29
+  - (3) Recovered   :     0 -&gt; 39741
 
 Transition Probabilities:
- - Susceptible  0.82  0.18  0.00  0.00
- - Exposed      0.00  0.86  0.14  0.00
- - Infected     0.00  0.00  0.87  0.13
+ - Susceptible  0.99  0.01  0.00  0.00
+ - Exposed      0.00  0.87  0.13  0.00
+ - Infected     0.00  0.00  0.86  0.14
  - Recovered    0.00  0.00  0.00  1.00</code></pre>
 </div>
 </div>
@@ -388,7 +397,7 @@ Transition Probabilities:
 <p>Take some time to familiarize yourself with this output.</p>
 </section><section id="model-visualization" class="level3"><h3 class="anchored" data-anchor-id="model-visualization">Model Visualization</h3>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">plot_incidence</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">plot_incidence</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="part1_files/figure-html/plot-model-1.png" class="img-fluid figure-img" width="672"></p>
@@ -398,7 +407,7 @@ Transition Probabilities:
 </div>
 <p>The <code>plot_incidence()</code> function plots the number of agents in each of the four SEIR states over the course of the model simulation. You can get this data in tabular form with the <code>get_hist_total()</code> function:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(monkeypox_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(monkeypox_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  date       state counts
 1    0 Susceptible  49995
@@ -412,22 +421,22 @@ Transition Probabilities:
 </section><section id="reproductive-number" class="level3"><h3 class="anchored" data-anchor-id="reproductive-number">Reproductive Number</h3>
 <p>An important statistic in epidemiological models is the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number#Effective_reproduction_number">reproductive number</a>. We get this from an <code>epiworldR</code> model using the <code>get_reproductive_number()</code> function.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(monkeypox_model)</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(monkeypox_model)</span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
 <pre><code>  virus_id     virus source source_exposure_date rt
-1        0 Monkeypox  13873                   48  0
-2        0 Monkeypox   2890                   48  0
-3        0 Monkeypox  47514                   46  0
-4        0 Monkeypox  34129                   46  0
-5        0 Monkeypox  48375                   45  0
-6        0 Monkeypox  31698                   45  0</code></pre>
+1        0 Monkeypox  31651                  300  0
+2        0 Monkeypox  27890                  299  0
+3        0 Monkeypox  27283                  298  0
+4        0 Monkeypox  31774                  295  0
+5        0 Monkeypox  12317                  295  0
+6        0 Monkeypox   5964                  292  0</code></pre>
 </div>
 </div>
-<p>Virus listed (each agent has a rt for each day of the model)</p>
+<p>The <code>repnum</code> object stores the reproductive number of each agent (listed by their ID under the <code>source</code> column) for each virus. Agents who haven’t been infected yet don’t have a reproductive number, consequently agents are only added to the <code>repnum</code> object when they have been infected.</p>
 <p>Plot the reproductive number using:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="part1_files/figure-html/plot-repnum-1.png" class="img-fluid figure-img" width="672"></p>
@@ -462,13 +471,13 @@ Transition Probabilities:
 <p>From there, run the model and visualize.</p>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
 <p>Plot the reproductive number of the COVID-19 simulated SEIR model over 100 days.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 

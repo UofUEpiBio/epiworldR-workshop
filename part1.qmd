@@ -22,10 +22,21 @@ The example implements the following scenario:
 -   **Disease:** Monkeypox
 -   **Population size:** 50,000 agents
 -   **Initial Disease Prevalence:** 0.0001 (5 agents start the simulation exposed to the virus)
--   **Contact Rate:** 4 (each agent will contact 4 others during each model step/day)
+-   **Contact Rate:** 4 (how many other agents each agent will contact during each model step/day)
 -   **Incubation Days:** 7 (how long after infection before symptoms appear)
 -   **Transmission Rate:** 0.5 (the probability an infected agent infects another agent)
 -   **Recovery Rate:** $\frac{1}{7}$ (infected agents take 7 days to recover)
+
+Using the [basic reproductive number](https://en.wikipedia.org/wiki/Basic_reproduction_number){target="_blank"} equation (R0) equation (R0 = P(transmission) \* contact_rate / P(recovery)) and `R0_monkeypox = 2.44`, the contact rate is computed as about 0.571 as follows:
+
+```{r}
+#| label: compute-contact-r
+monkeypox_r0 <- 2
+monkeypox_transmission_rate <- 0.5
+monkeypox_recovery_rate <- 1/7
+
+monkeypox_contact_rate <- monkeypox_r0 * monkeypox_recovery_rate / monkeypox_transmission_rate
+```
 
 ### Model Setup
 
@@ -37,10 +48,10 @@ monkeypox_model <- ModelSEIRCONN(
   name              = "Monkeypox",
   n                 = 50000, 
   prevalence        = 0.0001, 
-  contact_rate      = 4,
+  contact_rate      = monkeypox_contact_rate,
   incubation_days   = 7,
-  transmission_rate = 0.5,
-  recovery_rate     = 1/7
+  transmission_rate = monkeypox_transmission_rate,
+  recovery_rate     = monkeypox_recovery_rate
   )
 ```
 
@@ -69,8 +80,8 @@ monkeypox_model
 After running the model, printing it gives the final distribution of agents across the four SEIR states. If we want to re-run the model for a different duraction, `epiworldR` allows us to do this without re-initializing the model.
 
 ```{r}
-#| label: run-model-60
-run(monkeypox_model, ndays = 60, seed = 1912)
+#| label: run-model-300
+run(monkeypox_model, ndays = 300, seed = 1912)
 monkeypox_model
 ```
 
@@ -118,7 +129,7 @@ repnum <- get_reproductive_number(monkeypox_model)
 head(repnum)
 ```
 
-Virus listed (each agent has a rt for each day of the model)
+The `repnum` object stores the reproductive number of each agent (listed by their ID under the `source` column) for each virus. Agents who haven't been infected yet don't have a reproductive number, consequently agents are only added to the `repnum` object when they have been infected.
 
 Plot the reproductive number using:
 
