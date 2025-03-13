@@ -1,12 +1,6 @@
 ---
-title: "Part 3: Multiple Runs"
+title: "Part 3: Multiple Simulation Runs"
 ---
-
-## Introduction
-
-The purpose of the `run_multiple` function is to run a specified number of simulations using the same model object. That is, this function makes it possible to compare model results across several separate and repeated simulations.
-
-## The Principle Behind Multiple Runs
 
 ```{r, echo = FALSE}
 # Set the seed for reproducibility
@@ -39,15 +33,31 @@ plot(sample_sizes, averages, type = "l", xlab = "Sample Size (n)",
 
 In statistics, the Law of Large Numbers ensures that as the sample size increases, the sample mean (average) of a random variable will converge to the population mean. The same principle applies when using multiple runs to simulate epidemiological models. As the number of `epiworldR` simulations increases, the sample means of the reproductive number or model parameters, for example, will converge to their corresponding population means.
 
-## Example: Simulating a SEIRCONN Model 500 Times
+In `epiworldR`, the `run_multiple()` function allows us to run a specified number of simulations using the same model object to compare model results across several separate and repeated simulations. In this part of the workshop, we'll walk through an example of using this function.
 
-#### Setup and Running Model
+## Example Scenario: 500 Simulations of Measles
 
-To use the `run_multiple` function in `epiworldR`, create your `epiworldR_model` of choice; in this case, the example uses a `SEIRCONN` model for Measles, 10000 people, an initial prevalence of 0.0001 (0.01%), a contact rate of 2, probability of transmission 0.5, a total of 7 incubation days, and probability of recovery $\frac{1}{7}$.
+The example implements the following scenario:
 
-```{r sirconn-setup}
+-   **Disease:** Measles
+-   **Population size:** 5,000 agents
+-   **Initial Disease Prevalence:** 0.001
+-   **Contact Rate:** 2
+-   **Transmission Rate:** 0.5
+-   **Incubation Days:** 7
+-   **Recovery Rate:** $\frac{1}{7}$
+
+We'll run 500 simulations of this model and compare the results.
+
+### Model Setup
+
+Use the `ModelSEIRCONN()` function to initialize the measles model.
+
+```{r}
+#| label: model-setup
 library(epiworldR)
-model_seirconn <- ModelSEIRCONN(
+
+measles_model <- ModelSEIRCONN(
   name              = "Measles",
   n                 = 5000, 
   prevalence        = 0.001, 
@@ -58,91 +68,83 @@ model_seirconn <- ModelSEIRCONN(
   )
 ```
 
-#### Generating a Saver
+### Generate Saver
 
-Next, generate a saver for the purpose of extracting the `total_hist` and `reproductive` information from the model object. Keep in mind that you can generate a saver for any metric compatible with the `make_saver` function (see details section of the `make_saver` help manual).
+Use the `make_saver()` function to create a saver object. The saver will extract the `total_hist` and `reproductive` data from the model object after each run so the results can be compared.
+
+::: callout-note
+You can generate a saver for any metric compatible with the `make_saver()` function. See the details section of the `make_saver()` help manual for more (`?make_saver`).
+:::
 
 ```{r}
-# Generating a saver
-# ?make_saver
-saver <- make_saver("total_hist", "reproductive")
+#| label: generate-saver
+measles_saver <- make_saver("total_hist", "reproductive")
 ```
 
-#### Running the Simulation
+### Run 500 Simulations
 
-Now, use the `run_multiple` function with the model object, number of desired days to run the simulation, number of simulations to run, the generated saver, and number of threads for parallel computing.
+Use the `run_multiple()` function to simulate the measles model 500 times (`nsims = 500`) with each simulation running for 50 days (`ndays = 50`). Add the saver created in the previous step and set the number of threads to 4 (`nthread = 4`) for parallel computing.
 
-```{r saver-generation}
-# Running and printing
-run_multiple(model_seirconn, ndays = 50, nsims = 500, saver = saver, nthread = 4)
+```{r}
+#| label: run-model-multiple
+verbose_off(measles_model)
+run_multiple(measles_model, ndays = 50, nsims = 500, saver = measles_saver, nthread = 4)
 ```
 
-#### Extracting Results
+Note that we do not run the model with a random seed, because we want each model run to have random differences.
 
-Using the `run_multiple_get_results` function, extract the results from the model object that was simulated 500 times for comparison across simulations.
+### Visualize Results
 
-```{r extracting-results}
-head(run_multiple_get_results(model_seirconn)$total_hist)
-head(run_multiple_get_results(model_seirconn)$reproductive)
-```
+Create a boxplot of the four SEIR states for each day across the 500 simulations using the `run_multiple_get_results()` function. For this example, we filter the data to observe only the first 20 days.
 
-#### Plotting
-
-To plot the model parameters and reproductive numbers over time using boxplots, extract the results from the model object using `run_multiple_get_results`. For this example, the dates are filtered to observe the model parameters over the first 20 days. Notice each boxplot in the below table represents the observed values from each of the 500 simulations for each date.
-
-```{r plotting-seirconn-epicurves}
-seirconn_500 <- run_multiple_get_results(model_seirconn)$total_hist
+```{r}
+#| label: plot-epicurv-multiple
+seirconn_500 <- run_multiple_get_results(measles_model)$total_hist
 seirconn_500 <- seirconn_500[seirconn_500$date <= 20,]
 plot(seirconn_500)
 ```
 
-To view the a plot of the reproductive number over all 50 days for each of the 500 simulations, store the reproductive results to a new object using `run_multiple_get_results`, then plot using the `plot` function. Notice each source exposure date displays a boxplot representing the distribution of reproductive numbers across all 500 simulations for each date. As expected, the reproductive number on average, decreases over time.
+Create a boxplot of the reproductive number for all 50 days across the 500 simulations using the `run_multiple_get_results()` function.
 
-```{r reproductive-number-plot}
-seirconn_500_r <- run_multiple_get_results(model_seirconn)$reproductive
+```{r}
+#| label: plot-reproductive-number
+seirconn_500_r <- run_multiple_get_results(measles_model)$reproductive
 plot(seirconn_500_r)
 ```
 
+As expected, the reproductive number on average, decreases over time.
+
 ## Exercise 1
 
-Consider for this exercise that there is a Hepatitis A outbreak. Your goal is to observe the average reproductive number over 100 simulations. Using a `run_multiple` simulation, what is the average reproductive number over the course of the first 20 days? Use a `SEIRCONN` model with:\
-- n = 10000\
-- prevalence = 0.01\
-- contact_rate = 2\
-- transmission_rate = 0.5\
-- incubation_days = 2\
-- recovery_rate = $\frac{1}{7}$
+Consider a Hepatitis A outbreak with the following parameters:
 
-::: {.callout-tip collapse="true"}
-General Steps:\
-1. Create `epiworldR_model`\
-2. Generate saver\
-3. Run `epiworldR_model`\
-4. Plot average reproductive number
-:::
+-   **Population size:** 10,000 agents
+-   **Initial Prevalence:** 0.01
+-   **Contact Rate:** 2
+-   **Transmission Rate:** 0.5
+-   **Incubation Days:** 2
+-   **Recovery Rate:** $\frac{1}{7}$
+
+Using the `ModelSEIRCONN()` and `run_multiple()` functions, run 100 simulations each for 40 days. Plot the average reproductive number for the first 20 days.
 
 ```{r}
 # Your solution here
-
 ```
 
 ## Exercise 2
 
-Using the same `SEIRCONN` model from exercise 1, simulate a vaccine intervention for the previous exercise's Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:\
-- susceptibility_reduction = .9\
-- transmission_reduction = .5\
-- recovery_enhancer = .5\
-- death_reduction = .9
+Using the `ModelSEIRCONN` object from Exercise 1, add a vaccine tool (`tool()`) with the following parameters:
 
-::: {.callout-tip collapse="true"}
-General Steps:\
-1. Create tool\
-2. Use `globalaction_tool` & `add_global_action`\
-3. Generate saver & `run_multiple`\
-4. Plot average reproductive number
-:::
+-   **Susceptibility Reduction:** 0.9
+-   **Transmission Reduction:** 0.5
+-   **Death Reduction:** 0.9
+-   **Recovery Enhancer:** 0.5
+-   **Prevalence:** 0.5
+
+However, instead of adding the vaccine at the start of the simulation, introduce the vaccine on Day 10 to 50% of the population using the `globalevent_tool()` and `add_globalevent()` functions.
+
+How does that change the average reproductive number for the first 20 days over 100 simulations?
 
 ```{r}
 # Your solution here
-
 ```

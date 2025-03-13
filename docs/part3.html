@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.298">
+<meta name="generator" content="quarto-1.5.57">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>epiworldR - Sunbelt 2023 Workshop - Part 3: Multiple Runs</title>
+<title>Part 3: Multiple Simulation Runs – epiworldR - Sunbelt 2025 Workshop</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -30,7 +30,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -74,7 +74,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -83,8 +89,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-CQNCQM1SG1"></script><script type="text/javascript">
 
@@ -92,58 +100,83 @@ window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
-</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="styles.css">
+</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="styles.css">
 </head>
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">epiworldR - Sunbelt 2023 Workshop</span>
+    <span class="navbar-title">epiworldR - Sunbelt 2025 Workshop</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part1.html" rel="" target="">
- <span class="menu-text">Part 1</span></a>
+    <a class="nav-link" href="./part1.html"> 
+<span class="menu-text">Part 1</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part2a.html" rel="" target="">
- <span class="menu-text">Part 2a</span></a>
+    <a class="nav-link" href="./part2a.html"> 
+<span class="menu-text">Part 2a</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part2b.html" rel="" target="">
- <span class="menu-text">Part 2b</span></a>
+    <a class="nav-link" href="./part2b.html"> 
+<span class="menu-text">Part 2b</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./part3.html" rel="" target="" aria-current="page">
- <span class="menu-text">Part 3</span></a>
+    <a class="nav-link active" href="./part3.html" aria-current="page"> 
+<span class="menu-text">Part 3</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./examples.html" rel="" target="">
- <span class="menu-text">Examples</span></a>
+    <a class="nav-link" href="./additional-learning.html"> 
+<span class="menu-text">Additional Learning</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/UofUEpiBio/epiworldR-workshop"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text">GitHub</span></a>
+<span class="menu-text">GitHub</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools">
+</div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
@@ -152,16 +185,22 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#the-principle-behind-multiple-runs" id="toc-the-principle-behind-multiple-runs" class="nav-link" data-scroll-target="#the-principle-behind-multiple-runs">The Principle Behind Multiple Runs</a></li>
-  <li><a href="#example-simulating-a-seirconn-model-500-times" id="toc-example-simulating-a-seirconn-model-500-times" class="nav-link" data-scroll-target="#example-simulating-a-seirconn-model-500-times">Example: Simulating a SEIRCONN Model 500 Times</a></li>
+<li>
+<a href="#example-scenario-500-simulations-of-measles" id="toc-example-scenario-500-simulations-of-measles" class="nav-link active" data-scroll-target="#example-scenario-500-simulations-of-measles">Example Scenario: 500 Simulations of Measles</a>
+  <ul class="collapse">
+<li><a href="#model-setup" id="toc-model-setup" class="nav-link" data-scroll-target="#model-setup">Model Setup</a></li>
+  <li><a href="#generate-saver" id="toc-generate-saver" class="nav-link" data-scroll-target="#generate-saver">Generate Saver</a></li>
+  <li><a href="#run-500-simulations" id="toc-run-500-simulations" class="nav-link" data-scroll-target="#run-500-simulations">Run 500 Simulations</a></li>
+  <li><a href="#visualize-results" id="toc-visualize-results" class="nav-link" data-scroll-target="#visualize-results">Visualize Results</a></li>
+  </ul>
+</li>
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
   <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
   </ul></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">Part 3: Multiple Runs</h1>
+<h1 class="title">Part 3: Multiple Simulation Runs</h1>
 </div>
 
 
@@ -174,154 +213,151 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   </div>
   
 
-</header><section id="introduction" class="level2"><h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>The purpose of the <code>run_multiple</code> function is to run a specified number of simulations using the same model object. That is, this function makes it possible to compare model results across several separate and repeated simulations.</p>
-</section><section id="the-principle-behind-multiple-runs" class="level2"><h2 class="anchored" data-anchor-id="the-principle-behind-multiple-runs">The Principle Behind Multiple Runs</h2>
-<div class="cell">
+
+</header><div class="cell">
 <div class="cell-output-display">
-<p><img src="part3_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="part3_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>In statistics, the Law of Large Numbers ensures that as the sample size increases, the sample mean (average) of a random variable will converge to the population mean. The same principle applies when using multiple runs to simulate epidemiological models. As the number of <code>epiworldR</code> simulations increases, the sample means of the reproductive number or model parameters, for example, will converge to their corresponding population means.</p>
-</section><section id="example-simulating-a-seirconn-model-500-times" class="level2"><h2 class="anchored" data-anchor-id="example-simulating-a-seirconn-model-500-times">Example: Simulating a SEIRCONN Model 500 Times</h2>
-<section id="setup-and-running-model" class="level4"><h4 class="anchored" data-anchor-id="setup-and-running-model">Setup and Running Model</h4>
-<p>To use the <code>run_multiple</code> function in <code>epiworldR</code>, create your <code>epiworldR_model</code> of choice; in this case, the example uses a <code>SEIRCONN</code> model for Measles, 10000 people, an initial prevalence of 0.0001 (0.01%), a contact rate of 2, probability of transmission 0.5, a total of 7 incubation days, and probability of recovery <span class="math inline">\(\frac{1}{7}\)</span>.</p>
+<p>In <code>epiworldR</code>, the <code>run_multiple()</code> function allows us to run a specified number of simulations using the same model object to compare model results across several separate and repeated simulations. In this part of the workshop, we’ll walk through an example of using this function.</p>
+<section id="example-scenario-500-simulations-of-measles" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-500-simulations-of-measles">Example Scenario: 500 Simulations of Measles</h2>
+<p>The example implements the following scenario:</p>
+<ul>
+<li>
+<strong>Disease:</strong> Measles</li>
+<li>
+<strong>Population size:</strong> 5,000 agents</li>
+<li>
+<strong>Initial Disease Prevalence:</strong> 0.001</li>
+<li>
+<strong>Contact Rate:</strong> 2</li>
+<li>
+<strong>Transmission Rate:</strong> 0.5</li>
+<li>
+<strong>Incubation Days:</strong> 7</li>
+<li>
+<strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span>
+</li>
+</ul>
+<p>We’ll run 500 simulations of this model and compare the results.</p>
+<section id="model-setup" class="level3"><h3 class="anchored" data-anchor-id="model-setup">Model Setup</h3>
+<p>Use the <code>ModelSEIRCONN()</code> function to initialize the measles model.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
-<span id="cb1-2"><a href="#cb1-2"></a>model_seirconn <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="at">name              =</span> <span class="st">"Measles"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">n                 =</span> <span class="dv">5000</span>, </span>
-<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
-<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">contact_rate      =</span> <span class="dv">2</span>,</span>
-<span id="cb1-7"><a href="#cb1-7"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
-<span id="cb1-9"><a href="#cb1-9"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(epiworldR)</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a>measles_model <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>  <span class="at">name              =</span> <span class="st">"Measles"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="at">n                 =</span> <span class="dv">5000</span>, </span>
+<span id="cb1-6"><a href="#cb1-6"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="at">contact_rate      =</span> <span class="dv">2</span>,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-9"><a href="#cb1-9"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</section><section id="generating-a-saver" class="level4"><h4 class="anchored" data-anchor-id="generating-a-saver">Generating a Saver</h4>
-<p>Next, generate a saver for the purpose of extracting the <code>total_hist</code> and <code>reproductive</code> information from the model object. Keep in mind that you can generate a saver for any metric compatible with the <code>make_saver</code> function (see details section of the <code>make_saver</code> help manual).</p>
+</section><section id="generate-saver" class="level3"><h3 class="anchored" data-anchor-id="generate-saver">Generate Saver</h3>
+<p>Use the <code>make_saver()</code> function to create a saver object. The saver will extract the <code>total_hist</code> and <code>reproductive</code> data from the model object after each run so the results can be compared.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can generate a saver for any metric compatible with the <code>make_saver()</code> function. See the details section of the <code>make_saver()</code> help manual for more (<code>?make_saver</code>).</p>
+</div>
+</div>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Generating a saver</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># ?make_saver</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>measles_saver <span class="ot">&lt;-</span> <span class="fu">make_saver</span>(<span class="st">"total_hist"</span>, <span class="st">"reproductive"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-</section><section id="running-the-simulation" class="level4"><h4 class="anchored" data-anchor-id="running-the-simulation">Running the Simulation</h4>
-<p>Now, use the <code>run_multiple</code> function with the model object, number of desired days to run the simulation, number of simulations to run, the generated saver, and number of threads for parallel computing.</p>
+</section><section id="run-500-simulations" class="level3"><h3 class="anchored" data-anchor-id="run-500-simulations">Run 500 Simulations</h3>
+<p>Use the <code>run_multiple()</code> function to simulate the measles model 500 times (<code>nsims = 500</code>) with each simulation running for 50 days (<code>ndays = 50</code>). Add the saver created in the previous step and set the number of threads to 4 (<code>nthread = 4</code>) for parallel computing.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># Running and printing</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">run_multiple</span>(model_seirconn, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">nsims =</span> <span class="dv">500</span>, <span class="at">saver =</span> saver, <span class="at">nthread =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">verbose_off</span>(measles_model)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">run_multiple</span>(measles_model, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">nsims =</span> <span class="dv">500</span>, <span class="at">saver =</span> measles_saver, <span class="at">nthread =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
-<pre><code>Starting multiple runs (500) using 4 thread(s)
+<pre><code>Starting multiple runs (500)
 _________________________________________________________________________
 _________________________________________________________________________
 ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
  done.</code></pre>
 </div>
 </div>
-</section><section id="extracting-results" class="level4"><h4 class="anchored" data-anchor-id="extracting-results">Extracting Results</h4>
-<p>Using the <code>run_multiple_get_results</code> function, extract the results from the model object that was simulated 500 times for comparison across simulations.</p>
+<p>Note that we do not run the model with a random seed, because we want each model run to have random differences.</p>
+</section><section id="visualize-results" class="level3"><h3 class="anchored" data-anchor-id="visualize-results">Visualize Results</h3>
+<p>Create a boxplot of the four SEIR states for each day across the 500 simulations using the <code>run_multiple_get_results()</code> function. For this example, we filter the data to observe only the first 20 days.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">head</span>(<span class="fu">run_multiple_get_results</span>(model_seirconn)<span class="sc">$</span>total_hist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>  sim_num date nviruses       state counts
-1       1    0        1 Susceptible   4995
-2       1    0        1     Exposed      5
-3       1    0        1    Infected      0
-4       1    0        1   Recovered      0
-5       1    1        1 Susceptible   4995
-6       1    1        1     Exposed      5</code></pre>
-</div>
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">head</span>(<span class="fu">run_multiple_get_results</span>(model_seirconn)<span class="sc">$</span>reproductive)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>  sim_num virus_id   virus source source_exposure_date rt
-1       1        0 Measles    237                   50  0
-2       1        0 Measles    440                   50  0
-3       1        0 Measles    494                   50  0
-4       1        0 Measles    708                   50  0
-5       1        0 Measles   1111                   50  0
-6       1        0 Measles   1373                   50  0</code></pre>
-</div>
-</div>
-</section><section id="plotting" class="level4"><h4 class="anchored" data-anchor-id="plotting">Plotting</h4>
-<p>To plot the model parameters and reproductive numbers over time using boxplots, extract the results from the model object using <code>run_multiple_get_results</code>. For this example, the dates are filtered to observe the model parameters over the first 20 days. Notice each boxplot in the below table represents the observed values from each of the 500 simulations for each date.</p>
-<div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>seirconn_500 <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(model_seirconn)<span class="sc">$</span>total_hist</span>
-<span id="cb9-2"><a href="#cb9-2"></a>seirconn_500 <span class="ot">&lt;-</span> seirconn_500[seirconn_500<span class="sc">$</span>date <span class="sc">&lt;=</span> <span class="dv">20</span>,]</span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="fu">plot</span>(seirconn_500)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>seirconn_500 <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(measles_model)<span class="sc">$</span>total_hist</span>
+<span id="cb5-2"><a href="#cb5-2"></a>seirconn_500 <span class="ot">&lt;-</span> seirconn_500[seirconn_500<span class="sc">$</span>date <span class="sc">&lt;=</span> <span class="dv">20</span>,]</span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="fu">plot</span>(seirconn_500)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<p><img src="part3_files/figure-html/plotting-seirconn-epicurves-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="part3_files/figure-html/plot-epicurv-multiple-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<p>To view the a plot of the reproductive number over all 50 days for each of the 500 simulations, store the reproductive results to a new object using <code>run_multiple_get_results</code>, then plot using the <code>plot</code> function. Notice each source exposure date displays a boxplot representing the distribution of reproductive numbers across all 500 simulations for each date. As expected, the reproductive number on average, decreases over time.</p>
+</div>
+<p>Create a boxplot of the reproductive number for all 50 days across the 500 simulations using the <code>run_multiple_get_results()</code> function.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>seirconn_500_r <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(model_seirconn)<span class="sc">$</span>reproductive</span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="fu">plot</span>(seirconn_500_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>seirconn_500_r <span class="ot">&lt;-</span> <span class="fu">run_multiple_get_results</span>(measles_model)<span class="sc">$</span>reproductive</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">plot</span>(seirconn_500_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
-<p><img src="part3_files/figure-html/reproductive-number-plot-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="part3_files/figure-html/plot-reproductive-number-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
+</div>
+<p>As expected, the reproductive number on average, decreases over time.</p>
 </section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
-<p>Consider for this exercise that there is a Hepatitis A outbreak. Your goal is to observe the average reproductive number over 100 simulations. Using a <code>run_multiple</code> simulation, what is the average reproductive number over the course of the first 20 days? Use a <code>SEIRCONN</code> model with:<br>
-- n = 10000<br>
-- prevalence = 0.01<br>
-- contact_rate = 2<br>
-- transmission_rate = 0.5<br>
-- incubation_days = 2<br>
-- recovery_rate = <span class="math inline">\(\frac{1}{7}\)</span></p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>General Steps:<br>
-1. Create <code>epiworldR_model</code><br>
-2. Generate saver<br>
-3. Run <code>epiworldR_model</code><br>
-4. Plot average reproductive number</p>
-</div>
-</div>
-</div>
+<p>Consider a Hepatitis A outbreak with the following parameters:</p>
+<ul>
+<li>
+<strong>Population size:</strong> 10,000 agents</li>
+<li>
+<strong>Initial Prevalence:</strong> 0.01</li>
+<li>
+<strong>Contact Rate:</strong> 2</li>
+<li>
+<strong>Transmission Rate:</strong> 0.5</li>
+<li>
+<strong>Incubation Days:</strong> 2</li>
+<li>
+<strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{7}\)</span>
+</li>
+</ul>
+<p>Using the <code>ModelSEIRCONN()</code> and <code>run_multiple()</code> functions, run 100 simulations each for 40 days. Plot the average reproductive number for the first 20 days.</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
-<p>Using the same <code>SEIRCONN</code> model from exercise 1, simulate a vaccine intervention for the previous exercise’s Hepatitis A virus outbreak where 50% of individuals in the population will receive the vaccine on day 10. How then, does the average reproductive number behave over 20 days and 100 simulations? Assume the following parameters:<br>
-- susceptibility_reduction = .9<br>
-- transmission_reduction = .5<br>
-- recovery_enhancer = .5<br>
-- death_reduction = .9</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>General Steps:<br>
-1. Create tool<br>
-2. Use <code>globalaction_tool</code> &amp; <code>add_global_action</code><br>
-3. Generate saver &amp; <code>run_multiple</code><br>
-4. Plot average reproductive number</p>
-</div>
-</div>
-</div>
+<p>Using the <code>ModelSEIRCONN</code> object from Exercise 1, add a vaccine tool (<code>tool()</code>) with the following parameters:</p>
+<ul>
+<li>
+<strong>Susceptibility Reduction:</strong> 0.9</li>
+<li>
+<strong>Transmission Reduction:</strong> 0.5</li>
+<li>
+<strong>Death Reduction:</strong> 0.9</li>
+<li>
+<strong>Recovery Enhancer:</strong> 0.5</li>
+<li>
+<strong>Prevalence:</strong> 0.5</li>
+</ul>
+<p>However, instead of adding the vaccine at the start of the simulation, introduce the vaccine on Day 10 to 50% of the population using the <code>globalevent_tool()</code> and <code>add_globalevent()</code> functions.</p>
+<p>How does that change the average reproductive number for the first 20 days over 100 simulations?</p>
 <div class="cell">
-<details open=""><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
@@ -361,18 +397,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -404,11 +429,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -418,8 +482,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -431,7 +504,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -475,6 +671,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -500,6 +697,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {

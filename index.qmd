@@ -1,5 +1,5 @@
 ---
-title: "epiworldR Sunbelt 2023 Workshop"
+title: "epiworldR Workshop - Sunbelt 2025"
 ---
 
 ::: {style="width: 70%;margin:auto;"}
@@ -7,53 +7,127 @@ title: "epiworldR Sunbelt 2023 Workshop"
 #| warning: false
 #| echo: true
 #| code-fold: true
-#| fig-align: center
-#| fig-format: retina
 #| label: fig-epiworldR
 library(epiworldR)
 
-# Creating a model
+# Create a model
 mymodel <- ModelSEIRCONN(
-  name = "Nasty virus", n = 10000, prevalence = .001, contact_rate = 4,
-  transmission_rate = .4, incubation_days = 7, recovery_rate = 1/7
+  name = "Nasty virus", 
+  n = 10000, 
+  prevalence = .001, 
+  contact_rate = 4,
+  transmission_rate = .4, 
+  incubation_days = 7, 
+  recovery_rate = 1/7
 ) |> verbose_off() 
 
-# Adding a virus
-add_virus(mymodel, virus("Nasty virus 2", .5, .3), proportion = .001)
+# Add a second virus
+add_virus(
+  mymodel, 
+  virus(
+    name = "Nasty virus 2",
+    prob_infecting = .5,
+    recovery_rate = .3,
+    ), 
+  proportion = .001
+)
 
-# Renaming the model
+# Rename the model
 set_name(mymodel, mname = "SEIR COVID-19 model")
 
-# Running the model
+# Run the model
 set.seed(8383)
 run(mymodel, ndays = 100)
 
+# Plot the model
+# - Set graphical parameters to plot in 2x2 grid
 op <- par(mfrow = c(2, 2), mar = par()$mar * c(1, 1, 1/2, 0))
+# - Plot
 plot(mymodel)
 plot_reproductive_number(mymodel)
 plot_incidence(mymodel)
 plot_generation_time(mymodel)
+# - Restore original graphical parameters
 par(op)
 ```
 :::
 
-The [**`epiworldR`**](https://uofuepibio.github.io/epiworldR){target="_blank"} R package is a wrapper of the C++ library [epiworld](https://github.com/UofUEpi/epiworld). It provides a general framework for modeling disease transmission using agent-based models [wiki](https://en.wikipedia.org/w/index.php?title=Agent-based_model&oldid=1153634802). Some main features include:
+Welcome to the Sunbelt 2025 workshop **Simulating Complex Agent-Based Models with `epiworldR`**. 
 
--   Fast simulation with an average of 30 million agents/day per second.
--   Multiple-disease simulation.
--   Policies (tools) can be multiple and user-defined.
--   Out-of-the-box parallel computing.
--   Transmission and recovery rates based on comorbidities.
--   Etc.
+The [**`epiworldR`**](https://uofuepibio.github.io/epiworldR){target="_blank"} R package is a wrapper of the C++ library [`epiworld`](https://github.com/UofUEpi/epiworld){target="_blank"}.
+It provides a fast, highly customizable framework for building network-based transmission/diffusion [agent-based models](https://en.wikipedia.org/wiki/Agent-based_model){target="_blank"} (ABM).
+
+Key features of `epiworldR` include:
+
+-   Fast simulation with an average of 30 million agents/model-step/second
+-   Multi-disease models (e.g., competing pathogens, multiple rumors, etc.)
+-   Mutating pathogens
+-   User-defined interventions (events, tools, politices, etc.) that chagne model behavior while it's running
+-   Adapting transmission and recovery rates based on comorbidities
+-   Parallel computing out-of-the-box
+-   Likelihood-Free Markhov chain Monte Carlo (LFMCMC)
+-   Coming Soon: Models with an arbitrary number of compartments/states beyond SIR/SEIR (available in the `epiworld` C++ library and currently being ported to R)
+
+Additionally, while `epiworldR` was built for models of disease transmission, the `epiworld` framework is general enough to build models for any type of diffusion process (covered in Part 2a of this workshop).
+
+
+## Workshop Details
+
+If you don't want to use your personal computer, we have an online RStudio server available for you to use.[^1]
+
+[^1]: Please note that the online RStudio server and your data stored in it will be available for two weeks after the workshop. After that, the server will be shut down and all data will be deleted. If you would like to keep your data, please download it before the server is shut down.
+
+### Schedule
+
+-   (10 min) Setup
+-   (50 min) Part 1: Basic Modeling
+-   (10 min) Break
+-   (30 min) Part 2a: Non-Disease Applications - Network Diffusion
+-   (30 min) Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events
+-   (10 min) Break
+-   (40 min) Part 3: Multiple Simulation Runs
+
+### Install `epiworldR`
+
+You can install the latest stable version of `epiworldR` from CRAN:
+
+```{r}
+#| eval: false
+install.packages("epiworldR")
+```
+
+or the latest development version from GitHub:
+
+```{r}
+#| eval: false
+# install.packages("devtools")
+devtools::install_github("UofUEpiBio/epiworldR")
+```
+
+## Relevant Terminology
+
+**Agent-based modeling (ABM)**: A powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. 
+ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. 
+By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.
+
+As `epiworldR` focuses heavily on epidemiological applications, below are some common epidemiological terms that will be used throughout:
+
+-   **SEIR, SIR, SIS, etc.:** Epidemiological models used to analyze the spread and dynamics of diseases in a population. The models are named after the different compartments or states that an individual agent can fall into: Susceptible (S), Exposed (E), Infected (I), Recovered (R). So, SEIR has all four states, while SIR doesn't have the Exposed state.
+-   **SEIR connected (SEIRCONN), SIR connected (SIRCONN), etc.:** Epidemiological models similar to their above counterparts (SEIR, SIR, etc.), but with the added assumption that each individual agent is connected to all other agents.
+-   **Reproductive number:** The average number of secondary transmissions from one infected person. For example, a reproductive number of 2.0 indicates that one infected person transmits the disease to two other people in the population on average.
+-   **Incidence:** The occurrence of new cases of disease or injury in a population over a specified period of time. In `epiworldR` each step of a model represents a "day", thus `epiworldR` computes daily incidence.
+
+## About the Instructors
+
+Andrew Pulsipher is a software developer and Dr. George G. Vega Yon is a Research Assistant Professor of Epidemiology, both at the University of Utah's School of Medicine.
 
 ::: {style="width: 70%;margin:auto"}
 ```{r}
 #| echo: true
 #| warning: false
 #| message: false
-#| fig-cap: "Transmission network built using the netplot R package"
+#| fig-cap: "Example transmission network generated by epiworldR (plotted with netplot)"
 #| fig-align: center
-#| fig-format: retina
 #| fig-width: 8 
 #| fig-height: 8
 #| code-fold: true
@@ -81,55 +155,3 @@ x <- graph_from_edgelist(as.matrix(net[,2:3]) + 1)
 nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
 ```
 :::
-
-## Schedule
-
-Thank you for joining the epiworldR workshop at the Sunbelt 2023 conference. Our schedule for today is as follows:
-
-- Setup  (10 min)  
-- Part 1: Basic modeling (50 min)
-- Break  (10 min)  
-- Part 2a: Social Network Analysis (30 min)
-- Part 2b: Adding multiple diseases & tools (30 min)
-- Break  (10 min)  
-- Part 3: Multiple runs (40 min)
-
-You are welcome to use your personal computer, but we also have an online RStudio server available for you to use.[^noteposit]
-
-[^noteposit]: Please note that the online RStudio server and your data stored in it will be available for two weeks after the workshop. After that, the server will be shut down and all data will be deleted. If you would like to keep your data, please download it before the server is shut down.
- 
-## **Installation**
-
-You can install the development version of epiworldR from [GitHub](https://github.com/UofUEpiBio/epiworldR) with:
-
-```{r}
-#| eval: false
-# install.packages("devtools")
-devtools::install_github("UofUEpiBio/epiworldR")
-```
-
-## Agent-Based Modeling
-
-Agent-based modeling (ABM) is a powerful computational approach that enables the simulation and analysis of complex systems by representing individual agents and their interactions within an environment. ABM provides a bottom-up perspective, allowing for the examination of emergent phenomena arising from the collective behavior of autonomous agents. By capturing the heterogeneity, autonomy, and adaptive nature of agents, ABM offers a versatile tool for investigating various domains, including social sciences, economics, biology, and epidemiology, offering valuable insights into the dynamics and patterns that emerge from the interactions of individual entities within a larger system.
-
-## Terminology
-
-epiworldR focuses heavily on epidemiological applications to social networking. Below are some common terms that will be used throughout.
-
-SEIR, SIR, SIS, etc.:\
-These are epidemiological models that are used to analyze the spread and dynamics of diseases in a population. These models are a combination or selection of the states susceptible, exposed, infected, and/or recovered, in which all individuals in a population can be categorized in.
-
-SEIR connected (SEIRCONN), SIR connected (SIRCONN), etc.:\
-These are epidemiological models that are similar to their above counterparts (SEIR, SIR, etc.), but with the assumption that each individual agent is connected to all other agents.
-
-Reproductive number:\
-The average number of secondary transmissions from one infected person. For example, a reproductive number of 2.0 indicates that one infected person transmits the disease to two other people in the population on average.
-
-Incidence:\
-The the occurrence of new cases of disease or injury in a population over a specified period of time. Specifically, daily incidence is computed in epiworldR.
-
-## About the instructors
-
-Dr. George G. Vega Yon is a Research Assistant Professor of Epidemiology at the Department of Internal Medicine at the University of Utah.
-
-Derek S. Meyer is a Research Assistant and M.Stat. student in Biostatistics at the Department of Internal Medicine at the University of Utah.

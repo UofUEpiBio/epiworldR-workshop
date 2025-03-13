@@ -1,0 +1,320 @@
+---
+title: Additional Learning
+---
+
+Here we provide examples of epidemiological models, visualizations, and simulation strategies using `epiworldR`. These examples are intended to serve as jumping off points for new material and as quick references to the material covered in the workshop, thus we often simply show the code with little to no explanation. For further learning, see the workshop Parts 1-3 or the [`epiworldR` package documentation](https://cran.r-project.org/web//packages//epiworldR/index.html){target="_blank"}.
+
+## Epidemiological Model Examples
+
+Examples of [popular epidemiological models](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology){target="_blank"} implemented in `epiworldR`.
+
+```{r}
+#| echo: false
+library(epiworldR)
+```
+
+### SIR Model (Fully Connected Graph)
+
+```{r}
+#| label: sirconn-model
+model_sirconn <- ModelSIRCONN(
+  name                = "COVID-19",
+  n                   = 10000,
+  prevalence          = 0.01,
+  contact_rate        = 5,
+  transmission_rate   = 0.4,
+  recovery_rate       = 0.95
+  ) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
+```
+
+### SIR Model (Random Graph)
+
+```{r}
+#| label: sir-model
+model_sir <- ModelSIR(
+  name              = "COVID-19",
+  prevalence        = .01,
+  transmission_rate = .7,
+  recovery_rate     =  .3
+  ) |>
+  agents_smallworld(n = 100000, k = 10, d = FALSE, p = .01) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
+```
+
+### SEIR Model (Fully Connected Graph)
+
+```{r}
+#| label: sierconn-model
+model_seirconn <- ModelSEIRCONN(
+  name                = "COVID-19",
+  prevalence          = 0.01, 
+  n                   = 10000,
+  contact_rate        = 4, 
+  incubation_days     = 7, 
+  transmission_rate   = 0.6,
+  recovery_rate       = 0.5
+  ) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
+```
+
+### SEIR Model (Random Graph)
+
+```{r}
+#| label: seir-model
+model_seir <- ModelSEIR(
+  name              = "COVID-19", 
+  prevalence        = 0.01,
+  transmission_rate = 0.9, 
+  recovery_rate     = 0.1,
+  incubation_days   = 4
+  ) |>
+  agents_smallworld(n = 1000, k = 5, d = FALSE, p = .01) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
+```
+
+### SIR Logit
+
+```{r}
+#| label: sirlogit-model
+set.seed(2223)
+n <- 100000
+
+X <- cbind(
+  Intercept = 1,
+  Female    = sample.int(2, n, replace = TRUE) - 1
+  )
+
+coef_infect  <- c(.1, -2, 2)
+coef_recover <- rnorm(2)
+
+model_logit <- ModelSIRLogit(
+  vname             = "COVID-19",
+  data              = X,
+  coefs_infect      = coef_infect,
+  coefs_recover     = coef_recover, 
+  coef_infect_cols  = 1L:ncol(X),
+  coef_recover_cols = 1L:ncol(X), 
+  prob_infection    = .8,
+  recovery_rate     = .3,
+  prevalence        = .01
+  ) |>
+  agents_smallworld(n = n, k = 8, d = FALSE, p = .01) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
+```
+
+## Visualization Examples
+
+### Transmission Network using `netplot` and `igraph`
+
+```{r}
+#| label: plot transmission network
+suppressPackageStartupMessages(library(netplot))
+suppressPackageStartupMessages(library(igraph))
+
+model_sir <- ModelSIR(
+  name              = "COVID-19",
+  prevalence        = .01,
+  transmission_rate = .5,
+  recovery_rate     = .5
+  ) |> 
+    agents_smallworld(n = 500, k = 10, d = FALSE, p = .01) |>
+    verbose_off() |>
+    run(ndays = 50, seed = 1912)
+
+## Transmission network
+net <- get_transmissions(model_sir)
+
+## Plot
+x <- graph_from_edgelist(as.matrix(net[,2:3]) + 1)
+
+nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
+```
+
+## Multiple Simulations
+
+```{r}
+model_sir <- ModelSIRCONN(
+  name              = "COVID-19",
+  prevalence        = 0.01,
+  n                 = 1000,
+  contact_rate      = 2,
+  transmission_rate = 0.9,
+  recovery_rate     = 0.1
+  )
+
+## Generating a saver
+saver <- make_saver("total_hist", "reproductive")
+
+## Running and printing
+run_multiple(model_sir, ndays = 100, nsims = 50, saver = saver, nthread = 2)
+
+## Retrieving the results
+mult_sim_results <- run_multiple_get_results(model_sir)
+
+head(mult_sim_results$total_hist)
+plot(mult_sim_results$reproductive)
+```
+
+## Likelihood-Free Markhov Chain Monte Carlo (LFMCMC)
+
+Often in network simulations, we don't know the model parameters that will produce an accurate model. Likelihood-Free Markhov chain Monte Carlo (LFMCMC) runs a base model over a specified number of simulations, each time modifying the parameters used by the model to bring the model results closer to the observed data we're trying to model. In `epiworldR`, the `LFMCMC()` function creates an LFMCMC object that can perform this calibration. In this example, we use LFMCMC to calibrate a COVID-19 SIR Model. For an example of using `epiworldR` and the `LFMCMC()` function specifically to calibrate a model on real-world data, see the [epiworld-forecasts](https://github.com/EpiForeSITE/epiworld-forecasts){target="_blank"} project.
+
+### Create a True COVID-19 Model
+
+Assume that the true parameters of COVID-19 for a given population of 2,000 agents are as follows:
+
+-   **Initial Disease Prevalence:** 0.01
+-   **Transmission Rate:** 0.1
+-   **Recovery Rate:** 1/7
+
+We would represent that disease in `epiworldR` using the `ModelSIR()` and `agents_smallworld()` functions.
+
+```{r}
+#| label: set-observed-data
+library(epiworldR)
+model_seed <- 122
+
+true_covid_model <- ModelSIR(
+    name = "COVID-19",
+    prevalence = .01,
+    transmission_rate = .1,
+    recovery_rate = 1/7
+    )
+
+agents_smallworld(
+  true_covid_model,
+  n = 2000,
+  k = 5,
+  d = FALSE,
+  p = 0.01
+)
+```
+
+Running the true model for 50 days results in the following final distribution of agents across the three SIR states:
+
+```{r}
+#| label: get-obs-data
+verbose_off(true_covid_model)
+run(true_covid_model, ndays = 50, seed = model_seed)
+observed_data <- get_today_total(true_covid_model)
+observed_data
+```
+
+For the rest of the example, we'll assume we don't know the true disease parameters, but that we have the `observed_data` (e.g., from public health records). We'll use LFMCMC to recover the transmission and recovery rates from the true model and use the `observed_data` to check how close each simulation is to the true values.
+
+### Setup LFMCMC
+
+Frist, set up a new SIR model for LFMCMC to use. Since we don't know the true parameters, we'll guess. It won't matter what we choose for the recovery and transmission rates, as we'll define the initial parameters for LFMCMC before running it.
+
+```{r}
+#| label: create-lfmcmc-sir-model
+model_sir <- ModelSIR(
+    name = "COVID-19",
+    prevalence = .01,
+    transmission_rate = .9, #TODO:?
+    recovery_rate = .3
+    )
+
+agents_smallworld(
+  model_sir,
+  n = 2000,
+  k = 5,
+  d = FALSE,
+  p = 0.01
+)
+
+verbose_off(model_sir)
+```
+
+Next, define the LFMCMC functions (described in more detail [here](https://cran.r-project.org/web/packages/epiworldR/vignettes/likelihood-free-mcmc.html){target="_blank"}). Since we are trying to recover the Transmission and Recovery rates, our simulation function will test a new set of those two parameters during each iteration of LFMCMC.
+
+```{r}
+#| label: define-lfmcmc-funs
+# Define the simulation function
+simulation_fun <- function(params, lfmcmc_obj) {
+  set_param(model_sir, "Recovery rate", params[1])
+  set_param(model_sir, "Transmission rate", params[2])
+  run(model_sir, ndays = 50)
+  res <- get_today_total(model_sir)
+  return(res)
+}
+
+# Define the summary function
+summary_fun <- function(data, lfmcmc_obj) {
+  return(data)
+}
+
+# Define the proposal function
+proposal_fun <- function(old_params, lfmcmc_obj) {
+  res <- plogis(qlogis(old_params) + rnorm(length(old_params), sd = .1))
+  return(res)
+}
+
+# Define the kernel function
+kernel_fun <- function(
+    simulated_stats, observed_stats, epsilon, lfmcmc_obj
+    ) {
+
+  diff <- ((simulated_stats - observed_stats)^2)^epsilon
+  dnorm(sqrt(sum(diff)))
+}
+```
+
+Finally, use the `LFMCMC()` function to create the LFMCMC object, add the LFMCMC functions defined above, and pass in the observed COVID-19 data.
+
+```{r}
+#| label: create-lfmcmc
+lfmcmc_model <- LFMCMC(model_sir) |>
+  set_simulation_fun(simulation_fun) |>
+  set_summary_fun(summary_fun) |>
+  set_proposal_fun(proposal_fun) |>
+  set_kernel_fun(kernel_fun) |>
+  set_observed_data(observed_data)
+```
+
+### Run LFMCMC
+
+Before running LFMCMC, we need to pick the initial parameters (recovery rate = 0.3, transmission rate = 0.3) and choose an epsilon for the kernel function (`epsilon = 1.0`). We'll run LFMCMC for 2000 iterations or samples (`n_samples = 2000`).
+
+```{r}
+#| label: run-lfmcmc
+# Set initial parameters
+init_params <- c(0.3, 0.3)
+epsilon <- 1.0
+n_samples <- 2000
+
+# Run the LFMCMC simulation
+verbose_off(lfmcmc_model)
+run_lfmcmc(
+  lfmcmc = lfmcmc_model,
+  params_init = init_params,
+  n_samples = n_samples,
+  epsilon = epsilon,
+  seed = model_seed
+)
+```
+
+### Check Results
+
+Print the LFMCMC object with a burn-in period of 1,500.
+
+```{r}
+#| label: print-lfmcmc
+set_stats_names(lfmcmc_model, get_states(model_sir))
+set_params_names(lfmcmc_model, c("Recovery rate", "Transmission rate"))
+
+print(lfmcmc_model, burnin = 1500)
+```
+
+Out LFMCMC calibration was successful! The average LFMCMC Recovery rate was 0.14 (true value was 1/7 or 0.1428) and the average Transmission rate was 0.09 (true value was 0.1). The average number of Susceptible agents at Day 50 was 1,865.49 (observed value was 1865) and the average number of Recovered agents was 134.51 (observed value was 135).
