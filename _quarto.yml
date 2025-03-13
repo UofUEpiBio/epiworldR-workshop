@@ -22,7 +22,7 @@ website:
       - href: part3.qmd
         text: "Part 3"
       - href: examples.qmd
-        text: "Examples"
+        text: "Additional Learning"
 
     right: 
       - href: https://github.com/UofUEpiBio/epiworldR-workshop

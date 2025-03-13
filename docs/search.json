@@ -100,9 +100,9 @@
   {
     "objectID": "examples.html",
     "href": "examples.html",
-    "title": "Examples",
+    "title": "Additional Learning",
     "section": "",
-    "text": "This R package includes several popular epidemiological models, including SIS (wiki), SIR (wiki), and SEIR (wiki) using either a fully connected graph (similar to a compartmental model) or a user-defined network. Here are some examples:"
+    "text": "Here we provide examples of epidemiological models, visualizations, and simulation strategies using epiworldR. These examples are intended to serve as quick references to the material covered in the workshop, thus we simply show the code with little to no explanation. For further learning, see the workshop Parts 1-3 or the epiworldR package documentation."
   },
   {
     "objectID": "examples.html#sir-model-using-a-random-graph",
@@ -114,30 +114,30 @@
   {
     "objectID": "examples.html#seir-model-with-a-fully-connected-graph",
     "href": "examples.html#seir-model-with-a-fully-connected-graph",
-    "title": "Examples",
+    "title": "Additional Learning",
     "section": "SEIR Model With a Fully Connected Graph",
     "text": "SEIR Model With a Fully Connected Graph\n\nCodemodel_seirconn &lt;- ModelSEIRCONN(\n  name                = \"COVID-19\",\n  prevalence          = 0.01, \n  n                   = 10000,\n  contact_rate        = 4, \n  incubation_days     = 7, \n  transmission_rate   = 0.6,\n  recovery_rate       = 0.5\n)\n\nset.seed(132)\nrun(model_seirconn, ndays = 100)\n\n_________________________________________________________________________\nRunning the model...\n||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.\n done.\n\nCodemodel_seirconn\n\n________________________________________________________________________________\nSusceptible-Exposed-Infected-Removed (SEIR) (connected)\nIt features 10000 agents, 1 virus(es), and 0 tool(s).\nThe model has 4 states.\nThe final distribution is: 84 Susceptible, 0 Exposed, 0 Infected, and 9916 Recovered.\n\n\nComputing some key statistics: plotting and reproductive number (wiki)\n\nCodeplot(model_seirconn)\n\n\n\n\n\n\nCoderepnum &lt;- get_reproductive_number(model_seirconn)\nplot(repnum, type = \"b\")"
   },
   {
     "objectID": "examples.html#sir-logit",
     "href": "examples.html#sir-logit",
-    "title": "Examples",
+    "title": "Additional Learning",
     "section": "SIR Logit",
     "text": "SIR Logit\n\nCodeset.seed(2223)\nn &lt;- 100000\n\nX &lt;- cbind(\n  Intercept = 1,\n  Female    = sample.int(2, n, replace = TRUE) - 1\n  )\n\ncoef_infect  &lt;- c(.1, -2, 2)\ncoef_recover &lt;- rnorm(2)\n\nmodel_logit &lt;- ModelSIRLogit(\n  \"covid2\",\n  data = X,\n  coefs_infect      = coef_infect,\n  coefs_recover     = coef_recover, \n  coef_infect_cols  = 1L:ncol(X),\n  coef_recover_cols = 1L:ncol(X), \n  prob_infection = .8,\n  recovery_rate = .3,\n  prevalence = .01\n)\n\nagents_smallworld(model_logit, n, 8, FALSE, .01)\n\nrun(model_logit, 50)\n\n_________________________________________________________________________\n|Running the model...\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.\n| done.\n\nCodeplot(model_logit)\n\n\n\n\n\n\nCode## Females are supposed to be more likely to become infected\nrn &lt;- get_reproductive_number(model_logit)\n\n(table(\n  X[, \"Female\"],\n  (1:n %in% rn$source)\n) |&gt; prop.table())[,2]\n\n      0       1 \n0.13466 0.14878 \n\nCode## Looking into the agents\nget_agents(model_logit)\n\nAgents from the model \"Susceptible-Infected-Removed (SIR) (logit)\":\nAgent: 0, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 1, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 2, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 3, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 4, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 5, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 6, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 7, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 8, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\nAgent: 9, state: Susceptible (0), Has virus: no, NTools: 0i NNeigh: 8\n... 99990 more agents ..."
   },
   {
     "objectID": "examples.html#transmission-network",
     "href": "examples.html#transmission-network",
-    "title": "Examples",
+    "title": "Additional Learning",
     "section": "Transmission Network",
     "text": "Transmission Network\n\nCodesir &lt;- ModelSIR(\n  name              = \"COVID-19\",\n  prevalence        = .01,\n  transmission_rate = .5,\n  recovery_rate     = .5\n  ) |&gt;\n    # Adding a Small world population \n    agents_smallworld(n = 500, k = 10, d = FALSE, p = .01) |&gt;\n    # Running the model for 50 days\n    run(ndays = 50, seed = 1912)\n\n_________________________________________________________________________\n|Running the model...\n|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.\n| done.\n\nCode## Transmission network\nnet &lt;- get_transmissions(sir)\n\n## Plotting\nlibrary(netplot)\n\nLoading required package: grid\n\nCodelibrary(igraph)\n\n\nAttaching package: 'igraph'\n\n\nThe following object is masked from 'package:netplot':\n\n    ego\n\n\nThe following objects are masked from 'package:stats':\n\n    decompose, spectrum\n\n\nThe following object is masked from 'package:base':\n\n    union\n\nCodex &lt;- graph_from_edgelist(as.matrix(net[,2:3]) + 1)\n\nnplot(x, edge.curvature = 0, edge.color = \"gray\", skip.vertex=TRUE)"
   },
   {
     "objectID": "examples.html#multiple-simulations",
     "href": "examples.html#multiple-simulations",
-    "title": "Examples",
+    "title": "Additional Learning",
     "section": "Multiple Simulations",
-    "text": "Multiple Simulations\n\nCodemodel_sir &lt;- ModelSIRCONN(\n  name              = \"COVID-19\",\n  prevalence        = 0.01,\n  n                 = 1000,\n  contact_rate      = 2,\n  transmission_rate = 0.9,\n  recovery_rate     = 0.1\n  )\n\n## Generating a saver\nsaver &lt;- make_saver(\"total_hist\", \"reproductive\")\n\n## Running and printing\nrun_multiple(model_sir, ndays = 100, nsims = 50, saver = saver, nthread = 2)\n\nStarting multiple runs (50)\n_________________________________________________________________________\n_________________________________________________________________________\n||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.\n done.\n\nCode## Retrieving the results\nans &lt;- run_multiple_get_results(model_sir)\n\nhead(ans$total_hist)\n\n  sim_num date nviruses       state counts\n1       1    0        1 Susceptible    990\n2       1    0        1    Infected     10\n3       1    0        1   Recovered      0\n4       1    1        1 Susceptible    974\n5       1    1        1    Infected     26\n6       1    1        1   Recovered      0\n\nCodehead(ans$reproductive)\n\n  sim_num virus_id    virus source source_exposure_date rt\n1       1        0 COVID-19     77                   10  0\n2       1        0 COVID-19    970                    8  0\n3       1        0 COVID-19    895                    8  0\n4       1        0 COVID-19    866                    8  0\n5       1        0 COVID-19    811                    8  0\n6       1        0 COVID-19    752                    8  0\n\nCodeplot(ans$reproductive)"
+    "text": "Multiple Simulations\n\nCodemodel_sir &lt;- ModelSIRCONN(\n  name              = \"COVID-19\",\n  prevalence        = 0.01,\n  n                 = 1000,\n  contact_rate      = 2,\n  transmission_rate = 0.9,\n  recovery_rate     = 0.1\n  )\n\n## Generating a saver\nsaver &lt;- make_saver(\"total_hist\", \"reproductive\")\n\n## Running and printing\nrun_multiple(model_sir, ndays = 100, nsims = 50, saver = saver, nthread = 2)\n\nStarting multiple runs (50)\n_________________________________________________________________________\n_________________________________________________________________________\n||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.\n done.\n\nCode## Retrieving the results\nmult_sim_results &lt;- run_multiple_get_results(model_sir)\n\nhead(mult_sim_results$total_hist)\n\n  sim_num date nviruses       state counts\n1       1    0        1 Susceptible    990\n2       1    0        1    Infected     10\n3       1    0        1   Recovered      0\n4       1    1        1 Susceptible    974\n5       1    1        1    Infected     26\n6       1    1        1   Recovered      0\n\nCodeplot(mult_sim_results$reproductive)"
   },
   {
     "objectID": "index.html",
@@ -334,5 +334,33 @@
     "title": "Part 3: Multiple Simulation Runs",
     "section": "Example Scenario: 500 Simulations of Measles",
     "text": "Example Scenario: 500 Simulations of Measles\nThe example implements the following scenario:\n\n\nDisease: Measles\n\nPopulation size: 5,000 agents\n\nInitial Disease Prevalence: 0.001\n\nContact Rate: 2\n\nTransmission Rate: 0.5\n\nIncubation Days: 7\n\nRecovery Rate: \\(\\frac{1}{7}\\)\n\n\nWe’ll run 500 simulations of this model and compare the results.\nModel Setup\nUse the ModelSEIRCONN() function to initialize the measles model.\n\nCodelibrary(epiworldR)\n\nmeasles_model &lt;- ModelSEIRCONN(\n  name              = \"Measles\",\n  n                 = 5000, \n  prevalence        = 0.001, \n  contact_rate      = 2,\n  transmission_rate = 0.5,\n  incubation_days   = 7,\n  recovery_rate     = 1/7\n  )\n\n\nGenerate Saver\nUse the make_saver() function to create a saver object. The saver will extract the total_hist and reproductive data from the model object after each run so the results can be compared.\n\n\n\n\n\n\nNote\n\n\n\nYou can generate a saver for any metric compatible with the make_saver() function. See the details section of the make_saver() help manual for more (?make_saver).\n\n\n\nCodemeasles_saver &lt;- make_saver(\"total_hist\", \"reproductive\")\n\n\nRun 500 Simulations\nUse the run_multiple() function to simulate the measles model 500 times (nsims = 500) with each simulation running for 50 days (ndays = 50). Add the saver created in the previous step and set the number of threads to 4 (nthread = 4) for parallel computing.\n\nCodeverbose_off(measles_model)\nrun_multiple(measles_model, ndays = 50, nsims = 500, saver = measles_saver, nthread = 4)\n\nStarting multiple runs (500)\n_________________________________________________________________________\n_________________________________________________________________________\n||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.\n done.\n\n\nNote that we do not run the model with a random seed, because we want each model run to have random differences.\nVisualize Results\nCreate a boxplot of the four SEIR states for each day across the 500 simulations using the run_multiple_get_results() function. For this example, we filter the data to observe only the first 20 days.\n\nCodeseirconn_500 &lt;- run_multiple_get_results(measles_model)$total_hist\nseirconn_500 &lt;- seirconn_500[seirconn_500$date &lt;= 20,]\nplot(seirconn_500)\n\n\n\n\n\n\n\nCreate a boxplot of the reproductive number for all 50 days across the 500 simulations using the run_multiple_get_results() function.\n\nCodeseirconn_500_r &lt;- run_multiple_get_results(measles_model)$reproductive\nplot(seirconn_500_r)\n\n\n\n\n\n\n\nAs expected, the reproductive number on average, decreases over time."
+  },
+  {
+    "objectID": "examples.html#epidemiological-model-examples",
+    "href": "examples.html#epidemiological-model-examples",
+    "title": "Additional Learning",
+    "section": "Epidemiological Model Examples",
+    "text": "Epidemiological Model Examples\nExamples of popular epidemiological models implemented in epiworldR.\nSIR Model (Fully Connected Graph)\n\nCodemodel_sirconn &lt;- ModelSIRCONN(\n  name                = \"COVID-19\",\n  n                   = 10000,\n  prevalence          = 0.01,\n  contact_rate        = 5,\n  transmission_rate   = 0.4,\n  recovery_rate       = 0.95\n  ) |&gt;\n  verbose_off() |&gt;\n  run(ndays = 50, seed = 1912) |&gt;\n  plot()\n\n\n\n\n\n\n\nSIR Model (Random Graph)\n\nCodemodel_sir &lt;- ModelSIR(\n  name              = \"COVID-19\",\n  prevalence        = .01,\n  transmission_rate = .7,\n  recovery_rate     =  .3\n  ) |&gt;\n  agents_smallworld(n = 100000, k = 10, d = FALSE, p = .01) |&gt;\n  verbose_off() |&gt;\n  run(ndays = 50, seed = 1912) |&gt;\n  plot()\n\n\n\n\n\n\n\nSEIR Model (Fully Connected Graph)\n\nCodemodel_seirconn &lt;- ModelSEIRCONN(\n  name                = \"COVID-19\",\n  prevalence          = 0.01, \n  n                   = 10000,\n  contact_rate        = 4, \n  incubation_days     = 7, \n  transmission_rate   = 0.6,\n  recovery_rate       = 0.5\n  ) |&gt;\n  verbose_off() |&gt;\n  run(ndays = 50, seed = 1912) |&gt;\n  plot()\n\n\n\n\n\n\n\nSEIR Model (Random Graph)\n\nCodemodel_seir &lt;- ModelSEIR(\n  name              = \"COVID-19\", \n  prevalence        = 0.01,\n  transmission_rate = 0.9, \n  recovery_rate     = 0.1,\n  incubation_days   = 4\n  ) |&gt;\n  agents_smallworld(n = 1000, k = 5, d = FALSE, p = .01) |&gt;\n  verbose_off() |&gt;\n  run(ndays = 50, seed = 1912) |&gt;\n  plot()\n\n\n\n\n\n\n\nSIR Logit\n\nCodeset.seed(2223)\nn &lt;- 100000\n\nX &lt;- cbind(\n  Intercept = 1,\n  Female    = sample.int(2, n, replace = TRUE) - 1\n  )\n\ncoef_infect  &lt;- c(.1, -2, 2)\ncoef_recover &lt;- rnorm(2)\n\nmodel_logit &lt;- ModelSIRLogit(\n  vname             = \"COVID-19\",\n  data              = X,\n  coefs_infect      = coef_infect,\n  coefs_recover     = coef_recover, \n  coef_infect_cols  = 1L:ncol(X),\n  coef_recover_cols = 1L:ncol(X), \n  prob_infection    = .8,\n  recovery_rate     = .3,\n  prevalence        = .01\n  ) |&gt;\n  agents_smallworld(n = n, k = 8, d = FALSE, p = .01) |&gt;\n  verbose_off() |&gt;\n  run(ndays = 50, seed = 1912) |&gt;\n  plot()"
+  },
+  {
+    "objectID": "examples.html#seir-model-fully-connected-graph",
+    "href": "examples.html#seir-model-fully-connected-graph",
+    "title": "Additional Learning",
+    "section": "SEIR Model (Fully Connected Graph)",
+    "text": "SEIR Model (Fully Connected Graph)\n\nCodemodel_seirconn &lt;- ModelSEIRCONN(\n  name                = \"COVID-19\",\n  prevalence          = 0.01, \n  n                   = 10000,\n  contact_rate        = 4, \n  incubation_days     = 7, \n  transmission_rate   = 0.6,\n  recovery_rate       = 0.5\n  ) |&gt;\n  verbose_off() |&gt;\n  run(ndays = 50) |&gt;\n  plot()"
+  },
+  {
+    "objectID": "examples.html#seir-model-random-graph",
+    "href": "examples.html#seir-model-random-graph",
+    "title": "Additional Learning",
+    "section": "SEIR Model (Random Graph)",
+    "text": "SEIR Model (Random Graph)\n\nCodemodel_seir &lt;- ModelSEIR(\n  name = \"COVID-19\", \n  prevalence = 0.01,\n  transmission_rate = 0.9, \n  recovery_rate = 0.1,\n  incubation_days = 4\n  ) |&gt;\n  agents_smallworld(n = 1000, k = 5, d = FALSE, p = .01) |&gt;\n  verbose_off() |&gt;\n  run(ndays = 50) |&gt;\n  plot()"
+  },
+  {
+    "objectID": "examples.html#visualization-examples",
+    "href": "examples.html#visualization-examples",
+    "title": "Additional Learning",
+    "section": "Visualization Examples",
+    "text": "Visualization Examples\nTransmission Network using netplot and igraph\n\n\nCodesuppressPackageStartupMessages(library(netplot))\nsuppressPackageStartupMessages(library(igraph))\n\nmodel_sir &lt;- ModelSIR(\n  name              = \"COVID-19\",\n  prevalence        = .01,\n  transmission_rate = .5,\n  recovery_rate     = .5\n  ) |&gt; \n    agents_smallworld(n = 500, k = 10, d = FALSE, p = .01) |&gt;\n    verbose_off() |&gt;\n    run(ndays = 50, seed = 1912)\n\n## Transmission network\nnet &lt;- get_transmissions(model_sir)\n\n## Plot\nx &lt;- graph_from_edgelist(as.matrix(net[,2:3]) + 1)\n\nnplot(x, edge.curvature = 0, edge.color = \"gray\", skip.vertex=TRUE)"
   }
 ]

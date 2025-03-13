@@ -1,40 +1,57 @@
 ---
-title: Examples
+title: Additional Learning
 ---
 
-This R package includes several popular epidemiological models, including SIS ([wiki](https://en.wikipedia.org/w/index.php?title=Compartmental_models_in_epidemiology&oldid=1155757336#Variations_on_the_basic_SIR_model)), SIR ([wiki](https://en.wikipedia.org/w/index.php?title=Compartmental_models_in_epidemiology&oldid=1155757336#The_SIR_model)), and SEIR ([wiki](https://en.wikipedia.org/w/index.php?title=Compartmental_models_in_epidemiology&oldid=1155757336#The_SEIR_model)) using either a fully connected graph (similar to a compartmental model) or a user-defined network. Here are some examples:
+Here we provide examples of epidemiological models, visualizations, and simulation strategies using `epiworldR`.
+These examples are intended to serve as quick references to the material covered in the workshop, thus we simply show the code with little to no explanation.
+For further learning, see the workshop Parts 1-3 or the [`epiworldR` package documentation](https://cran.r-project.org/web//packages//epiworldR/index.html){target="_blank"}.
 
-## SIR Model Using a Random Graph
+## Epidemiological Model Examples
 
-This Susceptible-Infected-Recovered model features a population of 100,000 agents simulated in a small-world network. Each agent is connected to ten other agents. One percent of the population has the virus, with a 70% chance of transmission. Infected individuals recover at a 0.3 rate:
+Examples of [popular epidemiological models](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology){target="_blank"} implemented in `epiworldR`.
 
 ```{r}
+#| echo: false
 library(epiworldR)
+```
 
-## Creating a SIR model
-sir <- ModelSIR(
-  name           = "COVID-19",
-  prevalence     = .01,
-  transmission_rate  = .7,
-  recovery_rate =  .3
+### SIR Model (Fully Connected Graph)
+
+```{r}
+#| label: sirconn-model
+model_sirconn <- ModelSIRCONN(
+  name                = "COVID-19",
+  n                   = 10000,
+  prevalence          = 0.01,
+  contact_rate        = 5,
+  transmission_rate   = 0.4,
+  recovery_rate       = 0.95
   ) |>
-  # Adding a Small world population 
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
+```
+
+### SIR Model (Random Graph)
+
+```{r}
+#| label: sir-model
+model_sir <- ModelSIR(
+  name              = "COVID-19",
+  prevalence        = .01,
+  transmission_rate = .7,
+  recovery_rate     =  .3
+  ) |>
   agents_smallworld(n = 100000, k = 10, d = FALSE, p = .01) |>
-  # Running the model for 50 days
-  run(ndays = 50, seed = 1912)
-
-sir
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
 ```
 
-Visualizing the outputs
+### SEIR Model (Fully Connected Graph)
 
 ```{r}
-plot(sir)
-```
-
-## SEIR Model With a Fully Connected Graph
-
-```{r}
+#| label: sierconn-model
 model_seirconn <- ModelSEIRCONN(
   name                = "COVID-19",
   prevalence          = 0.01, 
@@ -43,25 +60,33 @@ model_seirconn <- ModelSEIRCONN(
   incubation_days     = 7, 
   transmission_rate   = 0.6,
   recovery_rate       = 0.5
-)
-
-set.seed(132)
-run(model_seirconn, ndays = 100)
-model_seirconn
+  ) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
 ```
 
-Computing some key statistics: plotting and reproductive number ([wiki](https://en.wikipedia.org/w/index.php?title=Basic_reproduction_number&oldid=1155282807))
+### SEIR Model (Random Graph)
 
 ```{r}
-plot(model_seirconn)
-
-repnum <- get_reproductive_number(model_seirconn)
-plot(repnum, type = "b")
+#| label: seir-model
+model_seir <- ModelSEIR(
+  name              = "COVID-19", 
+  prevalence        = 0.01,
+  transmission_rate = 0.9, 
+  recovery_rate     = 0.1,
+  incubation_days   = 4
+  ) |>
+  agents_smallworld(n = 1000, k = 5, d = FALSE, p = .01) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
 ```
 
-## SIR Logit
+### SIR Logit
 
 ```{r}
+#| label: sirlogit-model
 set.seed(2223)
 n <- 100000
 
@@ -74,55 +99,44 @@ coef_infect  <- c(.1, -2, 2)
 coef_recover <- rnorm(2)
 
 model_logit <- ModelSIRLogit(
-  "covid2",
-  data = X,
+  vname             = "COVID-19",
+  data              = X,
   coefs_infect      = coef_infect,
   coefs_recover     = coef_recover, 
   coef_infect_cols  = 1L:ncol(X),
   coef_recover_cols = 1L:ncol(X), 
-  prob_infection = .8,
-  recovery_rate = .3,
-  prevalence = .01
-)
-
-agents_smallworld(model_logit, n, 8, FALSE, .01)
-
-run(model_logit, 50)
-
-plot(model_logit)
-
-## Females are supposed to be more likely to become infected
-rn <- get_reproductive_number(model_logit)
-
-(table(
-  X[, "Female"],
-  (1:n %in% rn$source)
-) |> prop.table())[,2]
-
-## Looking into the agents
-get_agents(model_logit)
+  prob_infection    = .8,
+  recovery_rate     = .3,
+  prevalence        = .01
+  ) |>
+  agents_smallworld(n = n, k = 8, d = FALSE, p = .01) |>
+  verbose_off() |>
+  run(ndays = 50, seed = 1912) |>
+  plot()
 ```
 
-## Transmission Network
+## Visualization Examples
 
+### Transmission Network using `netplot` and `igraph`
 ```{r}
-sir <- ModelSIR(
+#| label: plot transmission network
+suppressPackageStartupMessages(library(netplot))
+suppressPackageStartupMessages(library(igraph))
+
+model_sir <- ModelSIR(
   name              = "COVID-19",
   prevalence        = .01,
   transmission_rate = .5,
   recovery_rate     = .5
-  ) |>
-    # Adding a Small world population 
+  ) |> 
     agents_smallworld(n = 500, k = 10, d = FALSE, p = .01) |>
-    # Running the model for 50 days
+    verbose_off() |>
     run(ndays = 50, seed = 1912)
 
 ## Transmission network
-net <- get_transmissions(sir)
+net <- get_transmissions(model_sir)
 
-## Plotting
-library(netplot)
-library(igraph)
+## Plot
 x <- graph_from_edgelist(as.matrix(net[,2:3]) + 1)
 
 nplot(x, edge.curvature = 0, edge.color = "gray", skip.vertex=TRUE)
@@ -147,10 +161,8 @@ saver <- make_saver("total_hist", "reproductive")
 run_multiple(model_sir, ndays = 100, nsims = 50, saver = saver, nthread = 2)
 
 ## Retrieving the results
-ans <- run_multiple_get_results(model_sir)
+mult_sim_results <- run_multiple_get_results(model_sir)
 
-head(ans$total_hist)
-head(ans$reproductive)
-
-plot(ans$reproductive)
+head(mult_sim_results$total_hist)
+plot(mult_sim_results$reproductive)
 ```
