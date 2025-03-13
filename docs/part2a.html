@@ -134,15 +134,11 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <span class="menu-text">Part 2b</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3a.html"> 
-<span class="menu-text">Part 3a</span></a>
+    <a class="nav-link" href="./part3.html"> 
+<span class="menu-text">Part 3</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./part3b.html"> 
-<span class="menu-text">Part 3b</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./examples.html"> 
+    <a class="nav-link" href="./additional-learning.html"> 
 <span class="menu-text">Additional Learning</span></a>
   </li>  
 </ul>
@@ -164,9 +160,8 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#non-disease-applications-network-diffusion" id="toc-non-disease-applications-network-diffusion" class="nav-link active" data-scroll-target="#non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</a></li>
-  <li>
-<a href="#example-scenario-academic-faculty-rumor" id="toc-example-scenario-academic-faculty-rumor" class="nav-link" data-scroll-target="#example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</a>
+<li>
+<a href="#example-scenario-academic-faculty-rumor" id="toc-example-scenario-academic-faculty-rumor" class="nav-link active" data-scroll-target="#example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</a>
   <ul class="collapse">
 <li><a href="#load-packages-and-data" id="toc-load-packages-and-data" class="nav-link" data-scroll-target="#load-packages-and-data">Load Packages and Data</a></li>
   <li><a href="#simulating-the-rumor" id="toc-simulating-the-rumor" class="nav-link" data-scroll-target="#simulating-the-rumor">Simulating the Rumor</a></li>
@@ -191,9 +186,8 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   
 
 
-</header><section id="non-disease-applications-network-diffusion" class="level2"><h2 class="anchored" data-anchor-id="non-disease-applications-network-diffusion">Non-Disease Applications: Network Diffusion</h2>
-<p>Though <code>epiworldR</code> focuses primarily on disease modeling, the <code>epiworld</code> framework is general enough to model any type of diffusion process, such as simulating the spread of ideas or rumors throughout a population. In this part of the workshop, we’ll walk through an example of social network diffusion.</p>
-</section><section id="example-scenario-academic-faculty-rumor" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</h2>
+</header><p>Though <code>epiworldR</code> focuses primarily on disease modeling, the <code>epiworld</code> framework is general enough to model any type of diffusion process, such as simulating the spread of ideas or rumors throughout a population. In this part of the workshop, we’ll walk through an example of social network diffusion.</p>
+<section id="example-scenario-academic-faculty-rumor" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-academic-faculty-rumor">Example Scenario: Academic Faculty Rumor</h2>
 <p>The example implements the following scenario:</p>
 <ul>
 <li>
@@ -217,7 +211,7 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 </div>
 </div>
 </section><section id="simulating-the-rumor" class="level3"><h3 class="anchored" data-anchor-id="simulating-the-rumor">Simulating the Rumor</h3>
-<p>Using the <code>ModelDiffNet()</code> function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1. TODO: Explain the params.</p>
+<p>Using the <code>ModelDiffNet()</code> function, we can simulate how the rumor spreads through the network. First, we create the network diffusion model. The prevalence of the rumor is set such that 2 agents are exposed to the rumor at the start of the simulation. The probability of an agent adopting the rumor is 0.1.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(epiworldR)</span>
 <span id="cb2-2"><a href="#cb2-2"></a></span>
@@ -255,7 +249,7 @@ It features 81 agents, 1 virus(es), and 0 tool(s).
 The model has 2 states.
 The final distribution is: 0 Non adopters, and 81 Adopters.</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">plot</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">plot_incidence</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>

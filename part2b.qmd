@@ -108,7 +108,7 @@ run(model_sirconn, ndays = 50, seed = 1912)
 plot(model_sirconn)
 ```
 
-Note how the vaccine severely limits the number of infected agents.
+Note how the vaccine flattens the Infected curve.
 
 ### Add Events
 

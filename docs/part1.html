@@ -163,7 +163,7 @@ window.Quarto = {
 <span class="menu-text">Part 3</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./examples.qmd"> 
+    <a class="nav-link" href="./additional-learning.html"> 
 <span class="menu-text">Additional Learning</span></a>
   </li>  
 </ul>
@@ -342,10 +342,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 60 (of 60)
 Number of viruses   : 1
-Last run elapsed t  : 114.00ms
-Total elapsed t     : 229.00ms (2 runs)
-Last run speed      : 26.29 million agents x day / second
-Average run speed   : 26.16 million agents x day / second
+Last run elapsed t  : 97.00ms
+Total elapsed t     : 205.00ms (2 runs)
+Last run speed      : 30.82 million agents x day / second
+Average run speed   : 29.23 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -388,7 +388,7 @@ Transition Probabilities:
 <p>Take some time to familiarize yourself with this output.</p>
 </section><section id="model-visualization" class="level3"><h3 class="anchored" data-anchor-id="model-visualization">Model Visualization</h3>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">plot</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">plot_incidence</span>(monkeypox_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="part1_files/figure-html/plot-model-1.png" class="img-fluid figure-img" width="672"></p>
@@ -396,7 +396,7 @@ Transition Probabilities:
 </div>
 </div>
 </div>
-<p>The <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> function plots the number of agents in each of the four SEIR states over the course of the model simulation. You can get this data in tabular form with the <code>get_hist_total()</code> function:</p>
+<p>The <code>plot_incidence()</code> function plots the number of agents in each of the four SEIR states over the course of the model simulation. You can get this data in tabular form with the <code>get_hist_total()</code> function:</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(monkeypox_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
