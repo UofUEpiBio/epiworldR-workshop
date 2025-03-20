@@ -148,3 +148,7 @@ How does that change the average reproductive number for the first 20 days over 
 ```{r}
 # Your solution here
 ```
+
+## Bonus Exercises and Exploration
+
+If you want further exploration of running multiple simulations in `epiworldR`, here are some bonus topics and exercises to guide your learning.

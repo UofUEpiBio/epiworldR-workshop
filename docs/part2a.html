@@ -165,9 +165,10 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
   <ul class="collapse">
 <li><a href="#load-packages-and-data" id="toc-load-packages-and-data" class="nav-link" data-scroll-target="#load-packages-and-data">Load Packages and Data</a></li>
   <li><a href="#simulating-the-rumor" id="toc-simulating-the-rumor" class="nav-link" data-scroll-target="#simulating-the-rumor">Simulating the Rumor</a></li>
-  <li><a href="#view-the-adoption-network" id="toc-view-the-adoption-network" class="nav-link" data-scroll-target="#view-the-adoption-network">View the Adoption Network</a></li>
   </ul>
 </li>
+  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#bonus-exercises-and-exploration" id="toc-bonus-exercises-and-exploration" class="nav-link" data-scroll-target="#bonus-exercises-and-exploration">Bonus Exercises and Exploration</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -196,6 +197,10 @@ gtag('config', 'G-CQNCQM1SG1', { 'anonymize_ip': true});
 <strong>Population Description:</strong> A UK university faculty</li>
 <li>
 <strong>Population size:</strong> 81 agents</li>
+<li>
+<strong>Initial rumor prevalence:</strong> 2 agents</li>
+<li>
+<strong>Probability of adopting the rumor:</strong> 0.1</li>
 </ul>
 <section id="load-packages-and-data" class="level3"><h3 class="anchored" data-anchor-id="load-packages-and-data">Load Packages and Data</h3>
 <p>We use the <code>igraph</code> and <code>netplot</code> R packages for manipulating and plotting networks respectively. The file <code>part2a.rda</code> includes the <code>UKfaculty</code> friendship network from the <code>igraphdata</code> package, with the vertex attributes (<code>UKfaculty_vertex</code>) and edge list (<code>UKfaculty_edgelist</code>) as numeric matrices. We load the <code>UKfaculty</code> data and visualize the friendship network.</p>
@@ -249,7 +254,7 @@ It features 81 agents, 1 virus(es), and 0 tool(s).
 The model has 2 states.
 The final distribution is: 0 Non adopters, and 81 Adopters.</code></pre>
 </div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">plot_incidence</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">plot</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="part2a_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
@@ -258,7 +263,18 @@ The final distribution is: 0 Non adopters, and 81 Adopters.</code></pre>
 </div>
 </div>
 <p>By day 16 or 17, the entire network had adopted the rumor that the dean will resign.</p>
-</section><section id="view-the-adoption-network" class="level3"><h3 class="anchored" data-anchor-id="view-the-adoption-network">View the Adoption Network</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Bonus Material: View the Adoption Network
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>The transmission network is not always relevant for a diffusion network model, but in this case we can use it to visualize the spread of the rumor through the network. We get the transmission network using the <code>get_transmissions()</code> function, then plot the network using the <code>igraph</code> and <code>netplot</code> packages.</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>transmissions <span class="ot">&lt;-</span> <span class="fu">get_transmissions</span>(adopt_rumor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -282,9 +298,51 @@ network is not necesarily relevant for the diffnet model</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
+</div>
+</section></section><section id="exercise" class="level2"><h2 class="anchored" data-anchor-id="exercise">Exercise</h2>
+<p>Create a diffusion network model using <code>ModelDiffNet()</code> to simulate the adoption of Chat-GPT among a population over 50 days.</p>
+<ul>
+<li>
+<strong>Population size:</strong> 10,000 agents</li>
+<li>
+<strong>Initial rumor prevalence:</strong> .01</li>
+<li>
+<strong>Probability of adopting ChatGPT:</strong> 0.1</li>
+<li>
+<strong>Logit Params:</strong> <code>c(1, 4)</code>
+</li>
+</ul>
+<p>We’ve setup a synthetic network dataset for you to use.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">set.seed</span>(<span class="dv">2223</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># Generating synthetic data on a matrix with 2 columns.</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a>network_data <span class="ot">&lt;-</span> <span class="fu">cbind</span>(</span>
+<span id="cb10-6"><a href="#cb10-6"></a>  <span class="at">age =</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, n, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb10-7"><a href="#cb10-7"></a>  <span class="at">female =</span> <span class="fu">sample.int</span>(<span class="dv">2</span>, n, <span class="at">replace =</span> <span class="cn">TRUE</span>) <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb10-8"><a href="#cb10-8"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Use the following parameters for <code>agents_smallworld()</code>:</p>
+<ul>
+<li>n = 10000</li>
+<li>k = 8 (number of connections for each agent)</li>
+<li>d = FALSE (whether the graph is directed)</li>
+<li>p = .01 (probability of rewiring)</li>
+</ul>
+<p>Create the model and run for 50 days, then plot the simulation with the <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> function.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section><section id="bonus-exercises-and-exploration" class="level2"><h2 class="anchored" data-anchor-id="bonus-exercises-and-exploration">Bonus Exercises and Exploration</h2>
+<p>If you want further exploration of network diffusion in <code>epiworldR</code>, here are some bonus topics and exercises to guide your learning.</p>
 
 
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");

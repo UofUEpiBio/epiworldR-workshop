@@ -2,9 +2,9 @@
 title: "Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events"
 ---
 
-As mentioned in Part 1, `epiworldR` models can have multiple viruses, tools, and events. In this part of the workshop, we'll walk through an example of an advanced model with multiple interacting pieces. We'll then look at an example of modeling comorbidities.
+As mentioned in Part 1, `epiworldR` models can have multiple viruses, tools, and events. In this part of the workshop, we'll walk through an example of an advanced model with multiple interacting pieces.
 
-## Example Scenario 1: Simultaneous COVID-19 and Flu Outbreaks
+## Example Scenario: Simultaneous COVID-19 and Flu Outbreaks
 
 The example implements the following scenario:
 
@@ -160,117 +160,16 @@ repnum2 <- get_reproductive_number(model_sirconn)
 plot(repnum2, type="b")
 ```
 
-## Example Scenario 2: Comorbidities Using Logit Functions
+## Exercise 1
 
-Often, we want to model the effects of comorbidities on a disease. In this example, we'll examine the effects of obesity on the probability of recovery from the flu.
-
-### Model Setup
-
-Create two identical models using the `ModelSEIRCONN()` function. One will have comorbidities, the other will not.
-
-```{r}
-#| label: model-setup-comorb
-# With comorbidities
-model_comorbid <- ModelSEIRCONN(
-  name              = "Flu",
-  n                 = 10000, 
-  prevalence        = 0.001, 
-  contact_rate      = 2.1,
-  transmission_rate = 0.5,
-  incubation_days   = 7,
-  recovery_rate     = 1/4
-  )
-
-# Without comorbidities
-model_no_comorbid <- ModelSEIRCONN(
-  name              = "Flu",
-  n                 = 10000, 
-  prevalence        = 0.001, 
-  contact_rate      = 2.1,
-  transmission_rate = 0.5,
-  incubation_days   = 7,
-  recovery_rate     = 1/4
-  )
-```
-
-### Add Comorbidities
-
-The file `part2b_comorb.rds` contains obesity data for the agents. This is formatted as a matrix with two columns: `baseline` and `obesity`. We'll read this in and assign it to the agents of the comorbidity model using the `set_agents_data()` function.
-
-```{r}
-#| label: add-obesity-data
-obesity_data <- readRDS("part2b_comorb.rds")
-set_agents_data(model_comorbid, obesity_data)
-```
-
-Now that population includes some agents with the obesity condition.
-
-### Set Recovery Rate Based on Comorbidity
-
-Use the `virus_fun_logit()` function to create a function for the probability of recovery. The function takes the following parameters:
-
--   `vars`: the variables to use in the model
--   `coefs`: the coefficients for each variable
--   `model`: the model object
-
-```{r}
-#| label: set-logit-fun
-# Logit function 
-lfun <- virus_fun_logit(
-  vars  = 0:1,
-  coefs = c(-1.0986, -0.8472), 
-  model_comorbid
-  )
-```
-
-::: callout-note
-To build the logit function, we used the following: (a) Under the logit model, the coefficient needed for the baseline probability of 0.25 is computed using `qlogis(0.25)`. With that, we can compute the associated coefficient to obese individuals with `plogis(qlogis(.25) + x) = .125` -\> `qlogis(.25) + x = plogis(.125)` -\> `x = qlogis(.125) - qlogis(.25)`
-:::
-
-Use the `set_prob_recovery_fun()` function to set the probability of recovery function for the virus to the logit function.
-
-```{r}
-#| label: set-prob-recovery-fun
-set_prob_recovery_fun(
-  virus = get_virus(model_comorbid, 0), 
-  model = model_comorbid,
-  vfun  = lfun
-  )
-```
-
-### Run the Model
-
-Run both models for the 50 days with the same random seed and compare the results.
-
-```{r}
-#| label: run-comorbid-models
-verbose_off(model_comorbid)
-verbose_off(model_no_comorbid)
-run(model_comorbid, ndays = 50, seed = 1231)
-run(model_no_comorbid, ndays = 50, seed = 1231)
-
-op <- par(mfrow = c(1, 2), cex = .7)
-plot_incidence(model_no_comorbid, main = "Without Comorbidities")
-plot_incidence(model_comorbid, main = "With Comorbidities")
-par(op)
-```
-
-Notice how the comorbidity of obesity results in many more infected agents than the when the comorbidity isn't present. Also, note how the `plot_incidence()` function output differs from that of the `plot()` function.
-
-::: callout-note
-If you want to drill further into this data, you can get the agents' final states using the function `get_agents_states()`.
-:::
-
-## Exercise
-
-Using the `ModelSIRCONN()` function, create a 75-day simulation of the flu and the Coronavirus Delta variant with a masking tool. Initialize the model with the flu and add the Delta variant and tool to the flu model.
+Using the `ModelSIRCONN()` function, create a 75-day simulation of tuberculosis and the Coronavirus Delta variant with a masking tool. Initialize the model with tuberculosis and add the Delta variant and tool to tuberculosis model.
 
 Assume the following:
 
 -   **Population size:** 10,000 agents
 -   **Contact Rate:** 2.1
 -   **Recovery Rate:** $\frac{1}{4}$ (same for both diseases)
--   *Flu Parameters*
+-   *Tuberculosis Parameters*
     -   **Initial Prevalence:** 0.001
     -   **Transmission Rate:** 0.5
 -   *Delta variant Parameters*
@@ -292,6 +191,28 @@ Run the model with `seed = 1912` and plot the model parameters and reproductive 
 
 After how many days does the number of infections peak in this simulation? How many infections occur at the peak?
 
+## Exercise 2
+
+Using the model you created in Exercise 1, add global events to represent two [superspreading events (SSEVs)](https://en.wikipedia.org/wiki/Superspreading_event) at academic conferences.
+
+Each event should occur once during the 60-day simulation. The first conference between Days 1 - 5 and the second conference between Days 10 - 15. Each conference lasts for three days. You choose the exact start and stop days of the events.
+
+During each conference, the contact rate should jump to 10, but after the conference is over (3 days later), the contact rate should reset to the initial value given in Exercise 1.
+
+Add the events to the model, run the model for 60 days, and plot the result with `plot_incidence()`.
+
+::: {.callout-tip collapse="true"}
+Using the tool method outlined in the above example scenario, you will need four events: one for each start and stop date of the conferences.
+
+**Note:** You could instead put the events into a single global event object using the `globalevent_fun()` to define a general global event, the `today()` function to get the current model day, the `set_param()` function to change the contact rate based on the current day, and the `add_globalevent()` function to add it to the model. This isn't required for this exercise, so we leave it to curious participants to try out this approach.
+:::
+
 ```{r}
 # Your solution here
 ```
+
+## Bonus Exercises and Exploration
+
+If you want further exploration of advanced modeling in `epiworldR`, here are some bonus topics and exercises to guide your learning.
+
+-   **Comorbidity:** Often, we want to model the effects of comorbidities on a disease. In [Additional Learning](./additional-learning.qmd), we provide an example of modeling the effects of obesity on the probability of recovery from the flu.
