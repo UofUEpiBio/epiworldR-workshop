@@ -11,6 +11,8 @@ The example implements the following scenario:
 -   **Rumor:** The dean will resign!
 -   **Population Description:** A UK university faculty
 -   **Population size:** 81 agents
+-   **Initial rumor prevalence:** 2 agents
+-   **Probability of adopting the rumor:** 0.1
 
 ### Load Packages and Data
 
@@ -69,7 +71,8 @@ plot(adopt_rumor)
 
 By day 16 or 17, the entire network had adopted the rumor that the dean will resign.
 
-### View the Adoption Network
+::: {.callout-note collapse="true"}
+### Bonus Material: View the Adoption Network
 
 The transmission network is not always relevant for a diffusion network model, but in this case we can use it to visualize the spread of the rumor through the network. We get the transmission network using the `get_transmissions()` function, then plot the network using the `igraph` and `netplot` packages.
 
@@ -86,3 +89,44 @@ tnet <- graph_from_data_frame(
 # Adding back vertex attributes
 nplot(tnet)
 ```
+:::
+
+## Exercise
+
+Create a diffusion network model using `ModelDiffNet()` to simulate the adoption of Chat-GPT among a population over 50 days.
+
+-   **Population size:** 10,000 agents
+-   **Initial rumor prevalence:** .01
+-   **Probability of adopting the rumor:** 0.1
+-   **Logit Params:** `c(1, 4)`
+
+We've setup a synthetic network dataset for you to use.
+
+```{r}
+set.seed(2223)
+n <- 10000
+
+# Generating synthetic data on a matrix with 2 columns.
+network_data <- cbind(
+  age = sample(1:100, n, replace = TRUE),
+  female = sample.int(2, n, replace = TRUE) - 1
+)
+```
+
+Use the above network data and the following parameters for `agents_smallworld()`:
+
+-   n = 10000
+-   k = 8 (number of connections for each agent)
+-   d = FALSE (whether the graph is directed)
+-   p = .01 (probability of rewiring)
+
+Create the model and run for 50 days, then plot the simulation with the `plot()` function.
+
+```{r}
+# Your solution here
+
+```
+
+## Bonus Exercises
+
+If you want further exploration of network diffusion in `epiworldR`, here are some bonus exercises to guide your exploration.
