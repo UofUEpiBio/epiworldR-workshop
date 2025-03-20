@@ -186,7 +186,7 @@ window.Quarto = {
    
   <ul>
 <li>
-<a href="#example-scenario-1-simultaneous-covid-19-and-flu-outbreaks" id="toc-example-scenario-1-simultaneous-covid-19-and-flu-outbreaks" class="nav-link active" data-scroll-target="#example-scenario-1-simultaneous-covid-19-and-flu-outbreaks">Example Scenario 1: Simultaneous COVID-19 and Flu Outbreaks</a>
+<a href="#example-scenario-simultaneous-covid-19-and-flu-outbreaks" id="toc-example-scenario-simultaneous-covid-19-and-flu-outbreaks" class="nav-link active" data-scroll-target="#example-scenario-simultaneous-covid-19-and-flu-outbreaks">Example Scenario: Simultaneous COVID-19 and Flu Outbreaks</a>
   <ul class="collapse">
 <li><a href="#model-setup" id="toc-model-setup" class="nav-link" data-scroll-target="#model-setup">Model Setup</a></li>
   <li><a href="#add-the-flu-virus" id="toc-add-the-flu-virus" class="nav-link" data-scroll-target="#add-the-flu-virus">Add the Flu Virus</a></li>
@@ -196,16 +196,9 @@ window.Quarto = {
   <li><a href="#reproductive-numbers" id="toc-reproductive-numbers" class="nav-link" data-scroll-target="#reproductive-numbers">Reproductive Numbers</a></li>
   </ul>
 </li>
-  <li>
-<a href="#example-scenario-2-comorbidities-using-logit-functions" id="toc-example-scenario-2-comorbidities-using-logit-functions" class="nav-link" data-scroll-target="#example-scenario-2-comorbidities-using-logit-functions">Example Scenario 2: Comorbidities Using Logit Functions</a>
-  <ul class="collapse">
-<li><a href="#model-setup-1" id="toc-model-setup-1" class="nav-link" data-scroll-target="#model-setup-1">Model Setup</a></li>
-  <li><a href="#add-comorbidities" id="toc-add-comorbidities" class="nav-link" data-scroll-target="#add-comorbidities">Add Comorbidities</a></li>
-  <li><a href="#set-recovery-rate-based-on-comorbidity" id="toc-set-recovery-rate-based-on-comorbidity" class="nav-link" data-scroll-target="#set-recovery-rate-based-on-comorbidity">Set Recovery Rate Based on Comorbidity</a></li>
-  <li><a href="#run-the-model" id="toc-run-the-model" class="nav-link" data-scroll-target="#run-the-model">Run the Model</a></li>
-  </ul>
-</li>
-  <li><a href="#exercise" id="toc-exercise" class="nav-link" data-scroll-target="#exercise">Exercise</a></li>
+  <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
+  <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
+  <li><a href="#bonus-exercises-and-exploration" id="toc-bonus-exercises-and-exploration" class="nav-link" data-scroll-target="#bonus-exercises-and-exploration">Bonus Exercises and Exploration</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -224,8 +217,8 @@ window.Quarto = {
   
 
 
-</header><p>As mentioned in Part 1, <code>epiworldR</code> models can have multiple viruses, tools, and events. In this part of the workshop, we’ll walk through an example of an advanced model with multiple interacting pieces. We’ll then look at an example of modeling comorbidities.</p>
-<section id="example-scenario-1-simultaneous-covid-19-and-flu-outbreaks" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-1-simultaneous-covid-19-and-flu-outbreaks">Example Scenario 1: Simultaneous COVID-19 and Flu Outbreaks</h2>
+</header><p>As mentioned in Part 1, <code>epiworldR</code> models can have multiple viruses, tools, and events. In this part of the workshop, we’ll walk through an example of an advanced model with multiple interacting pieces.</p>
+<section id="example-scenario-simultaneous-covid-19-and-flu-outbreaks" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-simultaneous-covid-19-and-flu-outbreaks">Example Scenario: Simultaneous COVID-19 and Flu Outbreaks</h2>
 <p>The example implements the following scenario:</p>
 <ul>
 <li>
@@ -385,10 +378,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 50 (of 50)
 Number of viruses   : 2
-Last run elapsed t  : 70.00ms
-Total elapsed t     : 284.00ms (4 runs)
-Last run speed      : 35.70 million agents x day / second
-Average run speed   : 35.16 million agents x day / second
+Last run elapsed t  : 80.00ms
+Total elapsed t     : 330.00ms (4 runs)
+Last run speed      : 30.91 million agents x day / second
+Average run speed   : 30.26 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -431,119 +424,8 @@ Transition Probabilities:
 </div>
 </div>
 </div>
-</section></section><section id="example-scenario-2-comorbidities-using-logit-functions" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-2-comorbidities-using-logit-functions">Example Scenario 2: Comorbidities Using Logit Functions</h2>
-<p>Often, we want to model the effects of comorbidities on a disease. In this example, we’ll examine the effects of obesity on the probability of recovery from the flu.</p>
-<section id="model-setup-1" class="level3"><h3 class="anchored" data-anchor-id="model-setup-1">Model Setup</h3>
-<p>Create two identical models using the <code>ModelSEIRCONN()</code> function. One will have comorbidities, the other will not.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># With comorbidities</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>model_comorbid <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
-<span id="cb16-3"><a href="#cb16-3"></a>  <span class="at">name              =</span> <span class="st">"Flu"</span>,</span>
-<span id="cb16-4"><a href="#cb16-4"></a>  <span class="at">n                 =</span> <span class="dv">10000</span>, </span>
-<span id="cb16-5"><a href="#cb16-5"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
-<span id="cb16-6"><a href="#cb16-6"></a>  <span class="at">contact_rate      =</span> <span class="fl">2.1</span>,</span>
-<span id="cb16-7"><a href="#cb16-7"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb16-8"><a href="#cb16-8"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
-<span id="cb16-9"><a href="#cb16-9"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
-<span id="cb16-10"><a href="#cb16-10"></a>  )</span>
-<span id="cb16-11"><a href="#cb16-11"></a></span>
-<span id="cb16-12"><a href="#cb16-12"></a><span class="co"># Without comorbidities</span></span>
-<span id="cb16-13"><a href="#cb16-13"></a>model_no_comorbid <span class="ot">&lt;-</span> <span class="fu">ModelSEIRCONN</span>(</span>
-<span id="cb16-14"><a href="#cb16-14"></a>  <span class="at">name              =</span> <span class="st">"Flu"</span>,</span>
-<span id="cb16-15"><a href="#cb16-15"></a>  <span class="at">n                 =</span> <span class="dv">10000</span>, </span>
-<span id="cb16-16"><a href="#cb16-16"></a>  <span class="at">prevalence        =</span> <span class="fl">0.001</span>, </span>
-<span id="cb16-17"><a href="#cb16-17"></a>  <span class="at">contact_rate      =</span> <span class="fl">2.1</span>,</span>
-<span id="cb16-18"><a href="#cb16-18"></a>  <span class="at">transmission_rate =</span> <span class="fl">0.5</span>,</span>
-<span id="cb16-19"><a href="#cb16-19"></a>  <span class="at">incubation_days   =</span> <span class="dv">7</span>,</span>
-<span id="cb16-20"><a href="#cb16-20"></a>  <span class="at">recovery_rate     =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">4</span></span>
-<span id="cb16-21"><a href="#cb16-21"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section><section id="add-comorbidities" class="level3"><h3 class="anchored" data-anchor-id="add-comorbidities">Add Comorbidities</h3>
-<p>The file <code>part2b_comorb.rds</code> contains obesity data for the agents. This is formatted as a matrix with two columns: <code>baseline</code> and <code>obesity</code>. We’ll read this in and assign it to the agents of the comorbidity model using the <code>set_agents_data()</code> function.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>obesity_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"part2b_comorb.rds"</span>)</span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="fu">set_agents_data</span>(model_comorbid, obesity_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Now that population includes some agents with the obesity condition.</p>
-</section><section id="set-recovery-rate-based-on-comorbidity" class="level3"><h3 class="anchored" data-anchor-id="set-recovery-rate-based-on-comorbidity">Set Recovery Rate Based on Comorbidity</h3>
-<p>Use the <code>virus_fun_logit()</code> function to create a function for the probability of recovery. The function takes the following parameters:</p>
-<ul>
-<li>
-<code>vars</code>: the variables to use in the model</li>
-<li>
-<code>coefs</code>: the coefficients for each variable</li>
-<li>
-<code>model</code>: the model object</li>
-</ul>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Logit function </span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>lfun <span class="ot">&lt;-</span> <span class="fu">virus_fun_logit</span>(</span>
-<span id="cb18-3"><a href="#cb18-3"></a>  <span class="at">vars  =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
-<span id="cb18-4"><a href="#cb18-4"></a>  <span class="at">coefs =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.0986</span>, <span class="sc">-</span><span class="fl">0.8472</span>), </span>
-<span id="cb18-5"><a href="#cb18-5"></a>  model_comorbid</span>
-<span id="cb18-6"><a href="#cb18-6"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>To build the logit function, we used the following: (a) Under the logit model, the coefficient needed for the baseline probability of 0.25 is computed using <code>qlogis(0.25)</code>. With that, we can compute the associated coefficient to obese individuals with <code>plogis(qlogis(.25) + x) = .125</code> -&gt; <code>qlogis(.25) + x = plogis(.125)</code> -&gt; <code>x = qlogis(.125) - qlogis(.25)</code></p>
-</div>
-</div>
-<p>Use the <code>set_prob_recovery_fun()</code> function to set the probability of recovery function for the virus to the logit function.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="fu">set_prob_recovery_fun</span>(</span>
-<span id="cb19-2"><a href="#cb19-2"></a>  <span class="at">virus =</span> <span class="fu">get_virus</span>(model_comorbid, <span class="dv">0</span>), </span>
-<span id="cb19-3"><a href="#cb19-3"></a>  <span class="at">model =</span> model_comorbid,</span>
-<span id="cb19-4"><a href="#cb19-4"></a>  <span class="at">vfun  =</span> lfun</span>
-<span id="cb19-5"><a href="#cb19-5"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-</section><section id="run-the-model" class="level3"><h3 class="anchored" data-anchor-id="run-the-model">Run the Model</h3>
-<p>Run both models for the 50 days with the same random seed and compare the results.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">verbose_off</span>(model_comorbid)</span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="fu">verbose_off</span>(model_no_comorbid)</span>
-<span id="cb20-3"><a href="#cb20-3"></a><span class="fu">run</span>(model_comorbid, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="fu">run</span>(model_no_comorbid, <span class="at">ndays =</span> <span class="dv">50</span>, <span class="at">seed =</span> <span class="dv">1231</span>)</span>
-<span id="cb20-5"><a href="#cb20-5"></a></span>
-<span id="cb20-6"><a href="#cb20-6"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">cex =</span> .<span class="dv">7</span>)</span>
-<span id="cb20-7"><a href="#cb20-7"></a><span class="fu">plot_incidence</span>(model_no_comorbid, <span class="at">main =</span> <span class="st">"Without Comorbidities"</span>)</span>
-<span id="cb20-8"><a href="#cb20-8"></a><span class="fu">plot_incidence</span>(model_comorbid, <span class="at">main =</span> <span class="st">"With Comorbidities"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part2b_files/figure-html/run-comorbid-models-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">par</span>(op)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<p>Notice how the comorbidity of obesity results in many more infected agents than the when the comorbidity isn’t present. Also, note how the <code>plot_incidence()</code> function output differs from that of the <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> function.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you want to drill further into this data, you can get the agents’ final states using the function <code>get_agents_states()</code>.</p>
-</div>
-</div>
-</section></section><section id="exercise" class="level2"><h2 class="anchored" data-anchor-id="exercise">Exercise</h2>
-<p>Using the <code>ModelSIRCONN()</code> function, create a 75-day simulation of the flu and the Coronavirus Delta variant with a masking tool. Initialize the model with the flu and add the Delta variant and tool to the flu model.</p>
+</section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<p>Using the <code>ModelSIRCONN()</code> function, create a 75-day simulation of tuberculosis and the Coronavirus Delta variant with a masking tool. Initialize the model with tuberculosis and add the Delta variant and tool to tuberculosis model.</p>
 <p>Assume the following:</p>
 <ul>
 <li>
@@ -553,7 +435,7 @@ Note
 <li>
 <strong>Recovery Rate:</strong> <span class="math inline">\(\frac{1}{4}\)</span> (same for both diseases)</li>
 <li>
-<em>Flu Parameters</em>
+<em>Tuberculosis Parameters</em>
 <ul>
 <li>
 <strong>Initial Prevalence:</strong> 0.001</li>
@@ -581,7 +463,7 @@ Note
 </li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -590,7 +472,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Masking only influences the transmission of a disease, thus transmission reduction = 0.3, and all other parameters of this tool will be 0.0.</p>
 </div>
@@ -598,14 +480,42 @@ Tip
 </div>
 <p>Run the model with <code>seed = 1912</code> and plot the model parameters and reproductive numbers over time.</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
+</section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
+<p>Using the model you created in Exercise 1, add global events to represent two <a href="https://en.wikipedia.org/wiki/Superspreading_event">superspreading events (SSEVs)</a> at academic conferences.</p>
+<p>Each event should occur once during the 60-day simulation. The first conference between Days 1 - 5 and the second conference between Days 10 - 15. Each conference lasts for three days. You choose the exact start and stop days of the events.</p>
+<p>During each conference, the contact rate should jump to 10, but after the conference is over (3 days later), the contact rate should reset to the initial value given in Exercise 1.</p>
+<p>Add the events to the model, run the model for 60 days, and plot the result with <code>plot_incidence()</code>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Using the tool method outlined in the above example scenario, you will need four events: one for each start and stop date of the conferences.</p>
+<p><strong>Note:</strong> You could instead put the events into a single global event object using the <code>globalevent_fun()</code> to define a general global event, the <code>today()</code> function to get the current model day, the <code>set_param()</code> function to change the contact rate based on the current day, and the <code>add_globalevent()</code> function to add it to the model. This isn’t required for this exercise, so we leave it to curious participants to try out this approach.</p>
+</div>
+</div>
+</div>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section><section id="bonus-exercises-and-exploration" class="level2"><h2 class="anchored" data-anchor-id="bonus-exercises-and-exploration">Bonus Exercises and Exploration</h2>
+<p>If you want further exploration of advanced modeling in <code>epiworldR</code>, here are some bonus topics and exercises to guide your exploration.</p>
+<ul>
+<li>
+<strong>Comorbidity:</strong> Often, we want to model the effects of comorbidities on a disease. In <a href="./additional-learning.html">Additional Learning</a>, we provide an example of modeling the effects of obesity on the probability of recovery from the flu.</li>
+</ul>
 
 
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">

@@ -97,7 +97,7 @@ Create a diffusion network model using `ModelDiffNet()` to simulate the adoption
 
 -   **Population size:** 10,000 agents
 -   **Initial rumor prevalence:** .01
--   **Probability of adopting the rumor:** 0.1
+-   **Probability of adopting ChatGPT:** 0.1
 -   **Logit Params:** `c(1, 4)`
 
 We've setup a synthetic network dataset for you to use.
@@ -113,7 +113,7 @@ network_data <- cbind(
 )
 ```
 
-Use the above network data and the following parameters for `agents_smallworld()`:
+Use the following parameters for `agents_smallworld()`:
 
 -   n = 10000
 -   k = 8 (number of connections for each agent)
@@ -127,6 +127,6 @@ Create the model and run for 50 days, then plot the simulation with the `plot()`
 
 ```
 
-## Bonus Exercises
+## Bonus Exercises and Exploration
 
 If you want further exploration of network diffusion in `epiworldR`, here are some bonus exercises to guide your exploration.

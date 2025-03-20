@@ -80,12 +80,12 @@ If you don't want to use your personal computer, we have an online RStudio serve
 ### Schedule
 
 -   (10 min) Setup
--   (50 min) Part 1: Basic Modeling
+-   (50 min) [Part 1: Basic Modeling](./part1.qmd)
 -   (10 min) Break
--   (30 min) Part 2a: Non-Disease Applications - Network Diffusion
--   (30 min) Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events
+-   (30 min) [Part 2a: Non-Disease Applications - Network Diffusion](./part2a.qmd)
+-   (30 min) [Part 2b: Advanced Modeling - Multiple Diseases, Tools, and Events](./part2b.qmd)
 -   (10 min) Break
--   (40 min) Part 3: Multiple Simulation Runs
+-   (40 min) [Part 3: Multiple Simulation Runs](./part3.qmd)
 
 ### Install `epiworldR`
 
