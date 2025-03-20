@@ -193,11 +193,17 @@ window.Quarto = {
   <li><a href="#run-the-model" id="toc-run-the-model" class="nav-link" data-scroll-target="#run-the-model">Run the Model</a></li>
   <li><a href="#model-summary" id="toc-model-summary" class="nav-link" data-scroll-target="#model-summary">Model Summary</a></li>
   <li><a href="#model-visualization" id="toc-model-visualization" class="nav-link" data-scroll-target="#model-visualization">Model Visualization</a></li>
-  <li><a href="#reproductive-number" id="toc-reproductive-number" class="nav-link" data-scroll-target="#reproductive-number">Reproductive Number</a></li>
   </ul>
 </li>
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1">Exercise 1</a></li>
   <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2">Exercise 2</a></li>
+  <li>
+<a href="#bonus-exercises" id="toc-bonus-exercises" class="nav-link" data-scroll-target="#bonus-exercises">Bonus Exercises</a>
+  <ul class="collapse">
+<li><a href="#bonus-exercise-a" id="toc-bonus-exercise-a" class="nav-link" data-scroll-target="#bonus-exercise-a">Bonus Exercise A</a></li>
+  <li><a href="#bonus-exercise-b" id="toc-bonus-exercise-b" class="nav-link" data-scroll-target="#bonus-exercise-b">Bonus Exercise B</a></li>
+  </ul>
+</li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -219,7 +225,7 @@ window.Quarto = {
 </header><section id="overview-of-epiworldr" class="level2"><h2 class="anchored" data-anchor-id="overview-of-epiworldr">Overview of <code>epiworldR</code>
 </h2>
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="figs/overview-of-epiworldr.drawio.svg" class="img-fluid figure-img" style="width:60.0%"></p>
+<figure class="figure"><p><img src="figs/overview-of-epiworldr.svg" class="img-fluid figure-img" style="width:70.0%"></p>
 <figcaption>General Structure of <code>epiworldR</code></figcaption></figure>
 </div>
 <p>As shown in the above diagram, the core component of an <code>epiworldR</code> simulation is the model object. Models can have an arbitrary number of parameters, viruses, tools, and global events, depending on what the user wants to simulate. Pre-built models in <code>epiworldR</code> (e.g., ModelSIR, ModelSEIR, ModelDiffNet) typically initialize with a single virus and a few other parameters, such as the population size. All <code>epiworldR</code> models inherit the “epiworld_model” class, which gives them access to the following functions:</p>
@@ -249,7 +255,7 @@ see '?methods' for accessing help and source code</code></pre>
 </div>
 <p>In this part of the workshop, we’ll use several of these functions as we walk through a basic modeling example for monkeypox.</p>
 </section><section id="example-scenario-monkeypox-outbreak" class="level2"><h2 class="anchored" data-anchor-id="example-scenario-monkeypox-outbreak">Example Scenario: Monkeypox Outbreak</h2>
-<p>The example implements the following scenario:</p>
+<p>The example implements the following scenario using an SEIR connected model:</p>
 <ul>
 <li>
 <strong>Disease:</strong> Monkeypox</li>
@@ -258,7 +264,7 @@ see '?methods' for accessing help and source code</code></pre>
 <li>
 <strong>Initial Disease Prevalence:</strong> 0.0001 (5 agents start the simulation exposed to the virus)</li>
 <li>
-<strong>Contact Rate:</strong> 4 (how many other agents each agent will contact during each model step/day)</li>
+<strong>Contact Rate:</strong> Calculated Below (how many other agents each agent will contact during each model step/day)</li>
 <li>
 <strong>Incubation Days:</strong> 7 (how long after infection before symptoms appear)</li>
 <li>
@@ -268,7 +274,7 @@ see '?methods' for accessing help and source code</code></pre>
 </ul>
 <p>Using the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number" target="_blank">basic reproductive number</a> equation (R0) equation (R0 = P(transmission) * contact_rate / P(recovery)) and <code>R0_monkeypox = 2.44</code>, the contact rate is computed as about 0.571 as follows:</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>monkeypox_r0 <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>monkeypox_r0 <span class="ot">&lt;-</span> <span class="fl">2.44</span></span>
 <span id="cb3-2"><a href="#cb3-2"></a>monkeypox_transmission_rate <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a>monkeypox_recovery_rate <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">7</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
@@ -290,7 +296,7 @@ see '?methods' for accessing help and source code</code></pre>
 </details>
 </div>
 </section><section id="run-the-model" class="level3"><h3 class="anchored" data-anchor-id="run-the-model">Run the Model</h3>
-<p>Execute the model using the <code>run()</code> function, passing the model object, the number of simulation days (in this case, 100 days), and an optional seed for reproducibility. Use the <code>verbose_off()</code> function before running the model to suppress output generated by hte <code>run()</code> function.</p>
+<p>Execute the model using the <code>run()</code> function, passing the model object, the number of simulation days (in this case, 100 days), and an optional seed for reproducibility. Use the <code>verbose_off()</code> function before running the model to suppress output generated by the <code>run()</code> function.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -321,7 +327,7 @@ Connected vs Non-Connected Models
 Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 It features 50000 agents, 1 virus(es), and 0 tool(s).
 The model has 4 states.
-The final distribution is: 48982 Susceptible, 265 Exposed, 209 Infected, and 544 Recovered.</code></pre>
+The final distribution is: 39180 Susceptible, 3400 Exposed, 2415 Infected, and 5005 Recovered.</code></pre>
 </div>
 </div>
 <p>After running the model, printing it gives the final distribution of agents across the four SEIR states. If we want to re-run the model for a different duraction, <code>epiworldR</code> allows us to do this without re-initializing the model.</p>
@@ -333,7 +339,7 @@ The final distribution is: 48982 Susceptible, 265 Exposed, 209 Infected, and 544
 Susceptible-Exposed-Infected-Removed (SEIR) (connected)
 It features 50000 agents, 1 virus(es), and 0 tool(s).
 The model has 4 states.
-The final distribution is: 10212 Susceptible, 18 Exposed, 29 Infected, and 39741 Recovered.</code></pre>
+The final distribution is: 5694 Susceptible, 0 Exposed, 0 Infected, and 44306 Recovered.</code></pre>
 </div>
 </div>
 </section><section id="model-summary" class="level3"><h3 class="anchored" data-anchor-id="model-summary">Model Summary</h3>
@@ -351,10 +357,10 @@ Agents' data        : (none)
 Number of entities  : 0
 Days (duration)     : 300 (of 300)
 Number of viruses   : 1
-Last run elapsed t  : 201.00ms
-Total elapsed t     : 265.00ms (2 runs)
-Last run speed      : 74.31 million agents x day / second
-Average run speed   : 113.02 million agents x day / second
+Last run elapsed t  : 156.00ms
+Total elapsed t     : 214.00ms (2 runs)
+Last run speed      : 95.87 million agents x day / second
+Average run speed   : 140.17 million agents x day / second
 Rewiring            : off
 
 Global events:
@@ -368,26 +374,26 @@ Tool(s):
 
 Model parameters:
  - Avg. Incubation days : 7.0000
- - Contact rate         : 0.5714
+ - Contact rate         : 0.6971
  - Prob. Recovery       : 0.1429
  - Prob. Transmission   : 0.5000
 
 Distribution of the population at time 300:
-  - (0) Susceptible : 49995 -&gt; 10212
-  - (1) Exposed     :     5 -&gt; 18
-  - (2) Infected    :     0 -&gt; 29
-  - (3) Recovered   :     0 -&gt; 39741
+  - (0) Susceptible : 49995 -&gt; 5694
+  - (1) Exposed     :     5 -&gt; 0
+  - (2) Infected    :     0 -&gt; 0
+  - (3) Recovered   :     0 -&gt; 44306
 
 Transition Probabilities:
  - Susceptible  0.99  0.01  0.00  0.00
- - Exposed      0.00  0.87  0.13  0.00
+ - Exposed      0.00  0.86  0.14  0.00
  - Infected     0.00  0.00  0.86  0.14
  - Recovered    0.00  0.00  0.00  1.00</code></pre>
 </div>
 </div>
 <p>The <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function provides a lot more information on the model:</p>
 <ol type="1">
-<li>Summary of the simulation itself, giving details on the size of the model, the number of entities (think of these are public spaces in which agents can make contact with one another, we’ll cover them later), the elapsed time for the simulation, etc.</li>
+<li>Summary of the simulation itself, giving details on the size of the model, the number of entities (think of these as public spaces in which agents can make contact with one another, we’ll cover them later), the elapsed time for the simulation, etc.</li>
 <li>List of global events. The model automatically includes an event to update infected individuals, which runs on each day of the model. During this event, infected agents contact other agents (with a chance to infect them) and/or recover from the disease. Users can define additional events and specify when they run (e.g., daily, weekly, once after 20 days, when the number of infected agents crosses a certain threshold, etc.).</li>
 <li>Lists of viruses and tools. Our example has 1 virus and 0 tools, but <code>epiworldR</code> models can have any number of viruses and tools.</li>
 <li>List of model parameters given at initialization.</li>
@@ -405,7 +411,7 @@ Transition Probabilities:
 </div>
 </div>
 </div>
-<p>The <code>plot_incidence()</code> function plots the number of agents in each of the four SEIR states over the course of the model simulation. You can get this data in tabular form with the <code>get_hist_total()</code> function:</p>
+<p>The <code>plot_incidence()</code> function plots the number of agents transitioning into each of the four SEIR states over the course of the model simulation. This plot shows the EIR states, because, in an SEIR model, an agent can’t transition into the Susceptible state (only from Susceptible to Exposed or Infected). You can get the same data shown in the graph in tabular form with the <code>get_hist_total()</code> function:</p>
 <div class="cell">
 <details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">head</span>(<span class="fu">get_hist_total</span>(monkeypox_model))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details><div class="cell-output cell-output-stdout">
@@ -418,34 +424,20 @@ Transition Probabilities:
 6    1     Exposed      4</code></pre>
 </div>
 </div>
-</section><section id="reproductive-number" class="level3"><h3 class="anchored" data-anchor-id="reproductive-number">Reproductive Number</h3>
-<p>An important statistic in epidemiological models is the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number#Effective_reproduction_number">reproductive number</a>. We get this from an <code>epiworldR</code> model using the <code>get_reproductive_number()</code> function.</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(monkeypox_model)</span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output cell-output-stdout">
-<pre><code>  virus_id     virus source source_exposure_date rt
-1        0 Monkeypox  31651                  300  0
-2        0 Monkeypox  27890                  299  0
-3        0 Monkeypox  27283                  298  0
-4        0 Monkeypox  31774                  295  0
-5        0 Monkeypox  12317                  295  0
-6        0 Monkeypox   5964                  292  0</code></pre>
-</div>
-</div>
-<p>The <code>repnum</code> object stores the reproductive number of each agent (listed by their ID under the <code>source</code> column) for each virus. Agents who haven’t been infected yet don’t have a reproductive number, consequently agents are only added to the <code>repnum</code> object when they have been infected.</p>
-<p>Plot the reproductive number using:</p>
-<div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>x <span class="ot">&lt;-</span> <span class="fu">plot</span>(repnum, <span class="at">type=</span><span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details><div class="cell-output-display">
-<div>
-<figure class="figure"><p><img src="part1_files/figure-html/plot-repnum-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>This function takes the average of values in the above table for each date and repeats until all dates have been accounted for. For example, on average, individuals who acquired the virus on the 10th day transmit the virus to roughly 10 other individuals.</p>
 </section></section><section id="exercise-1" class="level2"><h2 class="anchored" data-anchor-id="exercise-1">Exercise 1</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Don’t forget to use the <code><a href="https://rdrr.io/r/utils/help.html">help()</a></code> function to see documentation for functions you aren’t familiar with.</p>
+</div>
+</div>
 <p>Create a SEIR model using the <code>ModelSEIR()</code> function (not <code>ModelSEIRCONN()</code>) to simulate a COVID-19 outbreak for 100 days in a population with:</p>
 <ul>
 <li>
@@ -464,25 +456,97 @@ Transition Probabilities:
 <p>Since <code>ModelSEIR</code> is not connected, you will need to add a smallworld population using the <code>agents_smallworld()</code> function after initializing the model, using:</p>
 <ul>
 <li>n = 10000</li>
-<li>k = 5</li>
-<li>d = FALSE</li>
-<li>p = .01</li>
+<li>k = 5 (number of connections for each agent)</li>
+<li>d = FALSE (whether the graph is directed)</li>
+<li>p = .01 (probability of rewiring)</li>
 </ul>
 <p>From there, run the model and visualize.</p>
 <p>After how many days does the number of infections peak in this simulation? How many infections occur at the peak?</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section><section id="exercise-2" class="level2"><h2 class="anchored" data-anchor-id="exercise-2">Exercise 2</h2>
-<p>Plot the reproductive number of the COVID-19 simulated SEIR model over 100 days.</p>
+<p>Create an SIS model using the <code>ModelSIS()</code> function to simulate chickenpox for 60 days.</p>
+<p>The disease parameters are:</p>
+<ul>
+<li>
+<strong>Initial Disease Prevalence:</strong> 0.01</li>
+<li>
+<strong>Transmission Rate:</strong> 0.9</li>
+<li>
+<strong>Recovery Rate:</strong> 0.1</li>
+</ul>
+<p>The population parameters (for the <code>agents_smallworld()</code> function) are:</p>
+<ul>
+<li>
+<strong>Population size:</strong> 1,000 agents</li>
+<li>
+<strong>Number of connections per agent (k):</strong> 5</li>
+<li>
+<strong>Graph Type (d):</strong> Undirected (<code>d = FALSE</code>)</li>
+<li>
+<strong>Probability of rewiring (p):</strong> 0.01</li>
+</ul>
+<p>Run the model and print the summary.</p>
+<p>What is the final distribution of the population? How does it change if you run the model for 30 days? 100 days?</p>
 <div class="cell">
-<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section><section id="bonus-exercises" class="level2"><h2 class="anchored" data-anchor-id="bonus-exercises">Bonus Exercises</h2>
+<p>If you want further exploration of basic modeling in <code>epiworldR</code>, here are some bonus exercises to guide your exploration.</p>
+<section id="bonus-exercise-a" class="level3"><h3 class="anchored" data-anchor-id="bonus-exercise-a">Bonus Exercise A</h3>
+<p>Plot the reproductive number of the COVID-19 SEIR model from Exercise 1 simulated over 100 days.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Your solution here</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Reproductive Number
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>An important statistic in epidemiological models is the <a href="https://en.wikipedia.org/wiki/Basic_reproduction_number#Effective_reproduction_number">reproductive number</a>. We get this from an <code>epiworldR</code> model using the <code>get_reproductive_number()</code> function.</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>repnum <span class="ot">&lt;-</span> <span class="fu">get_reproductive_number</span>(monkeypox_model)</span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="fu">head</span>(repnum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output cell-output-stdout">
+<pre><code>  virus_id     virus source source_exposure_date rt
+1        0 Monkeypox  39821                  237  0
+2        0 Monkeypox  27608                  233  0
+3        0 Monkeypox  12907                  232  0
+4        0 Monkeypox  26016                  228  0
+5        0 Monkeypox   4124                  228  0
+6        0 Monkeypox  37040                  226  1</code></pre>
+</div>
+</div>
+<p>The <code>repnum</code> object stores the reproductive number of each agent (listed by their ID under the <code>source</code> column) for each virus. Agents who haven’t been infected yet don’t have a reproductive number, consequently agents are only added to the <code>repnum</code> object when they have been infected.</p>
+<p>Plot the reproductive number using:</p>
+<div class="cell">
+<details open="" class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="fu">plot</span>(repnum, <span class="at">type =</span> <span class="st">"b"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details><div class="cell-output-display">
+<div>
+<figure class="figure"><p><img src="part1_files/figure-html/plot-repnum-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This function takes the average of values in the above table for each date and repeats until all dates have been accounted for. For example, on average, individuals who acquired the virus on the 100th day transmit the virus to roughly 2 other individuals.</p>
+</div>
+</div>
+</div>
+</section><section id="bonus-exercise-b" class="level3"><h3 class="anchored" data-anchor-id="bonus-exercise-b">Bonus Exercise B</h3>
 
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
