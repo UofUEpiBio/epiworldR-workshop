@@ -179,7 +179,7 @@ What is the final distribution of the population? How does it change if you run 
 
 ## Bonus Exercises and Exploration
 
-If you want further exploration of basic modeling in `epiworldR`, here are some bonus exercises to guide your exploration.
+If you want further exploration of basic modeling in `epiworldR`, here are some bonus topics and exercises to guide your learning.
 
 ### Bonus Exercise A
 

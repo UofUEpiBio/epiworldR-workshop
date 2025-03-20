@@ -129,4 +129,4 @@ Create the model and run for 50 days, then plot the simulation with the `plot()`
 
 ## Bonus Exercises and Exploration
 
-If you want further exploration of network diffusion in `epiworldR`, here are some bonus exercises to guide your exploration.
+If you want further exploration of network diffusion in `epiworldR`, here are some bonus topics and exercises to guide your learning.
