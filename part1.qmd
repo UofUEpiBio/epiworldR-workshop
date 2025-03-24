@@ -214,3 +214,9 @@ This function takes the average of values in the above table for each date and r
 :::
 
 ### Bonus Exercise B
+
+Explore the various getter functions available to the `epiworld_model` class. Use `methods(class = "epiworld_model")` to list the functions, then run each of the functions with the `get_` prefix on one the models from the exercises or examples above.
+
+### Bonus Exercise C
+
+Repeat one of the above examples or exercises using a different `epiworldR` pre-built model. A list of the currently available models can be found on the [package website](https://uofuepibio.github.io/epiworldR/).
