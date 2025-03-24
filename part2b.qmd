@@ -216,3 +216,11 @@ Using the tool method outlined in the above example scenario, you will need four
 If you want further exploration of advanced modeling in `epiworldR`, here are some bonus topics and exercises to guide your learning.
 
 -   **Comorbidity:** Often, we want to model the effects of comorbidities on a disease. In [Additional Learning](./additional-learning.qmd), we provide an example of modeling the effects of obesity on the probability of recovery from the flu.
+
+### Bonus Exercise A
+
+Look at the **Tip** under **Exercise 2**, and complete the exercise using the method described in the **Note**.
+
+### Bonus Exercise B
+
+Run a model with multiple tools.

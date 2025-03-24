@@ -77,7 +77,7 @@ If you don't want to use your personal computer, we have an online RStudio serve
 
 [^1]: Please note that the online RStudio server and your data stored in it will be available for two weeks after the workshop. After that, the server will be shut down and all data will be deleted. If you would like to keep your data, please download it before the server is shut down.
 
-### Schedule
+### Schedule (Tentative)
 
 -   (10 min) Setup
 -   (50 min) [Part 1: Basic Modeling](./part1.qmd)
